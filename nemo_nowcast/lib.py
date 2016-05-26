@@ -14,7 +14,41 @@
 
 """NEMO_Nowcast framework library functions.
 """
+import argparse
+
 import yaml
+
+
+def basic_arg_parser(module_name, description=None, add_help=True):
+    """Return a command-line argument parser w/ handling for always-used args.
+
+    The returned parser provides help messages, and handles the
+    :option:`config_file` argument.
+
+    :arg str module_name: Name of the module that the parser is for;
+                          used to build the usage message.
+                          Use dotted notation for modules below the
+                          :kbd:`nowcast` namespace;
+                          e.g. :kbd:`workers.download_weather`.
+
+    :arg str description: Brief description of what the module does that
+                          will be displayed in help messages.
+
+    :arg boolean add_help: Add a `-h/--help` option to the parser.
+                           Disable this if you are going to use the returned
+                           parser as a parent parser to facilitate adding more
+                           args/options.
+
+    :returns: :class:`argparse.ArgumentParser` object
+    """
+    parser = argparse.ArgumentParser(
+        description=description, add_help=add_help)
+    parser.prog = 'python -m nowcast.{}'.format(module_name)
+    parser.add_argument(
+        'config_file',
+        help='Path/name of YAML configuration file for NEMO nowcast.'
+    )
+    return parser
 
 
 def load_config(config_file):
