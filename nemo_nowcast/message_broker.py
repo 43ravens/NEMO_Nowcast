@@ -74,6 +74,10 @@ def main():
     # Broker messages between workers on frontend and manager on backend
     try:
         zmq.device(zmq.QUEUE, frontend, backend)
+    except zmq.ZMQError as e:
+        # Fatal ZeroMQ problem
+        logger.critical('ZMQError: {}'.format(e))
+        logger.critical('shutting down')
     except SystemExit:
         # Termination by signal
         pass
