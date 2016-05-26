@@ -20,6 +20,7 @@ allowing the nowcast manager to be restarted more or less at will.
 import logging
 import logging.config
 import os
+import signal
 
 import zmq
 
@@ -49,6 +50,34 @@ def main():
     backend_port = config['zmq']['ports']['backend']
     backend.bind('tcp://*:{}'.format(backend_port))
     logger.info('backend bound to port {}'.format(backend_port))
+
+    # Set up interrupt and kill signal handlers
+    def cleanup():
+        frontend.close()
+        backend.close()
+        context.destroy()
+
+    def sigint_handler(signal, frame):
+        logger.info(
+            'interrupt signal (SIGINT or Ctrl-C) received; shutting down')
+        cleanup()
+        raise SystemExit
+    signal.signal(signal.SIGINT, sigint_handler)
+
+    def sigterm_handler(signal, frame):
+        logger.info(
+            'termination signal (SIGTERM) received; shutting down')
+        cleanup()
+        raise SystemExit
+    signal.signal(signal.SIGTERM, sigterm_handler)
+
+    # Broker messages between workers on frontend and manager on backend
+    try:
+        zmq.device(zmq.QUEUE, frontend, backend)
+    except SystemExit:
+        # Termination by signal
+        pass
+
 
 if __name__ == '__main__':
     main()
