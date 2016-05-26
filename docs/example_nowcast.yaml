@@ -22,6 +22,6 @@ logging:
 zmq:
   ports:
     # traffic between manager and message broker
-    backend: 5554
+    backend: 4343
     # traffic between workers and message broker
-    frontend: 5555
+    frontend: 4344
