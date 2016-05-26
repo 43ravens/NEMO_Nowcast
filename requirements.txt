@@ -1,3 +1,4 @@
 # Python packages and version used in development environment
 
 PyYAML==3.11
+pyzmq==15.2.0
