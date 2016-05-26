@@ -11,8 +11,13 @@
 
 name: nemo-nowcast
 dependencies:
+- libevent
 - pip
+- psutil
 - python=3
 - PyYAML
 - pyzmq
+- six
+- tornado
 - pip:
+  - circus
