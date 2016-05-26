@@ -77,6 +77,9 @@ def main():
     except SystemExit:
         # Termination by signal
         pass
+    except Exception as e:
+        logger.critical('unhandled exception:', exc_info=e)
+        logger.critical('shutting down')
 
 
 if __name__ == '__main__':
