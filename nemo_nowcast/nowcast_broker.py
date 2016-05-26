@@ -13,8 +13,9 @@
 # limitations under the License.
 
 """NEMO_Nowcast ZeroMQ message broker.
+
 This broker provides the static point in the nowcast messaging framework,
-allowing the nowcast_mgr to be restarted more or less at will.
+allowing the nowcast manager to be restarted more or less at will.
 """
 import logging
 import logging.config
@@ -28,7 +29,9 @@ logger = logging.getLogger(NAME)
 
 
 def main():
-    config = lib.load_config('docs/example_nowcast.yaml')
+    parser = lib.basic_arg_parser(NAME, description=__doc__)
+    parsed_args = parser.parse_args()
+    config = lib.load_config(parsed_args.config_file)
     logging.config.dictConfig(config['logging'])
     logger.info('running in process {}'.format(os.getpid()))
 
