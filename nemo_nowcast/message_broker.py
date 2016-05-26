@@ -23,7 +23,7 @@ import os
 
 from nemo_nowcast import lib
 
-NAME = 'nowcast_broker'
+NAME = 'message_broker'
 
 logger = logging.getLogger(NAME)
 
