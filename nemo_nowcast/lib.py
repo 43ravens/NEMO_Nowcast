@@ -43,7 +43,7 @@ def basic_arg_parser(module_name, description=None, add_help=True):
     """
     parser = argparse.ArgumentParser(
         description=description, add_help=add_help)
-    parser.prog = 'python -m nowcast.{}'.format(module_name)
+    parser.prog = 'python -m nemo_nowcast.{}'.format(module_name)
     parser.add_argument(
         'config_file',
         help='Path/name of YAML configuration file for NEMO nowcast.'
