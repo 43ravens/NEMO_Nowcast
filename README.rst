@@ -2,7 +2,7 @@
 NEMO Ocean Model Nowcast Framework
 **********************************
 
-The :py:obj:`NEMO_Nowcast` package is a collection of Python modules that can be used to build a software system to run the NEMO ocean model in a daily nowcast/forecast mode.
+The ``NEMO_Nowcast`` package is a collection of Python modules that can be used to build a software system to run the NEMO ocean model in a daily nowcast/forecast mode.
 Such a system typically use as-recent-as-available
 forcing data or model products for open boundary conditions,
 river run-off flows,
@@ -10,7 +10,7 @@ and atmospheric forcing.
 
 The runs are automated using an asynchronous,
 message-based architecture.
-The `Salish Sea NEMO Nowcast system` is an example of a system built on this framework.
+The `Salish Sea NEMO Nowcast system`_ is an example of a system built on this framework.
 That system:
 
 * obtains the forcing datasets from web services
