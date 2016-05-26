@@ -43,7 +43,7 @@ except IOError:
     long_description = ''
 install_requires = [
     # see environment-dev.yaml for conda environment dev installation,
-    # see requirements.pip for package versions used during recent development
+    # see requirements.txt for package versions used during recent development
 ]
 
 setup(

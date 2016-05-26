@@ -1,0 +1,8 @@
+# conda environment description file for docs build envioronment
+# on readthedocs.org
+
+name: sphinx-build
+dependencies:
+- pip
+- python=3
+- pip:
