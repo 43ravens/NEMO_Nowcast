@@ -17,3 +17,11 @@ logging:
     level: DEBUG
     handlers:
      - console
+
+# Message system
+zmq:
+  ports:
+    # traffic between manager and message broker
+    backend: 5554
+    # traffic between workers and message broker
+    frontend: 5555

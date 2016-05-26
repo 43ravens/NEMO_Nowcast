@@ -21,11 +21,15 @@ import logging
 import logging.config
 import os
 
+import zmq
+
 from nemo_nowcast import lib
 
 NAME = 'message_broker'
 
 logger = logging.getLogger(NAME)
+
+context = zmq.Context()
 
 
 def main():
@@ -34,7 +38,17 @@ def main():
     config = lib.load_config(parsed_args.config_file)
     logging.config.dictConfig(config['logging'])
     logger.info('running in process {}'.format(os.getpid()))
+    logger.info('read config from {.config_file}'.format(parsed_args))
 
+    # Create sockets and bind them to ports
+    frontend = context.socket(zmq.ROUTER)
+    backend = context.socket(zmq.DEALER)
+    frontend_port = config['zmq']['ports']['frontend']
+    frontend.bind('tcp://*:{}'.format(frontend_port))
+    logger.info('frontend bound to port {}'.format(frontend_port))
+    backend_port = config['zmq']['ports']['backend']
+    backend.bind('tcp://*:{}'.format(backend_port))
+    logger.info('backend bound to port {}'.format(backend_port))
 
 if __name__ == '__main__':
     main()
