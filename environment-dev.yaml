@@ -13,4 +13,5 @@ name: nemo-nowcast
 dependencies:
 - pip
 - python=3
+- PyYAML
 - pip:
