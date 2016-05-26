@@ -1,0 +1,16 @@
+# conda environment description file for NEMO_Nowcast package
+# development environment
+#
+# Create a conda environment for development, testing, and documentation
+# of the NEMO Nowcast framework with:
+#
+#    $ cd NEMO_NOwcast
+#    $ conda env create -f environment-dev.yaml
+#    $ source activate nemo-nowcast
+#    $ pip install --editable .
+
+name: nemo-nowcast
+dependencies:
+- pip
+- python=3
+- pip:
