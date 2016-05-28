@@ -26,6 +26,7 @@ import zmq
 
 from nemo_nowcast import lib
 
+
 NAME = 'message_broker'
 
 logger = logging.getLogger(NAME)
@@ -40,7 +41,10 @@ def main():
     logging.config.dictConfig(config['logging'])
     logger.info('running in process {}'.format(os.getpid()))
     logger.info('read config from {.config_file}'.format(parsed_args))
+    run(config)
 
+
+def run(config):
     # Create sockets and bind them to ports
     frontend = context.socket(zmq.ROUTER)
     backend = context.socket(zmq.DEALER)
@@ -51,7 +55,15 @@ def main():
     backend.bind('tcp://*:{}'.format(backend_port))
     logger.info('backend bound to port {}'.format(backend_port))
 
-    # Set up interrupt and kill signal handlers
+    # Set up hangup, interrupt, and kill signal handlers
+    def sighup_handler(signal, frame):
+        logger.info(
+            'hangup signal (SIGHUP) received; reloading configuration')
+        frontend.close()
+        backend.close()
+        main()
+    signal.signal(signal.SIGHUP, sighup_handler)
+
     def cleanup():
         frontend.close()
         backend.close()
@@ -62,7 +74,7 @@ def main():
             'interrupt signal (SIGINT or Ctrl-C) received; shutting down')
         cleanup()
         raise SystemExit
-    signal.signal(signal.SIGINT, sigint_handler)
+    signal.signal(signal.SIGINT, sighup_handler)
 
     def sigterm_handler(signal, frame):
         logger.info(
