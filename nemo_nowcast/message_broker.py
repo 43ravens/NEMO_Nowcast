@@ -74,7 +74,7 @@ def run(config):
             'interrupt signal (SIGINT or Ctrl-C) received; shutting down')
         cleanup()
         raise SystemExit
-    signal.signal(signal.SIGINT, sighup_handler)
+    signal.signal(signal.SIGINT, sigint_handler)
 
     def sigterm_handler(signal, frame):
         logger.info(
