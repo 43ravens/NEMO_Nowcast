@@ -2,11 +2,13 @@
 NEMO Ocean Model Nowcast Framework
 **********************************
 
-The ``NEMO_Nowcast`` package is a collection of Python modules that can be used to build a software system to run the NEMO ocean model in a daily nowcast/forecast mode.
+The `NEMO_Nowcast`_ package is a collection of Python modules that can be used to build a software system to run the NEMO ocean model in a daily nowcast/forecast mode.
 Such a system typically uses as-recent-as-available
 forcing data or model products for open boundary conditions,
 river run-off flows,
 and atmospheric forcing.
+
+.. _NEMO_Nowcast: https://anaconda.org/GoMSS-Nowcast/nemo_nowcast
 
 The runs are automated using an asynchronous,
 message-based architecture.
