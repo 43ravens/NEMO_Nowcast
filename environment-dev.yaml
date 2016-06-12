@@ -18,6 +18,7 @@ dependencies:
 - PyYAML
 - pyzmq
 - six
+- sphinx
 - tornado
 - pip:
   - circus
