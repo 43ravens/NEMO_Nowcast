@@ -51,6 +51,11 @@ install_requires = [
     'six',
     'tornado',
 ]
+tests_require = [
+    'coverage',
+    'pytest',
+]
+extra_require = {'docs': ['sphinx']}
 
 setup(
     name=__pkg_metadata__.PROJECT,
@@ -64,5 +69,8 @@ setup(
     classifiers=python_classifiers + other_classifiers,
     platforms=['Linux'],
     install_requires=install_requires,
+    tests_require=tests_require,
+    extra_require=extra_require,
     packages=find_packages(),
+    zip_safe=False
 )

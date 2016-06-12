@@ -11,10 +11,12 @@
 
 name: nemo-nowcast
 dependencies:
+- coverage
 - libevent
 - pip
 - psutil
 - python=3
+- pytest
 - PyYAML
 - pyzmq
 - six
