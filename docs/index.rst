@@ -25,6 +25,7 @@ Contents
    :maxdepth: 2
 
    development
+   api
 
 
 Indices and Tables

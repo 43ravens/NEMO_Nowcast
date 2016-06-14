@@ -19,6 +19,7 @@ logging:
 
 # Message system
 zmq:
+  server: localhost
   ports:
     # traffic between manager and message broker
     backend: 4343
