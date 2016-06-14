@@ -45,11 +45,8 @@ install_requires = [
     # see environment-dev.yaml for conda environment dev installation,
     # see requirements.txt for package versions used during recent development
     'circus',
-    'psutil',
     'PyYAML',
     'pyzmq',
-    'six',
-    'tornado',
 ]
 tests_require = [
     'coverage',
