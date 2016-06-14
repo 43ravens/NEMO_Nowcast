@@ -106,3 +106,60 @@ class TestNowcastManagerSetup:
         mgr.setup()
         m_logging.config.dictConfig.assert_called_once_with(
             mgr.config['logging'])
+
+
+class TestCli:
+    """Unit tests for NowcastManager._cli method.
+    """
+    def test_config_file(self):
+        mgr = manager.NowcastManager()
+        parsed_args = mgr._cli(['foo.yaml'])
+        assert parsed_args.config_file == 'foo.yaml'
+
+    def test_ignore_checklist_default(self):
+        mgr = manager.NowcastManager()
+        parsed_args = mgr._cli(['foo.yaml'])
+        assert not parsed_args.ignore_checklist
+
+    def test_ignore_checklist(self):
+        mgr = manager.NowcastManager()
+        parsed_args = mgr._cli(['foo.yaml', '--ignore-checklist'])
+        assert parsed_args.ignore_checklist
+
+
+class TestNowcastManagerRun:
+    """Unit tests for NowcastManager.run method.
+    """
+    def test_socket(self):
+        mgr = manager.NowcastManager()
+        mgr.config = {
+            'zmq': {'server': 'example.com', 'ports': {'backend': 6666}}}
+        mgr.logger = Mock(name='logger')
+        mgr._install_signal_handlers = Mock(name='_install_signal_handlers')
+        mgr._process_messages = Mock(name='_process_messages')
+        mgr._context = Mock(name='zmq_context')
+        mgr.run()
+        assert mgr._socket == mgr._context.socket(zmq.REP)
+        mgr._socket.connect.assert_called_once_with('tcp://example.com:6666')
+
+    def test_install_signal_handers(self):
+        mgr = manager.NowcastManager()
+        mgr.config = {
+            'zmq': {'server': 'example.com', 'ports': {'backend': 6666}}}
+        mgr.logger = Mock(name='logger')
+        mgr._install_signal_handlers = Mock(name='_install_signal_handlers')
+        mgr._process_messages = Mock(name='_process_messages')
+        mgr._context = Mock(name='zmq_context')
+        mgr.run()
+        assert mgr._install_signal_handlers.called
+
+    def test_process_messages(self):
+        mgr = manager.NowcastManager()
+        mgr.config = {
+            'zmq': {'server': 'example.com', 'ports': {'backend': 6666}}}
+        mgr.logger = Mock(name='logger')
+        mgr._install_signal_handlers = Mock(name='_install_signal_handlers')
+        mgr._process_messages = Mock(name='_process_messages')
+        mgr._context = Mock(name='zmq_context')
+        mgr.run()
+        assert mgr._process_messages.called
