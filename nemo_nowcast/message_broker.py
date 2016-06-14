@@ -35,6 +35,27 @@ context = zmq.Context()
 
 
 def main():
+    """
+    Set up and run the nowcast system messgae broker.
+
+    Set-up includes:
+
+    * Building the command-line parser, and parsing the command-line used
+      to launch the message broker
+    * Reading and parsing the configuration file given on the command-line
+    * Configuring the logging system as specified in the configuration file
+    * Logging the message broker's PID, and the file path/name that was used to
+      configure it.
+
+    The set-up is repeated if the message broker process receives a HUP signal
+    so that the configuration can be re-loaded without having to stop and
+    re-start the message broker.
+
+    After the set-up is complete, launch the broker message queuing process.
+
+    See :command:`python -m nowcast.message_broker -help`
+    for details of the command-line interface.
+    """
     parser = lib.basic_arg_parser(NAME, description=__doc__)
     parsed_args = parser.parse_args()
     config = lib.load_config(parsed_args.config_file)
@@ -45,7 +66,33 @@ def main():
 
 
 def run(config):
-    # Create sockets and bind them to ports
+    """Run the nowcast system message broker:
+
+    * Create and bind the :py:class:`zmq.Context.socket` instances for
+      communication with the manager and worker processes.
+    * Install signal handlers for hangup, interrupt, and kill signals.
+    * Launch the brokers message queuing process.
+    """
+    frontend, backend = _bind_zmq_sockets(config)
+    _install_signal_handlers(frontend, backend)
+    # Broker messages between workers on frontend and manager on backend
+    try:
+        zmq.device(zmq.QUEUE, frontend, backend)
+    except zmq.ZMQError as e:
+        # Fatal ZeroMQ problem
+        logger.critical('ZMQError: {}'.format(e))
+        logger.critical('shutting down')
+    except SystemExit:
+        # Termination by signal
+        pass
+    except Exception as e:
+        logger.critical('unhandled exception:', exc_info=e)
+        logger.critical('shutting down')
+
+
+def _bind_zmq_sockets(config):
+    """Create 0mq sockets and bind them to ports.
+    """
     frontend = context.socket(zmq.ROUTER)
     backend = context.socket(zmq.DEALER)
     frontend_port = config['zmq']['ports']['frontend']
@@ -54,8 +101,12 @@ def run(config):
     backend_port = config['zmq']['ports']['backend']
     backend.bind('tcp://*:{}'.format(backend_port))
     logger.info('backend bound to port {}'.format(backend_port))
+    return backend, frontend
 
-    # Set up hangup, interrupt, and kill signal handlers
+
+def _install_signal_handlers(frontend, backend):
+    """Set up hangup, interrupt, and kill signal handlers.
+    """
     def sighup_handler(signal, frame):
         logger.info(
             'hangup signal (SIGHUP) received; reloading configuration')
@@ -82,20 +133,6 @@ def run(config):
         cleanup()
         raise SystemExit
     signal.signal(signal.SIGTERM, sigterm_handler)
-
-    # Broker messages between workers on frontend and manager on backend
-    try:
-        zmq.device(zmq.QUEUE, frontend, backend)
-    except zmq.ZMQError as e:
-        # Fatal ZeroMQ problem
-        logger.critical('ZMQError: {}'.format(e))
-        logger.critical('shutting down')
-    except SystemExit:
-        # Termination by signal
-        pass
-    except Exception as e:
-        logger.critical('unhandled exception:', exc_info=e)
-        logger.critical('shutting down')
 
 
 if __name__ == '__main__':
