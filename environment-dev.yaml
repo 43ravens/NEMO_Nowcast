@@ -10,17 +10,17 @@
 #    $ pip install --editable .
 
 name: nemo-nowcast
+
+channels:
+  - defaults
+  - gomss-nowcast
+
 dependencies:
-- coverage
-- libevent
+- circus
 - pip
-- psutil
 - python=3
-- pytest
 - PyYAML
 - pyzmq
-- six
+- coverage
+- pytest
 - sphinx
-- tornado
-- pip:
-  - circus
