@@ -21,7 +21,6 @@ import os
 import signal
 
 import zmq
-from psutil.tests import cleanup
 
 from nemo_nowcast import lib
 
@@ -94,7 +93,7 @@ class NowcastManager:
         self.logger.info('read config from {.config_file}'.format(
             self._parsed_args))
 
-    def _cli(self):
+    def _cli(self, args=None):
         """Configure command-line argument parser and return parsed arguments
         object.
         """
@@ -111,7 +110,7 @@ class NowcastManager:
             running manager instance.
             ''',
         )
-        return parser.parse_args()
+        return parser.parse_args(args)
 
     def run(self):
         """Run the nowcast system manager:
