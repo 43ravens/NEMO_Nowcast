@@ -140,6 +140,7 @@ class NowcastManager:
             self._socket.disconnect(
                 'tcp://{host}:{port}'.format(host=zmq_host, port=zmq_port))
             self.setup()
+            self.run()
         signal.signal(signal.SIGHUP, sighup_handler)
 
         def sigint_handler(signal, frame):
