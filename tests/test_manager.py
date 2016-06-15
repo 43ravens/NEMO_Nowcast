@@ -14,7 +14,11 @@
 
 """Unit tests for nemo_nowcast.manager module.
 """
-from unittest.mock import patch, Mock
+from unittest.mock import (
+    patch,
+    Mock,
+    mock_open,
+)
 
 import zmq
 
@@ -132,6 +136,7 @@ class TestNowcastManagerRun:
     """
     def test_socket(self):
         mgr = manager.NowcastManager()
+        mgr._parsed_args = Mock(config_file='foo.yaml', ignore_checklist=True)
         mgr.config = {
             'zmq': {'server': 'example.com', 'ports': {'backend': 6666}}}
         mgr.logger = Mock(name='logger')
@@ -144,22 +149,56 @@ class TestNowcastManagerRun:
 
     def test_install_signal_handers(self):
         mgr = manager.NowcastManager()
+        mgr._parsed_args = Mock(config_file='foo.yaml', ignore_checklist=True)
         mgr.config = {
             'zmq': {'server': 'example.com', 'ports': {'backend': 6666}}}
+        mgr._context = Mock(name='zmq_context')
         mgr.logger = Mock(name='logger')
         mgr._install_signal_handlers = Mock(name='_install_signal_handlers')
         mgr._process_messages = Mock(name='_process_messages')
-        mgr._context = Mock(name='zmq_context')
         mgr.run()
         assert mgr._install_signal_handlers.called
 
-    def test_process_messages(self):
+    def test_load_checklist(self):
         mgr = manager.NowcastManager()
+        mgr._parsed_args = Mock(config_file='foo.yaml', ignore_checklist=False)
         mgr.config = {
             'zmq': {'server': 'example.com', 'ports': {'backend': 6666}}}
+        mgr._context = Mock(name='zmq_context')
+        mgr.logger = Mock(name='logger')
+        mgr._install_signal_handlers = Mock(name='_install_signal_handlers')
+        mgr._load_checklist = Mock(name='_load_checklist')
+        mgr._process_messages = Mock(name='_process_messages')
+        mgr.run()
+        assert mgr._load_checklist.called
+
+    def test_process_messages(self):
+        mgr = manager.NowcastManager()
+        mgr._parsed_args = Mock(config_file='foo.yaml', ignore_checklist=True)
+        mgr.config = {
+            'zmq': {'server': 'example.com', 'ports': {'backend': 6666}}}
+        mgr._context = Mock(name='zmq_context')
         mgr.logger = Mock(name='logger')
         mgr._install_signal_handlers = Mock(name='_install_signal_handlers')
         mgr._process_messages = Mock(name='_process_messages')
-        mgr._context = Mock(name='zmq_context')
         mgr.run()
         assert mgr._process_messages.called
+
+
+class TestLoadChecklist:
+    """Unit tests for NowcastManager._load_checklist method.
+    """
+    def test_load_checklist(self):
+        mgr = manager.NowcastManager()
+        p_open = patch('nemo_nowcast.manager.open', mock_open(), create=True)
+        mgr.config = {'checklist file': 'nowcast_checklist.yaml'}
+        with p_open as m_open:
+            mgr._load_checklist()
+        m_open.assert_called_once_with('nowcast_checklist.yaml', 'rt')
+
+    def test_load_checklist_filenotfounderror(self):
+        mgr = manager.NowcastManager()
+        mgr.config = {'checklist file': 'nowcast_checklist.yaml'}
+        mgr.logger = Mock(name='logger')
+        mgr._load_checklist()
+        mgr.logger.warning.assert_called_with('running with empty checklist')
