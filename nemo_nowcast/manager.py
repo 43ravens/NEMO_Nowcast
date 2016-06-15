@@ -18,8 +18,10 @@ import argparse
 import logging
 import logging.config
 import os
+import pprint
 import signal
 
+import yaml
 import zmq
 
 from nemo_nowcast import lib
@@ -129,6 +131,8 @@ class NowcastManager:
             'connected to {host} port {port}'
             .format(host=zmq_host, port=zmq_port))
         self._install_signal_handlers(zmq_host, zmq_port)
+        if not self._parsed_args.ignore_checklist:
+            self._load_checklist()
         self._process_messages()
 
     def _install_signal_handlers(self, zmq_host, zmq_port):
@@ -156,6 +160,22 @@ class NowcastManager:
             self._socket.close()
             raise SystemExit
         signal.signal(signal.SIGTERM, sigterm_handler)
+
+    def _load_checklist(self):
+        """Load the serialized checklist left on disk by a previously
+        running manager instance.
+        """
+        checklist_file = self.config['checklist file']
+        try:
+            with open(checklist_file, 'rt') as f:
+                self.checklist = yaml.safe_load(f)
+                self.logger.info(
+                    'checklist read from {}'.format(checklist_file))
+                self.logger.info(
+                    'checklist:\n{}'.format(pprint.pformat(self.checklist)))
+        except FileNotFoundError as e:
+            self.logger.warning('checklist load failed: {}'.format(e))
+            self.logger.warning('running with empty checklist')
 
     def _process_messages(self):
         """Process messages from workers.

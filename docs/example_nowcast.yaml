@@ -1,5 +1,8 @@
 # Example system configuration file for a NEMO_Nowcast framework system
 
+# System status checklist file
+checklist file: /data1/dlatorne/nowcast-sys/nowcast_checklist.yaml
+
 logging:
   version: 1
   disable_existing_loggers: False
