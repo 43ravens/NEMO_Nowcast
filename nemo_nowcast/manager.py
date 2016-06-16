@@ -184,11 +184,11 @@ class NowcastManager:
             self.logger.debug('listening...')
             try:
                 message = self._socket.recv()
-                # reply, next_steps = self._message_handler(message)
-                # self._socket.send_string(reply)
-                # if next_steps is not None:
-                #     for next_step, next_step_args in next_steps:
-                #         next_step(*next_step_args)
+                reply, next_steps = self._message_handler(message)
+                self._socket.send_string(reply)
+                if next_steps is not None:
+                    for next_step in next_steps:
+                        next_step.func(*next_step.args)
             except zmq.ZMQError as e:
                 # Fatal ZeroMQ problem
                 self.logger.critical('ZMQError:', exc_info=e)
@@ -200,6 +200,23 @@ class NowcastManager:
             except Exception as e:
                 self.logger.critical('unhandled exception:', exc_info=e)
                 self.logger.critical('shutting down')
+
+    def _message_handler(self, message):
+        """Handle message from worker.
+        """
+        msg = lib.deserialize_message(message)
+        if msg.source not in self.config['message registry']['workers']:
+            reply = self._handle_unregistered_worker_msg(msg)
+            return reply, None
+
+    def _handle_unregistered_worker_msg(self, msg):
+        """Emit warning message to log about a message received from a worker
+        that is not included in the message registry.
+        """
+        self.logger.error(
+            'message received from unregisterd worker: {.source}'.format(msg))
+        reply = lib.serialize_message(self.name, 'unregistered worker')
+        return reply
 
 
 if __name__ == '__main__':
