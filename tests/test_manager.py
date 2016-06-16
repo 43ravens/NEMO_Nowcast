@@ -14,15 +14,20 @@
 
 """Unit tests for nemo_nowcast.manager module.
 """
+from collections import namedtuple
 from unittest.mock import (
     patch,
     Mock,
     mock_open,
 )
 
+import yaml
 import zmq
 
 from nemo_nowcast import manager
+
+# Message data structure
+message = namedtuple('Message', 'source, type, payload')
 
 
 @patch('nemo_nowcast.manager.NowcastManager')
@@ -202,3 +207,35 @@ class TestLoadChecklist:
         mgr.logger = Mock(name='logger')
         mgr._load_checklist()
         mgr.logger.warning.assert_called_with('running with empty checklist')
+
+
+class TestMessageHandler:
+    """Unit tests for NowcastManager._message_handler method.
+    """
+    mgr = manager.NowcastManager()
+    mgr.config = {'message registry': {'workers': {}}}
+    mgr._handle_unregistered_worker_msg = Mock(
+        name='_handle_unregistered_worker_msg')
+    mgr._log_received_message = Mock(name='_log_received_message')
+    msg = message(source='worker', type='foo', payload=None)
+    msg_dict = {'source': msg.source, 'type': msg.type, 'payload': msg.payload}
+    reply, next_steps = mgr._message_handler(yaml.dump(msg_dict))
+    mgr._handle_unregistered_worker_msg.assert_called_once_with(msg)
+    assert reply == mgr._handle_unregistered_worker_msg()
+    assert next_steps is None
+    assert not mgr._log_received_message.called
+
+
+class TestHandleUnregisteredWorkerMsg:
+    """Unit test for NowcastManager._handle_unregistered_worker_msg method.
+    """
+    def test_handle_unregistered_worker_msg(self):
+        mgr = manager.NowcastManager()
+        mgr.logger = Mock(name='logger')
+        msg = message(source='worker', type='foo', payload=None)
+        reply = mgr._handle_unregistered_worker_msg(msg)
+        assert mgr.logger.error.call_count == 1
+        expected = {
+            'source': 'manager', 'type': 'unregistered worker',
+            'payload': None}
+        assert yaml.safe_load(reply) == expected

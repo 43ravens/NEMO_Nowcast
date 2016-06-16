@@ -28,3 +28,9 @@ zmq:
     backend: 4343
     # traffic between workers and message broker
     frontend: 4344
+
+message registry:
+  manager:
+    unregistered worker: ERROR - message received from unregistered worker
+
+  workers:
