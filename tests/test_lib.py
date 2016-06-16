@@ -17,6 +17,7 @@
 import argparse
 from unittest.mock import mock_open, patch
 
+import pytest
 import yaml
 
 from nemo_nowcast import lib
@@ -71,20 +72,14 @@ class TestLoadConfig:
 class TestDeserializeMessage:
     """Unit tests for lib.deserialize_message function.
     """
-    def test_message_without_payload(self):
+    @pytest.mark.parametrize('source, msg_type, payload', [
+        ('manager', 'ack', None),
+        ('download_weather', 'success 00', {'00 forecast': True}),
+    ])
+    def test_deserialize_message(self, source, msg_type, payload):
         message = yaml.dump(
-            {'source': 'manager', 'type': 'ack', 'payload': None})
+            {'source': source, 'type': msg_type, 'payload': payload})
         msg = lib.deserialize_message(message)
-        assert msg.source == 'manager'
-        assert msg.type == 'ack'
-        assert msg.payload is None
-
-    def test_message_with_payload(self):
-        message = yaml.dump({
-            'source': 'download_weather',
-            'type': 'success 00',
-            'payload': {'00 foecast': True}})
-        msg = lib.deserialize_message(message)
-        assert msg.source == 'download_weather'
-        assert msg.type == 'success 00'
-        assert msg.payload == {'00 foecast': True}
+        assert msg.source == source
+        assert msg.type == msg_type
+        assert msg.payload == payload
