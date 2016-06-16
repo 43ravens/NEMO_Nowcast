@@ -17,11 +17,13 @@
 import argparse
 from unittest.mock import mock_open, patch
 
+import yaml
+
 from nemo_nowcast import lib
 
 
 class TestBasicArgParser:
-    """Unit tests for lib.basic_arg_parser() function.
+    """Unit tests for lib.basic_arg_parser function.
     """
     def test_usage_cmd(self):
         parser = lib.basic_arg_parser('message_broker')
@@ -51,7 +53,7 @@ class TestBasicArgParser:
 
 
 class TestLoadConfig:
-    """Unit tests for lib.load_config() functions.
+    """Unit tests for lib.load_config functions.
     """
     def test_load_config(self):
         m_open = mock_open(read_data='foo: bar')
@@ -64,3 +66,25 @@ class TestLoadConfig:
         with patch('nemo_nowcast.lib.open', m_open):
             config = lib.load_config('nowcast.yaml')
         assert config['config_file'] == 'nowcast.yaml'
+
+
+class TestDeserializeMessage:
+    """Unit tests for lib.deserialize_message function.
+    """
+    def test_message_without_payload(self):
+        message = yaml.dump(
+            {'source': 'manager', 'type': 'ack', 'payload': None})
+        msg = lib.deserialize_message(message)
+        assert msg.source == 'manager'
+        assert msg.type == 'ack'
+        assert msg.payload is None
+
+    def test_message_with_payload(self):
+        message = yaml.dump({
+            'source': 'download_weather',
+            'type': 'success 00',
+            'payload': {'00 foecast': True}})
+        msg = lib.deserialize_message(message)
+        assert msg.source == 'download_weather'
+        assert msg.type == 'success 00'
+        assert msg.payload == {'00 foecast': True}

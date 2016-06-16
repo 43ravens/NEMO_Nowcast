@@ -15,6 +15,7 @@
 """NEMO_Nowcast framework library functions.
 """
 import argparse
+from collections import namedtuple
 
 import yaml
 
@@ -66,3 +67,20 @@ def load_config(config_file):
         config = yaml.safe_load(f)
     config['config_file'] = config_file
     return config
+
+
+def deserialize_message(message):
+    """Transform received message from str to message data structure.
+
+    :arg str message: Message dict serialized using YAML.
+
+    :returns:
+    :rtype: :py:class:`collections.namedtuple`
+    """
+    msg = yaml.safe_load(message)
+    message = namedtuple('Message', 'source, type, payload')
+    return message(
+        source=msg['source'],
+        type=msg['type'],
+        payload=msg['payload'],
+    )
