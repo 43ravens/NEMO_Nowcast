@@ -74,7 +74,12 @@ def deserialize_message(message):
 
     :arg str message: Message dict serialized using YAML.
 
-    :returns:
+    :returns: Named-tuple with attributes:
+
+              * :py:attr:`source`: the name of the message source
+              * :py:attr:`type`: the message type
+              * :py:attr:`payload`: the message payload
+
     :rtype: :py:class:`collections.namedtuple`
     """
     msg = yaml.safe_load(message)
@@ -84,3 +89,24 @@ def deserialize_message(message):
         type=msg['type'],
         payload=msg['payload'],
     )
+
+
+def serialize_message(source, msg_type, payload=None):
+    """Construct a message data structure and transofrm it into a string
+    suitable for sending.
+
+    :arg str source: Name of the worker or manager sending the message.
+
+    :arg str msg_type: Key of a message type that is defined for source
+                       in the message registry section of the configuration
+                       data structure.
+
+    :arg payload: Content of message;
+                  must be serializable by YAML such that it can be
+                  deserialized by :func:`yaml.safe_load`.
+    :type payload: Python object
+
+    :returns: Message data structure serialized using YAML.
+    """
+    message = {'source': source, 'type': msg_type, 'payload': payload}
+    return yaml.dump(message)
