@@ -99,8 +99,8 @@ class NowcastManager:
         """Configure command-line argument parser and return parsed arguments
         object.
         """
-        base_parser = lib.basic_arg_parser(
-            self.name, description=__doc__, add_help=False)
+        base_parser = lib.base_arg_parser(self.name, package='nemo_nowcast',
+            description=__doc__, add_help=False)
         parser = argparse.ArgumentParser(
             prog=base_parser.prog,
             description=base_parser.description,

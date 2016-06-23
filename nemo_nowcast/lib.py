@@ -20,7 +20,9 @@ from collections import namedtuple
 import yaml
 
 
-def basic_arg_parser(module_name, description=None, add_help=True):
+def base_arg_parser(
+    module_name, package='nowcast', description=None, add_help=True,
+):
     """Return a command-line argument parser w/ handling for always-used args.
 
     The returned parser provides help messages, and handles the
@@ -28,9 +30,12 @@ def basic_arg_parser(module_name, description=None, add_help=True):
 
     :arg str module_name: Name of the module that the parser is for;
                           used to build the usage message.
-                          Use dotted notation for modules below the
-                          :kbd:`nowcast` namespace;
-                          e.g. :kbd:`workers.download_weather`.
+
+    :arg str package: Name of the package that the module is part of;
+                      used to build the usage message.
+                      Use dotted notation;
+                      e.g. :kbd:`workers.download_weather`.
+
 
     :arg str description: Brief description of what the module does that
                           will be displayed in help messages.
@@ -44,7 +49,7 @@ def basic_arg_parser(module_name, description=None, add_help=True):
     """
     parser = argparse.ArgumentParser(
         description=description, add_help=add_help)
-    parser.prog = 'python -m nemo_nowcast.{}'.format(module_name)
+    parser.prog = 'python -m {}.{}'.format(package, module_name)
     parser.add_argument(
         'config_file',
         help='Path/name of YAML configuration file for NEMO nowcast.'

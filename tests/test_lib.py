@@ -27,29 +27,29 @@ class TestBasicArgParser:
     """Unit tests for lib.basic_arg_parser function.
     """
     def test_usage_cmd(self):
-        parser = lib.basic_arg_parser('message_broker')
-        expected = 'python -m nemo_nowcast.message_broker'
+        parser = lib.base_arg_parser('message_broker')
+        expected = 'python -m nowcast.message_broker'
         assert parser.prog == expected
 
     def test_default_no_description(self):
-        parser = lib.basic_arg_parser('module_name')
+        parser = lib.base_arg_parser('module_name')
         assert parser.description is None
 
     def test_description(self):
-        parser = lib.basic_arg_parser('module_name', description='description')
+        parser = lib.base_arg_parser('module_name', description='description')
         assert parser.description == 'description'
 
     def test_default_add_help(self):
-        parser = lib.basic_arg_parser('module_name')
+        parser = lib.base_arg_parser('module_name')
         assert isinstance(parser._optionals._actions[0], argparse._HelpAction)
 
     def test_no_help(self):
-        parser = lib.basic_arg_parser('module_name', add_help=False)
+        parser = lib.base_arg_parser('module_name', add_help=False)
         assert not isinstance(
             parser._optionals._actions[0], argparse._HelpAction)
 
     def test_config_file_arg(self):
-        parser = lib.basic_arg_parser('module_name')
+        parser = lib.base_arg_parser('module_name')
         assert parser._positionals._actions[1].dest == 'config_file'
 
 
