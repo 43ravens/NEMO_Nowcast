@@ -34,8 +34,7 @@ def base_arg_parser(
     :arg str package: Name of the package that the module is part of;
                       used to build the usage message.
                       Use dotted notation;
-                      e.g. :kbd:`workers.download_weather`.
-
+                      e.g. :kbd:`nowcast.workers`.
 
     :arg str description: Brief description of what the module does that
                           will be displayed in help messages.
