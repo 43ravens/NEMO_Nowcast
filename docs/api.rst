@@ -16,3 +16,11 @@ Manager
 .. automodule:: nemo_nowcast.manager
     :members: main, NowcastManager
     :special-members: __init__
+
+
+Worker
+======
+
+.. automodule:: nemo_nowcast.worker
+    :members:
+    :special-members: __init__
