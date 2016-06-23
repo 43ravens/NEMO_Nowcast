@@ -19,8 +19,9 @@ import os
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-
-sys.path.insert(0, os.path.abspath('../nemo_nowcast'))
+sys.path.insert(0, os.path.abspath('..'))
+import pprint
+pprint.pprint(sys.path)
 
 # -- General configuration ------------------------------------------------
 
@@ -60,9 +61,7 @@ copyright = (
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
-import pprint
-pprint.pprint(sys.path)
-import __pkg_metadata__
+from nemo_nowcast import __pkg_metadata__
 #
 # The short X.Y version.
 version = __pkg_metadata__.VERSION
