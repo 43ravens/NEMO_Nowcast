@@ -60,7 +60,9 @@ copyright = (
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
-from nemo_nowcast import __pkg_metadata__
+import pprint
+pprint.pprint(sys.path)
+import __pkg_metadata__
 #
 # The short X.Y version.
 version = __pkg_metadata__.VERSION
