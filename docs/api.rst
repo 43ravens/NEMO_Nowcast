@@ -18,9 +18,16 @@ Manager
     :special-members: __init__
 
 
-Worker
-======
+Class and Exception for Building Workers
+========================================
 
 .. automodule:: nemo_nowcast.worker
     :members:
     :special-members: __init__
+
+
+Example Worker
+==============
+
+.. automodule:: nemo_nowcast.workers.example
+    :members:
