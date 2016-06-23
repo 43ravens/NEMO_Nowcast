@@ -30,6 +30,9 @@ to produce a `daily nowcast and 2 forecasts`_ of the state of the Salish Sea on 
 
 Documentation for the framework is in the ``docs/`` directory and is rendered at http://nemo-nowcast.readthedocs.io/en/latest/.
 
+.. image:: https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest
+    :target: http://nemo-nowcast.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Build Status
 
 License
 =======
