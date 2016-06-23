@@ -56,7 +56,8 @@ def main():
     See :command:`python -m nowcast.message_broker -help`
     for details of the command-line interface.
     """
-    parser = lib.basic_arg_parser(NAME, description=__doc__)
+    parser = lib.base_arg_parser(NAME, package='nemo_nowcast',
+        description=__doc__)
     parsed_args = parser.parse_args()
     config = lib.load_config(parsed_args.config_file)
     logging.config.dictConfig(config['logging'])
