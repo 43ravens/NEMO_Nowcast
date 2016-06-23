@@ -32,7 +32,6 @@ Documentation for the framework is in the ``docs/`` directory and is rendered at
 
 .. image:: https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest
     :target: http://nemo-nowcast.readthedocs.io/en/latest/?badge=latest
-    :title: Documentation Build Status
     :alt: Documentation Build Status
 
 License
