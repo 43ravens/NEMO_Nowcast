@@ -30,6 +30,16 @@ class TestMain:
         assert 'description' in kwargs
         assert 'package' in kwargs
 
+    def test_add_sleep_time_arg(self, m_worker):
+        example.main()
+        worker = m_worker()
+        args, kwargs = worker.arg_parser.set_defaults.call_args_list[0]
+        assert kwargs['sleep_time'] == 5
+        args, kwargs = worker.arg_parser.add_argument.call_args_list[0]
+        assert args == ('--sleep-time',)
+        assert kwargs['type'] == int
+        assert 'help' in kwargs
+
     def test_run_worker(self, m_worker):
         example.main()
         args, kwargs = m_worker().run.call_args
