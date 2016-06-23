@@ -29,6 +29,14 @@ def main():
     """
     worker = NowcastWorker(
         'example', description=__doc__, package='nemo_nowcast.workers')
+    arg_defaults = {'sleep_time': 5}
+    worker.arg_parser.set_defaults(**arg_defaults)
+    worker.arg_parser.add_argument(
+        '--sleep-time', type=int,
+        help=(
+            'number of seconds to sleep for; defaults to {[sleep_time]}'
+            .format(arg_defaults))
+    )
     worker.run()
 
 
