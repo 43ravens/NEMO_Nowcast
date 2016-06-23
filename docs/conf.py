@@ -15,7 +15,6 @@ import datetime
 import sys
 import os
 
-import __pkg_metadata__
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -61,6 +60,7 @@ copyright = (
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
+from nemo_nowcast import __pkg_metadata__
 #
 # The short X.Y version.
 version = __pkg_metadata__.VERSION
