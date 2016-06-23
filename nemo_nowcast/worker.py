@@ -58,13 +58,13 @@ class NowcastWorker:
         #: :kbd:`--help`,
         #: and :kbd:`-h` options
         self.arg_parser = lib.base_arg_parser(
-            self.name, description=self.description)
+            self.name, description=self.description, package=self.package)
         self.arg_parser.add_argument(
             '--debug', action='store_true',
             help='''
             Send logging output to the console instead of the log file.
-            Log messages that would normally be sent to the manager to the
-            console,
+            Log messages that would normally be sent to the manager are sent
+            to the console,
             suppressing interactions with the manager such as launching other
             workers.
             Intended only for use when the worker is run in foreground
@@ -93,3 +93,8 @@ class NowcastWorker:
             add_help=False,
         )
         self.arg_parser.add_argument(*args, **kwargs)
+
+    def run(self):
+        """Prepare the worker to do its work, then do it.
+        """
+        self.arg_parser.parse_args()

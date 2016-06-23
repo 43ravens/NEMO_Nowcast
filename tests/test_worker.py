@@ -15,58 +15,60 @@
 """Unit tests for nemo_nowcast.manager module.
 """
 import argparse
-from unittest.mock import patch
+from unittest.mock import (
+    Mock,
+    patch,
+)
 
 import zmq
 
-from nemo_nowcast import worker
+from nemo_nowcast.worker import NowcastWorker
 
 
 class TestNowcastWorkerConstructor:
     """Unit tests for NowcastWorker.__init__ method.
     """
     def test_name(self):
-        wkr = worker.NowcastWorker('worker_name', 'description')
-        assert wkr.name == 'worker_name'
+        worker = NowcastWorker('worker_name', 'description')
+        assert worker.name == 'worker_name'
 
     def test_package_default(self):
-        wkr = worker.NowcastWorker('worker_name', 'description')
-        assert wkr.package == 'nowcast.workers'
+        worker = NowcastWorker('worker_name', 'description')
+        assert worker.package == 'nowcast.workers'
 
     def test_package_specified(self):
-        wkr = worker.NowcastWorker(
-            'worker_name', 'description', package='foo.bar')
-        assert wkr.package == 'foo.bar'
+        worker = NowcastWorker('worker_name', 'description', package='foo.bar')
+        assert worker.package == 'foo.bar'
 
     def test_description(self):
-        wkr = worker.NowcastWorker('worker_name', 'description')
-        assert wkr.description == 'description'
+        worker = NowcastWorker('worker_name', 'description')
+        assert worker.description == 'description'
 
     def test_config(self):
-        wkr = worker.NowcastWorker('worker_name', 'description')
-        assert wkr.config is None
+        worker = NowcastWorker('worker_name', 'description')
+        assert worker.config is None
 
     def test_logger_name(self):
-        wkr = worker.NowcastWorker('worker_name', 'description')
-        assert wkr.logger.name == 'worker_name'
+        worker = NowcastWorker('worker_name', 'description')
+        assert worker.logger.name == 'worker_name'
 
     def test_arg_parser(self):
-        wkr = worker.NowcastWorker('worker_name', 'description')
-        assert isinstance(wkr.arg_parser, argparse.ArgumentParser)
+        worker = NowcastWorker('worker_name', 'description')
+        assert isinstance(worker.arg_parser, argparse.ArgumentParser)
 
     def test_add_debug_arg(self):
-        wkr = worker.NowcastWorker('worker_name', 'description')
+        worker = NowcastWorker('worker_name', 'description')
         assert isinstance(
-            wkr.arg_parser._get_option_tuples('--debug')[0][0],
+            worker.arg_parser._get_option_tuples('--debug')[0][0],
             argparse._StoreTrueAction)
 
     def test_context(self):
-        wkr = worker.NowcastWorker('worker_name', 'description')
-        assert isinstance(wkr._context, zmq.Context)
+        worker = NowcastWorker('worker_name', 'description')
+        assert isinstance(worker._context, zmq.Context)
 
     def test_socket(self):
-        wkr = worker.NowcastWorker('worker_name', 'description')
-        assert wkr._socket is None
+        worker = NowcastWorker('worker_name', 'description')
+        assert worker._socket is None
 
 
 class TestAddArgument:
@@ -75,9 +77,9 @@ class TestAddArgument:
     def test_add_argument(self):
         """add_argument() wraps argparse.ArgumentParser.add_argument()
         """
-        wkr = worker.NowcastWorker('worker_name', 'description')
+        worker = NowcastWorker('worker_name', 'description')
         with patch('nemo_nowcast.worker.argparse.ArgumentParser') as m_parser:
-            wkr.add_argument(
+            worker.add_argument(
                 '--yesterday', action='store_true',
                 help="Download forecast files for previous day's date."
             )
@@ -85,3 +87,13 @@ class TestAddArgument:
             '--yesterday', action='store_true',
             help="Download forecast files for previous day's date."
         )
+
+
+class TestNowcastWorkerRun:
+    """Unit tests for NowcastWorker.run() method.
+    """
+    def test_parse_args(self):
+        worker = NowcastWorker('worker_name', 'description')
+        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker.run()
+        worker.arg_parser.parse_args.assert_called_once_with()
