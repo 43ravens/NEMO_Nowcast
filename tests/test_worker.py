@@ -15,6 +15,7 @@
 """Unit tests for nemo_nowcast.manager module.
 """
 import argparse
+from unittest.mock import patch
 
 import zmq
 
@@ -66,3 +67,21 @@ class TestNowcastWorkerConstructor:
     def test_socket(self):
         wkr = worker.NowcastWorker('worker_name', 'description')
         assert wkr._socket is None
+
+
+class TestAddArgument:
+    """Unit test for NowcastWorker.add_argument() method.
+    """
+    def test_add_argument(self):
+        """add_argument() wraps argparse.ArgumentParser.add_argument()
+        """
+        wkr = worker.NowcastWorker('worker_name', 'description')
+        with patch('nemo_nowcast.worker.argparse.ArgumentParser') as m_parser:
+            wkr.add_argument(
+                '--yesterday', action='store_true',
+                help="Download forecast files for previous day's date."
+            )
+        m_parser().add_argument.assert_called_once_with(
+            '--yesterday', action='store_true',
+            help="Download forecast files for previous day's date."
+        )

@@ -14,6 +14,7 @@
 
 """NEMO_Nowcast worker classes.
 """
+import argparse
 import logging
 
 import zmq
@@ -77,3 +78,18 @@ class NowcastWorker:
         #: message broker to enable nowcast system messages to be exchanged
         #: with manager process.
         self._socket = None
+
+    def add_argument(self, *args, **kwargs):
+        """Add an argument to the worker's command-line interface.
+
+        This is a thin wrapper around
+        :py:meth:`argparse.ArgumentParser.add_argument` that accepts
+        that method's arguments.
+        """
+        self.arg_parser = argparse.ArgumentParser(
+            prog=self.arg_parser.prog,
+            description=self.arg_parser.description,
+            parents=[self.arg_parser],
+            add_help=False,
+        )
+        self.arg_parser.add_argument(*args, **kwargs)
