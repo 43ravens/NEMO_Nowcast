@@ -74,6 +74,23 @@ class NowcastWorker:
             from the command-line.
             ''',
         )
+        #: Function to be called to do the worker's job.
+        #: Called with the worker's parsed command-line arguments
+        #: :py:class:`argparse.Namespace` instance,
+        #: and the worker's configuration dict.
+        self.worker_func = None
+        #: Function to be called when the worker finishes successfully.
+        #: Called with the worker's parsed command-line arguments
+        #: :py:class:`argparse.Namespace` instance.
+        #: Must return a string whose value is a success message type defined
+        # for the worker in the nowcast configuration file.
+        self.success = None
+        #: Function to be called when the worker fails. Called with the
+        # worker's parsed command-line arguments
+        #: :py:class:`argparse.Namespace`; instance.
+        #: Must return a string whose value is a failure message type defined
+        # for the worker in the nowcast configuration file.
+        self.failure = None
         #: :py:class:`argparse.Namespace` instance containing the arguments
         #: and option flags and values parsed from the command-line when the
         #: worker was started.
@@ -101,9 +118,57 @@ class NowcastWorker:
         )
         self.arg_parser.add_argument(*args, **kwargs)
 
-    def run(self):
+    def run(self, worker_func, success, failure):
         """Prepare the worker to do its work, then do it.
+
+        Preparations include:
+
+        * Parsing the worker's command-line argument into a
+          :py:class:`argparse.ArgumentParser.Namepsace` instance
+
+        * Reading the nowcast configuration file named on the command
+          line to a dict
+
+        * Configuring the worker's logging interface
+
+        * Configuring the worker's interface to the nowcast messaging
+          framework
+
+        * Installing handlers for signals from the operating system
+
+        :arg worker_func: Function to be called to do the worker's job.
+                          Called with the worker's parsed command-line
+                          arguments
+                          :py:class:`argparse.Namespace`
+                          instance,
+                          and the worker's configuration dict.
+        :type worker_func: Python function
+
+        :arg success: Function to be called when the worker finishes
+                      successfully.
+                      Called with the worker's parsed command-line
+                      arguments
+                      :py:class:`argparse.Namespace`
+                      instance.
+                      Must return a string whose value is a success
+                      message type defined for the worker in the nowcast
+                      configuration file.
+
+        :type success: Python function
+
+        :arg failure: Function to be called when the worker fails.
+                      Called with the worker's parsed command-line
+                      arguments
+                      :py:class:`argparse.Namespace`
+                      instance.
+                      Must return a string whose value is a failure
+                      message type defined for the worker in the nowcast
+                      configuration file.
+
+        :type failure: Python function
         """
+        self.worker_func = worker_func
+        self.success, self.failure = success, failure
         self._parsed_args = self.arg_parser.parse_args()
         self.config = lib.load_config(self._parsed_args.config_file)
         logging.config.dictConfig(self.config['logging'])
@@ -149,4 +214,26 @@ class NowcastWorker:
         signal.signal(signal.SIGTERM, sigterm_handler)
 
     def _do_work(self):
+        """Execute the worker function, communicate its success or failure to
+        the nowcast manager via the messaging framework, and handle any
+        exceptions it raises.
+        """
+        try:
+            checklist = self.worker_func(
+                self._parsed_args, self.config, self._tell_manager)
+            msg_type = self.success(self._parsed_args)
+            self._tell_manager(msg_type, checklist)
+        except WorkerError:
+            msg_type = self.failure(self._parsed_args)
+            self._tell_manager(msg_type)
+        except SystemExit:
+            # Normal termination
+            pass
+        except:
+            self.logger.critical('unhandled exception:', exc_info=True)
+            self._tell_manager('crash')
+        self._context.destroy()
+        self.logger.debug('task completed; shutting down')
+
+    def _tell_manager(self, msg_type, payload=None):
         pass
