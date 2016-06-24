@@ -23,7 +23,10 @@ from unittest.mock import (
 
 import zmq
 
-from nemo_nowcast.worker import NowcastWorker
+from nemo_nowcast.worker import (
+    NowcastWorker,
+    WorkerError,
+)
 
 
 class TestNowcastWorkerConstructor:
@@ -52,6 +55,18 @@ class TestNowcastWorkerConstructor:
     def test_logger_name(self):
         worker = NowcastWorker('worker_name', 'description')
         assert worker.logger.name == 'worker_name'
+
+    def test_worker_func(self):
+        worker = NowcastWorker('worker_name', 'description')
+        assert worker.worker_func is None
+
+    def test_success(self):
+        worker = NowcastWorker('worker_name', 'description')
+        assert worker.success is None
+
+    def test_failure(self):
+        worker = NowcastWorker('worker_name', 'description')
+        assert worker.failure is None
 
     def test_arg_parser(self):
         worker = NowcastWorker('worker_name', 'description')
@@ -100,68 +115,125 @@ class TestAddArgument:
 class TestNowcastWorkerRun:
     """Unit tests for NowcastWorker.run method.
     """
-    def test_parse_args(self, m_logging, m_load_config):
+    def test_worker_func(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
+        m_worker_func = Mock(name='worker_func')
+        m_success = Mock(name='success')
+        m_failure = Mock(name='failure')
         worker.arg_parser.parse_args = Mock(name='parse_args')
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
-        worker.run()
+        worker.run(m_worker_func, m_success, m_failure)
+        assert worker.worker_func == m_worker_func
+
+    def test_success_func(self, m_logging, m_load_config):
+        worker = NowcastWorker('worker_name', 'description')
+        m_worker_func = Mock(name='worker_func')
+        m_success = Mock(name='success')
+        m_failure = Mock(name='failure')
+        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._do_work = Mock(name='_do_work')
+        worker.run(m_worker_func, m_success, m_failure)
+        assert worker.success == m_success
+
+    def test_failure_func(self, m_logging, m_load_config):
+        worker = NowcastWorker('worker_name', 'description')
+        m_worker_func = Mock(name='worker_func')
+        m_success = Mock(name='success')
+        m_failure = Mock(name='failure')
+        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._do_work = Mock(name='_do_work')
+        worker.run(m_worker_func, m_success, m_failure)
+        assert worker.failure== m_failure
+
+    def test_parse_args(self, m_logging, m_load_config):
+        worker = NowcastWorker('worker_name', 'description')
+        m_worker_func = Mock(name='worker_func')
+        m_success = Mock(name='success')
+        m_failure = Mock(name='failure')
+        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._do_work = Mock(name='_do_work')
+        worker.run(m_worker_func, m_success, m_failure)
         worker.arg_parser.parse_args.assert_called_once_with()
 
     def test_config(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
+        m_worker_func = Mock(name='worker_func')
+        m_success = Mock(name='success')
+        m_failure = Mock(name='failure')
         worker.arg_parser.parse_args = Mock(name='parse_args')
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
-        worker.run()
+        worker.run(m_worker_func, m_success, m_failure)
         assert worker.config == m_load_config()
 
     def test_logging_config(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
+        m_worker_func = Mock(name='worker_func')
+        m_success = Mock(name='success')
+        m_failure = Mock(name='failure')
         worker.arg_parser.parse_args = Mock(name='parse_args')
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
-        worker.run()
+        worker.run(m_worker_func, m_success, m_failure)
         m_logging.config.dictConfig.assert_called_once_with(
             worker.config['logging'])
 
     def test_logging_info(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
+        m_worker_func = Mock(name='worker_func')
+        m_success = Mock(name='success')
+        m_failure = Mock(name='failure')
         worker.arg_parser.parse_args = Mock(name='parse_args')
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
-        worker.run()
+        worker.run(m_worker_func, m_success, m_failure)
         assert worker.logger.info.call_count == 2
 
     def test_init_zmq_interface(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
+        m_worker_func = Mock(name='worker_func')
+        m_success = Mock(name='success')
+        m_failure = Mock(name='failure')
         worker.arg_parser.parse_args = Mock(name='parse_args')
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
-        worker.run()
+        worker.run(m_worker_func, m_success, m_failure)
         worker._init_zmq_interface.assert_called_once_with()
 
     def test_install_signal_handlers(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
+        m_worker_func = Mock(name='worker_func')
+        m_success = Mock(name='success')
+        m_failure = Mock(name='failure')
         worker.arg_parser.parse_args = Mock(name='parse_args')
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
-        worker.run()
+        worker.run(m_worker_func, m_success, m_failure)
         worker._install_signal_handlers.assert_called_once_with()
 
     def test_do_work(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
+        m_worker_func = Mock(name='worker_func')
+        m_success = Mock(name='success')
+        m_failure = Mock(name='failure')
         worker.arg_parser.parse_args = Mock(name='parse_args')
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
-        worker.run()
+        worker.run(m_worker_func, m_success, m_failure)
         assert worker._do_work.call_count == 1
 
 
@@ -209,3 +281,85 @@ class TestInstallSignalHandlers:
         worker._install_signal_handlers()
         args, kwargs = m_signal.call_args_list[1]
         assert args[0] == signal.SIGTERM
+
+
+class TestDoWork:
+    """Unit tests for NowcastWorker._do_work method.
+    """
+    def test_worker_func(self):
+        worker = NowcastWorker('worker_name', 'description')
+        worker._tell_manager = Mock(name='_tell_manager')
+        worker.worker_func = Mock(name='worker_func')
+        worker.success = Mock(name='success_func')
+        worker._do_work()
+        worker.worker_func.assert_called_once_with(
+            worker._parsed_args, worker.config, worker._tell_manager)
+
+    def test_success_func(self):
+        worker = NowcastWorker('worker_name', 'description')
+        worker._tell_manager = Mock(name='_tell_manager')
+        worker.worker_func = Mock(name='worker_func')
+        worker.success = Mock(name='success_func')
+        worker._do_work()
+        worker.success.assert_called_once_with(worker._parsed_args)
+
+    def test_success_tell_manager(self):
+        worker = NowcastWorker('worker_name', 'description')
+        worker._tell_manager = Mock(name='_tell_manager')
+        worker.worker_func = Mock(name='worker_func', return_value='checklist')
+        worker.success = Mock(name='success_func', return_value='success')
+        worker._do_work()
+        # noinspection PyUnresolvedReferences
+        worker._tell_manager.assert_called_once_with('success', 'checklist')
+
+    def test_failure_func(self):
+        worker = NowcastWorker('worker_name', 'description')
+        worker._tell_manager = Mock(name='_tell_manager')
+        worker.worker_func = Mock(name='worker_func', side_effect=WorkerError)
+        worker.failure = Mock(name='failure_func')
+        worker._do_work()
+        worker.failure.assert_called_once_with(worker._parsed_args)
+
+    def test_failure_tell_manager(self):
+        worker = NowcastWorker('worker_name', 'description')
+        worker._tell_manager = Mock(name='_tell_manager')
+        worker.worker_func = Mock(name='worker_func', side_effect=WorkerError)
+        worker.failure = Mock(name='failure_func', return_value='failure')
+        worker._do_work()
+        # noinspection PyUnresolvedReferences
+        worker._tell_manager.assert_called_once_with('failure')
+
+    def test_system_exit_context_destroy(self):
+        worker = NowcastWorker('worker_name', 'description')
+        worker._context = Mock(name='context')
+        worker.worker_func = Mock(name='worker_func', side_effect=SystemExit)
+        worker._do_work()
+        assert worker._context.destroy.call_count == 1
+
+    def test_logger_critical_unhandled_exception(self):
+        worker = NowcastWorker('worker_name', 'description')
+        worker.logger = Mock(name='logger')
+        worker._context = Mock(name='context')
+        worker.worker_func = Mock(name='worker_func', side_effect=Exception)
+        worker._do_work()
+        worker.logger.critical.assert_called_once_with(
+            'unhandled exception:', exc_info=True)
+
+    def test_crash_tell_manager(self):
+        worker = NowcastWorker('worker_name', 'description')
+        worker.logger = Mock(name='logger')
+        worker._tell_manager = Mock(name='_tell_manager')
+        worker.worker_func = Mock(name='worker_func', side_effect=Exception)
+        worker._do_work()
+        # noinspection PyUnresolvedReferences
+        worker._tell_manager.assert_called_once_with('crash')
+
+    def test_logger_debug_task_completed(self):
+        worker = NowcastWorker('worker_name', 'description')
+        worker.logger = Mock(name='logger')
+        worker._context = Mock(name='context')
+        worker.worker_func = Mock(name='worker_func', side_effect=SystemExit)
+        worker._do_work()
+        worker.logger.debug.assert_called_once_with(
+            'task completed; shutting down')
+
