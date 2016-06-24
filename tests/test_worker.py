@@ -15,6 +15,7 @@
 """Unit tests for nemo_nowcast.manager module.
 """
 import argparse
+import signal
 from unittest.mock import (
     Mock,
     patch,
@@ -62,6 +63,10 @@ class TestNowcastWorkerConstructor:
             worker.arg_parser._get_option_tuples('--debug')[0][0],
             argparse._StoreTrueAction)
 
+    def test_parsed_args(self):
+        worker = NowcastWorker('worker_name', 'description')
+        assert worker._parsed_args is None
+
     def test_context(self):
         worker = NowcastWorker('worker_name', 'description')
         assert isinstance(worker._context, zmq.Context)
@@ -72,7 +77,7 @@ class TestNowcastWorkerConstructor:
 
 
 class TestAddArgument:
-    """Unit test for NowcastWorker.add_argument() method.
+    """Unit test for NowcastWorker.add_argument method.
     """
     def test_add_argument(self):
         """add_argument() wraps argparse.ArgumentParser.add_argument()
@@ -89,11 +94,118 @@ class TestAddArgument:
         )
 
 
+# noinspection PyUnresolvedReferences
+@patch('nemo_nowcast.worker.lib.load_config')
+@patch('nemo_nowcast.worker.logging')
 class TestNowcastWorkerRun:
-    """Unit tests for NowcastWorker.run() method.
+    """Unit tests for NowcastWorker.run method.
     """
-    def test_parse_args(self):
+    def test_parse_args(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
         worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._do_work = Mock(name='_do_work')
         worker.run()
         worker.arg_parser.parse_args.assert_called_once_with()
+
+    def test_config(self, m_logging, m_load_config):
+        worker = NowcastWorker('worker_name', 'description')
+        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._do_work = Mock(name='_do_work')
+        worker.run()
+        assert worker.config == m_load_config()
+
+    def test_logging_config(self, m_logging, m_load_config):
+        worker = NowcastWorker('worker_name', 'description')
+        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._do_work = Mock(name='_do_work')
+        worker.run()
+        m_logging.config.dictConfig.assert_called_once_with(
+            worker.config['logging'])
+
+    def test_logging_info(self, m_logging, m_load_config):
+        worker = NowcastWorker('worker_name', 'description')
+        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._do_work = Mock(name='_do_work')
+        worker.run()
+        assert worker.logger.info.call_count == 2
+
+    def test_init_zmq_interface(self, m_logging, m_load_config):
+        worker = NowcastWorker('worker_name', 'description')
+        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._do_work = Mock(name='_do_work')
+        worker.run()
+        worker._init_zmq_interface.assert_called_once_with()
+
+    def test_install_signal_handlers(self, m_logging, m_load_config):
+        worker = NowcastWorker('worker_name', 'description')
+        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._do_work = Mock(name='_do_work')
+        worker.run()
+        worker._install_signal_handlers.assert_called_once_with()
+
+    def test_do_work(self, m_logging, m_load_config):
+        worker = NowcastWorker('worker_name', 'description')
+        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._do_work = Mock(name='_do_work')
+        worker.run()
+        assert worker._do_work.call_count == 1
+
+
+class TestInitZmqInterface:
+    """Unit testss for NowcastWorker._init_zmq_interface method.
+    """
+    def test_debug_mode(self):
+        worker = NowcastWorker('worker_name', 'description')
+        worker._parsed_args = Mock(debug=True)
+        worker.logger = Mock(name='logger')
+        worker._context = Mock(name='context')
+        worker._init_zmq_interface()
+        assert worker.logger.debug.call_count == 1
+        assert not worker._context.socket.called
+
+    def test_socket(self):
+        worker = NowcastWorker('worker_name', 'description')
+        worker._parsed_args = Mock(debug=False)
+        worker.logger = Mock(name='logger')
+        worker._context = Mock(name='context')
+        worker.config = {
+            'zmq': {
+                'server': 'example.com',
+                'ports': {
+                    'frontend': 4343}}}
+        worker._init_zmq_interface()
+        # noinspection PyUnresolvedReferences
+        worker._context.socket.assert_called_once_with(zmq.REQ)
+        worker._socket.connect.assert_called_once_with('tcp://example.com:4343')
+        assert worker.logger.info.call_count == 1
+
+
+@patch('nemo_nowcast.worker.signal.signal')
+class TestInstallSignalHandlers:
+    """Unit tests for NowcastWorker._install_signal_handlers method.
+    """
+    def test_sigint_handler(self, m_signal):
+        worker = NowcastWorker('worker_name', 'description')
+        worker._install_signal_handlers()
+        args, kwargs = m_signal.call_args_list[0]
+        assert args[0] == signal.SIGINT
+
+    def test_sigterm_handler(self, m_signal):
+        worker = NowcastWorker('worker_name', 'description')
+        worker._install_signal_handlers()
+        args, kwargs = m_signal.call_args_list[1]
+        assert args[0] == signal.SIGTERM

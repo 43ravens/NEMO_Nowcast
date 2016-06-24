@@ -16,6 +16,9 @@
 """
 import argparse
 import logging
+import logging.config
+import os
+import signal
 
 import zmq
 
@@ -71,6 +74,10 @@ class NowcastWorker:
             from the command-line.
             ''',
         )
+        #: :py:class:`argparse.Namespace` instance containing the arguments
+        #: and option flags and values parsed from the command-line when the
+        #: worker was started.
+        self._parsed_args = None
         #: :py:class:`zmq.Context` instance that provides the basis for the
         #: nowcast messaging system.
         self._context = zmq.Context()
@@ -97,4 +104,49 @@ class NowcastWorker:
     def run(self):
         """Prepare the worker to do its work, then do it.
         """
-        self.arg_parser.parse_args()
+        self._parsed_args = self.arg_parser.parse_args()
+        self.config = lib.load_config(self._parsed_args.config_file)
+        logging.config.dictConfig(self.config['logging'])
+        self.logger.info('running in process {}'.format(os.getpid()))
+        self.logger.info('read config from {.config_file}'.format(
+            self._parsed_args))
+        self._init_zmq_interface()
+        self._install_signal_handlers()
+        self._do_work()
+
+    def _init_zmq_interface(self):
+        """Initialize a ZeroMQ request/reply (REQ/REP) interface.
+
+        :returns: ZeroMQ socket for communication with nowcast manager process.
+        """
+        if self._parsed_args.debug:
+            self.logger.debug('**debug mode** no connection to manager')
+            return
+        self._socket = self._context.socket(zmq.REQ)
+        zmq_host = self.config['zmq']['server']
+        zmq_port = self.config['zmq']['ports']['frontend']
+        self._socket.connect(
+            'tcp://{host}:{port}'.format(host=zmq_host, port=zmq_port))
+        self.logger.info(
+            'connected to {host} port {port}'
+            .format(host=zmq_host, port=zmq_port))
+
+    def _install_signal_handlers(self):
+        """Set up interrupt and kill signal handlers.
+        """
+        def sigint_handler(signal, frame):
+            self.logger.info(
+                'interrupt signal (SIGINT or Ctrl-C) received; shutting down')
+            self._socket.close()
+            raise SystemExit
+        signal.signal(signal.SIGINT, sigint_handler)
+
+        def sigterm_handler(signal, frame):
+            self.logger.info(
+                'termination signal (SIGTERM) received; shutting down')
+            self._socket.close()
+            raise SystemExit
+        signal.signal(signal.SIGTERM, sigterm_handler)
+
+    def _do_work(self):
+        pass
