@@ -83,38 +83,36 @@ class TestNowcastManagerConstructor:
         assert mgr._socket is None
 
 
+@patch('nemo_nowcast.manager.lib.load_config')
+@patch('nemo_nowcast.manager.logging')
 class TestNowcastManagerSetup:
     """Unit tests for NowcastManager.setup method.
     """
-    @patch('nemo_nowcast.manager.lib.load_config')
-    @patch('nemo_nowcast.manager.logging')
     def test_parsed_args(self, m_logging, m_load_config):
         mgr = manager.NowcastManager()
         mgr._cli = Mock(name='_cli')
-        mgr.logger = Mock(name='logger')
         mgr.setup()
         assert mgr._parsed_args == mgr._cli()
 
-    @patch('nemo_nowcast.manager.lib.load_config')
-    @patch('nemo_nowcast.manager.logging')
     def test_config(self, m_logging, m_load_config):
         mgr = manager.NowcastManager()
         mgr._cli = Mock(name='_cli')
-        mgr.logger = Mock(name='logger')
         mgr.setup()
         m_load_config.assert_called_once_with(mgr._parsed_args.config_file)
         assert mgr.config == m_load_config()
 
-    @patch('nemo_nowcast.manager.lib.load_config')
-    @patch('nemo_nowcast.manager.logging')
     def test_logging_config(self, m_logging, m_load_config):
         mgr = manager.NowcastManager()
         mgr._cli = Mock(name='_cli')
-        mgr.logger = Mock(name='logger')
-        m_load_config.return_value = {'logging': ''}
         mgr.setup()
         m_logging.config.dictConfig.assert_called_once_with(
             mgr.config['logging'])
+
+    def test_logging_info(self, m_logging, m_load_config):
+        mgr = manager.NowcastManager()
+        mgr._cli = Mock(name='_cli')
+        mgr.setup()
+        assert mgr.logger.info.call_count == 2
 
 
 class TestCli:
