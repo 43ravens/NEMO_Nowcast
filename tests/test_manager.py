@@ -15,6 +15,7 @@
 """Unit tests for nemo_nowcast.manager module.
 """
 from collections import namedtuple
+import signal
 from unittest.mock import (
     patch,
     Mock,
@@ -186,6 +187,29 @@ class TestNowcastManagerRun:
         mgr._process_messages = Mock(name='_process_messages')
         mgr.run()
         assert mgr._process_messages.called
+
+
+@patch('nemo_nowcast.worker.signal.signal')
+class TestInstallSignalHandlers:
+    """Unit tests for NowcastManager._install_signal_handlers method.
+    """
+    def test_sighup_handler(self, m_signal):
+        mgr = manager.NowcastManager()
+        mgr._install_signal_handlers('example.com', 4343)
+        args, kwargs = m_signal.call_args_list[0]
+        assert args[0] == signal.SIGHUP
+
+    def test_sigint_handler(self, m_signal):
+        mgr = manager.NowcastManager()
+        mgr._install_signal_handlers('example.com', 4343)
+        args, kwargs = m_signal.call_args_list[1]
+        assert args[0] == signal.SIGINT
+
+    def test_sigterm_handler(self, m_signal):
+        mgr = manager.NowcastManager()
+        mgr._install_signal_handlers('example.com', 4343)
+        args, kwargs = m_signal.call_args_list[2]
+        assert args[0] == signal.SIGTERM
 
 
 class TestLoadChecklist:
