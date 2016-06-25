@@ -28,7 +28,6 @@ from nemo_nowcast import lib
 
 
 NAME = 'message_broker'
-
 logger = logging.getLogger(NAME)
 
 context = zmq.Context()
@@ -97,10 +96,10 @@ def _bind_zmq_sockets(config):
     manager_socket = context.socket(zmq.DEALER)
     workers_port = config['zmq']['ports']['workers']
     workers_socket.bind('tcp://*:{}'.format(workers_port))
-    logger.info('frontend bound to port {}'.format(workers_port))
+    logger.info('worker socket bound to port {}'.format(workers_port))
     manager_port = config['zmq']['ports']['manager']
     manager_socket.bind('tcp://*:{}'.format(manager_port))
-    logger.info('manager bound to port {}'.format(manager_port))
+    logger.info('manager socket bound to port {}'.format(manager_port))
     return workers_socket, manager_socket
 
 
