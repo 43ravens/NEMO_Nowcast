@@ -235,11 +235,27 @@ class TestMessageHandler:
             name='_handle_unregistered_worker_msg')
         mgr._log_received_message = Mock(name='_log_received_message')
         msg = message(source='worker', type='foo', payload=None)
-        msg_dict = {'source': msg.source, 'type': msg.type, 'payload': msg.payload}
+        msg_dict = {
+            'source': msg.source, 'type': msg.type, 'payload': msg.payload}
         reply, next_steps = mgr._message_handler(yaml.dump(msg_dict))
         mgr._handle_unregistered_worker_msg.assert_called_once_with(msg)
         assert reply == mgr._handle_unregistered_worker_msg()
-        assert next_steps is None
+        assert next_steps == []
+        assert not mgr._log_received_message.called
+
+    def test_unregistered_msg_type(self):
+        mgr = manager.NowcastManager()
+        mgr.config = {'message registry': {'workers': {'test_worker': {}}}}
+        mgr._handle_unregistered_msg_type = Mock(
+            name='_handle_unregistered_msg_type')
+        mgr._log_received_message = Mock(name='_log_received_message')
+        msg = message(source='test_worker', type='foo', payload=None)
+        msg_dict = {
+            'source': msg.source, 'type': msg.type, 'payload': msg.payload}
+        reply, next_steps = mgr._message_handler(yaml.dump(msg_dict))
+        mgr._handle_unregistered_msg_type.assert_called_once_with(msg)
+        assert reply == mgr._handle_unregistered_msg_type()
+        assert next_steps == []
         assert not mgr._log_received_message.called
 
 
@@ -254,5 +270,19 @@ class TestHandleUnregisteredWorkerMsg:
         assert mgr.logger.error.call_count == 1
         expected = {
             'source': 'manager', 'type': 'unregistered worker',
+            'payload': None}
+        assert yaml.safe_load(reply) == expected
+
+class TestHandleUnregisteredMsgType:
+    """Unit test for NowcastManager._handle_unregistered_msg_type method.
+    """
+    def test_handle_unregistered_msg_type(self):
+        mgr = manager.NowcastManager()
+        mgr.logger = Mock(name='logger')
+        msg = message(source='worker', type='foo', payload=None)
+        reply = mgr._handle_unregistered_msg_type(msg)
+        assert mgr.logger.error.call_count == 1
+        expected = {
+            'source': 'manager', 'type': 'unregistered message type',
             'payload': None}
         assert yaml.safe_load(reply) == expected

@@ -32,6 +32,7 @@ zmq:
 message registry:
   manager:
     unregistered worker: ERROR - message received from unregistered worker
+    unregistered message type: ERROR - unregistered message type received from worker
 
   workers:
     example:
