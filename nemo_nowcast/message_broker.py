@@ -35,8 +35,7 @@ context = zmq.Context()
 
 
 def main():
-    """
-    Set up and run the nowcast system messgae broker.
+    """Set up and run the nowcast system messgae broker.
 
     Set-up includes:
 
@@ -81,13 +80,13 @@ def run(config):
         zmq.device(zmq.QUEUE, workers_socket, manager_socket)
     except zmq.ZMQError as e:
         # Fatal ZeroMQ problem
-        logger.critical('ZMQError: {}'.format(e), exc_info=e)
+        logger.critical('ZMQError: {}'.format(e), exc_info=True)
         logger.critical('shutting down')
     except SystemExit:
         # Termination by signal
         pass
-    except Exception as e:
-        logger.critical('unhandled exception:', exc_info=e)
+    except:
+        logger.critical('unhandled exception:', exc_info=True)
         logger.critical('shutting down')
 
 
@@ -137,4 +136,4 @@ def _install_signal_handlers(workers_socket, manager_socket):
 
 
 if __name__ == '__main__':
-    main()
+    main()  # pragma: no cover
