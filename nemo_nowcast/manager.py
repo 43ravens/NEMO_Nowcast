@@ -124,7 +124,7 @@ class NowcastManager:
         """
         self._socket = self._context.socket(zmq.REP)
         zmq_host = self.config['zmq']['server']
-        zmq_port = self.config['zmq']['ports']['backend']
+        zmq_port = self.config['zmq']['ports']['manager']
         self._socket.connect(
             'tcp://{host}:{port}'.format(host=zmq_host, port=zmq_port))
         self.logger.info(

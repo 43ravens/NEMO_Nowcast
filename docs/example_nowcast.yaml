@@ -25,9 +25,9 @@ zmq:
   server: localhost
   ports:
     # traffic between manager and message broker
-    backend: 4343
+    manager: 4343
     # traffic between workers and message broker
-    frontend: 4344
+    workers: 4344
 
 message registry:
   manager:
