@@ -186,9 +186,8 @@ class NowcastManager:
                 message = self._socket.recv_string()
                 reply, next_steps = self._message_handler(message)
                 self._socket.send_string(reply)
-                if next_steps is not None:
-                    for next_step in next_steps:
-                        next_step.func(*next_step.args)
+                for next_step in next_steps:
+                    next_step.func(*next_step.args)
             except zmq.ZMQError as e:
                 # Fatal ZeroMQ problem
                 self.logger.critical('ZMQError:', exc_info=e)
@@ -205,17 +204,33 @@ class NowcastManager:
         """Handle message from worker.
         """
         msg = lib.deserialize_message(message)
-        if msg.source not in self.config['message registry']['workers']:
+        msg_registry = self.config['message registry']['workers']
+        if msg.source not in msg_registry:
             reply = self._handle_unregistered_worker_msg(msg)
-            return reply, None
+            return reply, []
+        if msg.type not in msg_registry[msg.source]:
+            reply = self._handle_unregistered_msg_type(msg)
+            return reply, []
 
     def _handle_unregistered_worker_msg(self, msg):
-        """Emit warning message to log about a message received from a worker
+        """Emit error message to log about a message received from a worker
         that is not included in the message registry.
         """
         self.logger.error(
-            'message received from unregistered worker: {.source}'.format(msg))
+            'message received from unregistered worker: {.source}'.format(msg),
+            extra={'worker_msg': msg})
         reply = lib.serialize_message(self.name, 'unregistered worker')
+        return reply
+
+    def _handle_unregistered_msg_type(self, msg):
+        """Emit error message to log about a message type received from a worker
+        that is not included in the message registry.
+        """
+        self.logger.error(
+            'unregistered message type received from '
+            '{0.source} worker: {0.type}'.format(msg),
+            extra={'worker_msg': msg})
+        reply = lib.serialize_message(self.name, 'unregistered message type')
         return reply
 
 
