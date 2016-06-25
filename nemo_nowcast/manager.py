@@ -183,7 +183,7 @@ class NowcastManager:
         while True:
             self.logger.debug('listening...')
             try:
-                message = self._socket.recv()
+                message = self._socket.recv_string()
                 reply, next_steps = self._message_handler(message)
                 self._socket.send_string(reply)
                 if next_steps is not None:
@@ -214,7 +214,7 @@ class NowcastManager:
         that is not included in the message registry.
         """
         self.logger.error(
-            'message received from unregisterd worker: {.source}'.format(msg))
+            'message received from unregistered worker: {.source}'.format(msg))
         reply = lib.serialize_message(self.name, 'unregistered worker')
         return reply
 

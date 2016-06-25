@@ -17,7 +17,14 @@
 An example implementation of a worker module that does nothing other than sleep
 for a specified number of seconds.
 """
+import logging
+import time
+
 from nemo_nowcast.worker import NowcastWorker
+
+
+NAME = 'example'
+logger = logging.getLogger(NAME)
 
 
 def main():
@@ -28,7 +35,7 @@ def main():
     :command:`python -m nemo_nowcast.workers.example`
     """
     worker = NowcastWorker(
-        'example', description=__doc__, package='nemo_nowcast.workers')
+        NAME, description=__doc__, package='nemo_nowcast.workers')
     arg_defaults = {'sleep_time': 5}
     worker.arg_parser.set_defaults(**arg_defaults)
     worker.arg_parser.add_argument(
@@ -37,7 +44,29 @@ def main():
             'number of seconds to sleep for; defaults to {[sleep_time]}'
             .format(arg_defaults))
     )
-    worker.run()
+    worker.run(example, success, failure)
+
+
+def success(parsed_args):
+    logger.info(
+        'slept for {.sleep_time} seconds'
+        .format(parsed_args), extra={'sleep_time': parsed_args.sleep_time})
+    msg_type = 'success'
+    return msg_type
+
+
+def failure(parsed_args):
+    logger.critical(
+        'failed to sleep for {.sleep_time} seconds'
+        .format(parsed_args), extra={'sleep_time': parsed_args.sleep_time})
+    msg_type = 'failure'
+    return msg_type
+
+
+def example(parsed_args, config):
+    time.sleep(parsed_args.sleep_time)
+    checklist = {'sleep time': parsed_args.sleep_time}
+    return checklist
 
 
 if __name__ == '__main__':

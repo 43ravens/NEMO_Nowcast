@@ -34,3 +34,7 @@ message registry:
     unregistered worker: ERROR - message received from unregistered worker
 
   workers:
+    example:
+      success: example worker slept well
+      failure: example worker slept badly
+      crash: example worker crashed

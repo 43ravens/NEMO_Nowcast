@@ -290,7 +290,7 @@ class TestDoWork:
         worker.success = Mock(name='success_func')
         worker._do_work()
         worker.worker_func.assert_called_once_with(
-            worker._parsed_args, worker.config, worker._tell_manager)
+            worker._parsed_args, worker.config)
 
     def test_success_func(self):
         worker = NowcastWorker('worker_name', 'description')
