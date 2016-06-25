@@ -263,10 +263,10 @@ class NowcastWorker:
             msg_words = worker_msgs[msg_type]
         except (KeyError, TypeError):
             raise WorkerError(
-                'message type not found for {.name} worker in {config_filte} '
+                'message type not found for {.name} worker in {config_file} '
                 'message registry: {msg_type}'
                 .format(
-                    self, config_filte=self.config['config_file'],
+                    self, config_file=self.config['config_file'],
                     msg_type=msg_type))
         if self._parsed_args.debug:
             self.logger.debug(
