@@ -265,21 +265,19 @@ class TestInitZmqInterface:
         assert worker.logger.info.call_count == 1
 
 
-@patch('nemo_nowcast.worker.signal.signal')
+@pytest.mark.parametrize('i, sig', [
+    (0, signal.SIGINT),
+    (1, signal.SIGTERM),
+])
 class TestInstallSignalHandlers:
     """Unit tests for NowcastWorker._install_signal_handlers method.
     """
-    def test_sigint_handler(self, m_signal):
+    def test_signal_handlers(self, i, sig):
         worker = NowcastWorker('worker_name', 'description')
-        worker._install_signal_handlers()
-        args, kwargs = m_signal.call_args_list[0]
-        assert args[0] == signal.SIGINT
-
-    def test_sigterm_handler(self, m_signal):
-        worker = NowcastWorker('worker_name', 'description')
-        worker._install_signal_handlers()
-        args, kwargs = m_signal.call_args_list[1]
-        assert args[0] == signal.SIGTERM
+        with patch('nemo_nowcast.worker.signal.signal') as m_signal:
+            worker._install_signal_handlers()
+        args, kwargs = m_signal.call_args_list[i]
+        assert args[0] == sig
 
 
 class TestDoWork:

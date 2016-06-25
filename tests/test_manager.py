@@ -22,6 +22,7 @@ from unittest.mock import (
     mock_open,
 )
 
+import pytest
 import yaml
 import zmq
 
@@ -189,27 +190,20 @@ class TestNowcastManagerRun:
         assert mgr._process_messages.called
 
 
-@patch('nemo_nowcast.worker.signal.signal')
+@pytest.mark.parametrize('i, sig', [
+    (0, signal.SIGHUP),
+    (1, signal.SIGINT),
+    (2, signal.SIGTERM),
+])
 class TestInstallSignalHandlers:
     """Unit tests for NowcastManager._install_signal_handlers method.
     """
-    def test_sighup_handler(self, m_signal):
+    def test_signal_handlers(self, i, sig):
         mgr = manager.NowcastManager()
-        mgr._install_signal_handlers('example.com', 4343)
-        args, kwargs = m_signal.call_args_list[0]
-        assert args[0] == signal.SIGHUP
-
-    def test_sigint_handler(self, m_signal):
-        mgr = manager.NowcastManager()
-        mgr._install_signal_handlers('example.com', 4343)
-        args, kwargs = m_signal.call_args_list[1]
-        assert args[0] == signal.SIGINT
-
-    def test_sigterm_handler(self, m_signal):
-        mgr = manager.NowcastManager()
-        mgr._install_signal_handlers('example.com', 4343)
-        args, kwargs = m_signal.call_args_list[2]
-        assert args[0] == signal.SIGTERM
+        with patch('nemo_nowcast.manager.signal.signal') as m_signal:
+            mgr._install_signal_handlers('example.com', 4343)
+        args, kwargs = m_signal.call_args_list[i]
+        assert args[0] == sig
 
 
 class TestLoadChecklist:
@@ -234,18 +228,19 @@ class TestLoadChecklist:
 class TestMessageHandler:
     """Unit tests for NowcastManager._message_handler method.
     """
-    mgr = manager.NowcastManager()
-    mgr.config = {'message registry': {'workers': {}}}
-    mgr._handle_unregistered_worker_msg = Mock(
-        name='_handle_unregistered_worker_msg')
-    mgr._log_received_message = Mock(name='_log_received_message')
-    msg = message(source='worker', type='foo', payload=None)
-    msg_dict = {'source': msg.source, 'type': msg.type, 'payload': msg.payload}
-    reply, next_steps = mgr._message_handler(yaml.dump(msg_dict))
-    mgr._handle_unregistered_worker_msg.assert_called_once_with(msg)
-    assert reply == mgr._handle_unregistered_worker_msg()
-    assert next_steps is None
-    assert not mgr._log_received_message.called
+    def test_unregistered_worker_msg(self):
+        mgr = manager.NowcastManager()
+        mgr.config = {'message registry': {'workers': {}}}
+        mgr._handle_unregistered_worker_msg = Mock(
+            name='_handle_unregistered_worker_msg')
+        mgr._log_received_message = Mock(name='_log_received_message')
+        msg = message(source='worker', type='foo', payload=None)
+        msg_dict = {'source': msg.source, 'type': msg.type, 'payload': msg.payload}
+        reply, next_steps = mgr._message_handler(yaml.dump(msg_dict))
+        mgr._handle_unregistered_worker_msg.assert_called_once_with(msg)
+        assert reply == mgr._handle_unregistered_worker_msg()
+        assert next_steps is None
+        assert not mgr._log_received_message.called
 
 
 class TestHandleUnregisteredWorkerMsg:
