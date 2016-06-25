@@ -220,7 +220,7 @@ class NowcastWorker:
         """
         try:
             checklist = self.worker_func(
-                self._parsed_args, self.config, self._tell_manager)
+                self._parsed_args, self.config)
             msg_type = self.success(self._parsed_args)
             self._tell_manager(msg_type, checklist)
         except WorkerError:
@@ -255,13 +255,13 @@ class NowcastWorker:
         """
         try:
             worker_msgs = self.config['message registry']['workers'][self.name]
-        except KeyError:
+        except (KeyError, TypeError):
             raise WorkerError(
                 'worker not found in {config_file} message registry: {name}'
                 .format(config_file=self.config['config_file'], name=self.name))
         try:
             msg_words = worker_msgs[msg_type]
-        except KeyError:
+        except (KeyError, TypeError):
             raise WorkerError(
                 'message type not found for {.name} worker in {config_filte} '
                 'message registry: {msg_type}'

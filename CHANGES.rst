@@ -5,7 +5,7 @@ Change Log
 In Development
 ==============
 
-*
+* Add example nowcast worker module.
 
 
 v0.3
