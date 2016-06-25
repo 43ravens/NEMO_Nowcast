@@ -142,7 +142,7 @@ class TestNowcastManagerRun:
         mgr = manager.NowcastManager()
         mgr._parsed_args = Mock(config_file='foo.yaml', ignore_checklist=True)
         mgr.config = {
-            'zmq': {'server': 'example.com', 'ports': {'backend': 6666}}}
+            'zmq': {'server': 'example.com', 'ports': {'manager': 6666}}}
         mgr.logger = Mock(name='logger')
         mgr._install_signal_handlers = Mock(name='_install_signal_handlers')
         mgr._process_messages = Mock(name='_process_messages')
@@ -155,7 +155,7 @@ class TestNowcastManagerRun:
         mgr = manager.NowcastManager()
         mgr._parsed_args = Mock(config_file='foo.yaml', ignore_checklist=True)
         mgr.config = {
-            'zmq': {'server': 'example.com', 'ports': {'backend': 6666}}}
+            'zmq': {'server': 'example.com', 'ports': {'manager': 6666}}}
         mgr._context = Mock(name='zmq_context')
         mgr.logger = Mock(name='logger')
         mgr._install_signal_handlers = Mock(name='_install_signal_handlers')
@@ -167,7 +167,7 @@ class TestNowcastManagerRun:
         mgr = manager.NowcastManager()
         mgr._parsed_args = Mock(config_file='foo.yaml', ignore_checklist=False)
         mgr.config = {
-            'zmq': {'server': 'example.com', 'ports': {'backend': 6666}}}
+            'zmq': {'server': 'example.com', 'ports': {'manager': 6666}}}
         mgr._context = Mock(name='zmq_context')
         mgr.logger = Mock(name='logger')
         mgr._install_signal_handlers = Mock(name='_install_signal_handlers')
@@ -180,7 +180,7 @@ class TestNowcastManagerRun:
         mgr = manager.NowcastManager()
         mgr._parsed_args = Mock(config_file='foo.yaml', ignore_checklist=True)
         mgr.config = {
-            'zmq': {'server': 'example.com', 'ports': {'backend': 6666}}}
+            'zmq': {'server': 'example.com', 'ports': {'manager': 6666}}}
         mgr._context = Mock(name='zmq_context')
         mgr.logger = Mock(name='logger')
         mgr._install_signal_handlers = Mock(name='_install_signal_handlers')

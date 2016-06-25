@@ -189,7 +189,7 @@ class NowcastWorker:
             return
         self._socket = self._context.socket(zmq.REQ)
         zmq_host = self.config['zmq']['server']
-        zmq_port = self.config['zmq']['ports']['frontend']
+        zmq_port = self.config['zmq']['ports']['workers']
         self._socket.connect(
             'tcp://{host}:{port}'.format(host=zmq_host, port=zmq_port))
         self.logger.info(

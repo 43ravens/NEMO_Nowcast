@@ -56,8 +56,8 @@ def main():
     See :command:`python -m nowcast.message_broker -help`
     for details of the command-line interface.
     """
-    parser = lib.base_arg_parser(NAME, package='nemo_nowcast',
-        description=__doc__)
+    parser = lib.base_arg_parser(
+        NAME, package='nemo_nowcast', description=__doc__)
     parsed_args = parser.parse_args()
     config = lib.load_config(parsed_args.config_file)
     logging.config.dictConfig(config['logging'])
@@ -74,14 +74,14 @@ def run(config):
     * Install signal handlers for hangup, interrupt, and kill signals.
     * Launch the brokers message queuing process.
     """
-    frontend, backend = _bind_zmq_sockets(config)
-    _install_signal_handlers(frontend, backend)
-    # Broker messages between workers on frontend and manager on backend
+    workers_socket, manager_socket = _bind_zmq_sockets(config)
+    _install_signal_handlers(workers_socket, manager_socket)
+    # Broker messages between workers and manager
     try:
-        zmq.device(zmq.QUEUE, frontend, backend)
+        zmq.device(zmq.QUEUE, workers_socket, manager_socket)
     except zmq.ZMQError as e:
         # Fatal ZeroMQ problem
-        logger.critical('ZMQError: {}'.format(e))
+        logger.critical('ZMQError: {}'.format(e), exc_info=e)
         logger.critical('shutting down')
     except SystemExit:
         # Termination by signal
@@ -94,31 +94,31 @@ def run(config):
 def _bind_zmq_sockets(config):
     """Create 0mq sockets and bind them to ports.
     """
-    frontend = context.socket(zmq.ROUTER)
-    backend = context.socket(zmq.DEALER)
-    frontend_port = config['zmq']['ports']['frontend']
-    frontend.bind('tcp://*:{}'.format(frontend_port))
-    logger.info('frontend bound to port {}'.format(frontend_port))
-    backend_port = config['zmq']['ports']['backend']
-    backend.bind('tcp://*:{}'.format(backend_port))
-    logger.info('backend bound to port {}'.format(backend_port))
-    return backend, frontend
+    workers_socket = context.socket(zmq.ROUTER)
+    manager_socket = context.socket(zmq.DEALER)
+    workers_port = config['zmq']['ports']['workers']
+    workers_socket.bind('tcp://*:{}'.format(workers_port))
+    logger.info('frontend bound to port {}'.format(workers_port))
+    manager_port = config['zmq']['ports']['manager']
+    manager_socket.bind('tcp://*:{}'.format(manager_port))
+    logger.info('manager bound to port {}'.format(manager_port))
+    return workers_socket, manager_socket
 
 
-def _install_signal_handlers(frontend, backend):
+def _install_signal_handlers(workers_socket, manager_socket):
     """Set up hangup, interrupt, and kill signal handlers.
     """
     def sighup_handler(signal, frame):
         logger.info(
             'hangup signal (SIGHUP) received; reloading configuration')
-        frontend.close()
-        backend.close()
+        workers_socket.close()
+        manager_socket.close()
         main()
     signal.signal(signal.SIGHUP, sighup_handler)
 
     def cleanup():
-        frontend.close()
-        backend.close()
+        workers_socket.close()
+        manager_socket.close()
         context.destroy()
 
     def sigint_handler(signal, frame):

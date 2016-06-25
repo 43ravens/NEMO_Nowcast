@@ -257,10 +257,7 @@ class TestInitZmqInterface:
         worker.logger = Mock(name='logger')
         worker._context = Mock(name='context')
         worker.config = {
-            'zmq': {
-                'server': 'example.com',
-                'ports': {
-                    'frontend': 4343}}}
+            'zmq': {'server': 'example.com', 'ports': {'workers': 4343}}}
         worker._init_zmq_interface()
         # noinspection PyUnresolvedReferences
         worker._context.socket.assert_called_once_with(zmq.REQ)
