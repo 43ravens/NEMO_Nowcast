@@ -16,6 +16,7 @@
 """
 import signal
 from unittest.mock import (
+    call,
     Mock,
     patch,
 )
@@ -101,11 +102,11 @@ class TestBindZmqSockets:
     @patch('nemo_nowcast.message_broker.logger')
     def test_ports(self, m_logger, m_context):
         config = {
-            'zmq': {'ports': {'workers': 4343, 'manager': 6665}}
+            'zmq': {'ports': {'workers': 4343, 'manager': 6666}}
         }
         worker_socket, manager_socket = message_broker._bind_zmq_sockets(config)
-        worker_socket.bind.call_args_list[0] == 'tcp://*:4343'
-        manager_socket.bind.call_args_list[0] == 'tcp://*:666'
+        assert worker_socket.bind.call_args_list[0] == call('tcp://*:4343')
+        assert manager_socket.bind.call_args_list[1] == call('tcp://*:6666')
         assert m_logger.info.call_count == 2
 
 
@@ -117,8 +118,8 @@ class TestBindZmqSockets:
 class TestInstallSignalHandlers:
     """Unit tests for message_broker._install_signal_handlers function.
     """
-    def test_sighup_handler(self, i, sig):
-         with patch('nemo_nowcast.worker.signal.signal') as m_signal:
+    def test_signal_handlers(self, i, sig):
+         with patch('nemo_nowcast.message_broker.signal.signal') as m_signal:
             message_broker._install_signal_handlers(4343, 6666)
          args, kwargs = m_signal.call_args_list[i]
          assert args[0] == sig
