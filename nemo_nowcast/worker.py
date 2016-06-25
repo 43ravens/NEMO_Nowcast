@@ -236,4 +236,66 @@ class NowcastWorker:
         self.logger.debug('task completed; shutting down')
 
     def _tell_manager(self, msg_type, payload=None):
-        pass
+        """Exchange messages with the nowcast manager process.
+
+        Message is composed of worker's name, msg_type, and payload.
+        Acknowledgement message from manager process is logged,
+        and payload of that message is returned.
+
+        :arg str msg_type: Key of the message type to send;
+                           must be defined for worker name in the configuration
+                           data structure.
+
+        :arg payload: Data object to send in the message;
+                      e.g. dict containing worker's checklist of
+                      accomplishments.
+
+        :returns: Payload included in acknowledgement message from manager
+                  process.
+        """
+        try:
+            worker_msgs = self.config['message registry']['workers'][self.name]
+        except KeyError:
+            raise WorkerError(
+                'worker not found in {config_file} message registry: {name}'
+                .format(config_file=self.config['config_file'], name=self.name))
+        try:
+            msg_words = worker_msgs[msg_type]
+        except KeyError:
+            raise WorkerError(
+                'message type not found for {.name} worker in {config_filte} '
+                'message registry: {msg_type}'
+                .format(
+                    self, config_filte=self.config['config_file'],
+                    msg_type=msg_type))
+        if self._parsed_args.debug:
+            self.logger.debug(
+                '**debug mode** '
+                'message that would have been sent to manager: '
+                '({msg_type} {msg_words})'
+                .format(msg_type=msg_type, msg_words=msg_words))
+            return
+        # Send message to nowcast manager
+        message = lib.serialize_message(self.name, msg_type, payload)
+        self._socket.send_string(message)
+        self.logger.debug(
+            'sent message: ({msg_type}) {msg_words}'
+            .format(msg_type=msg_type, msg_words=worker_msgs[msg_type]))
+        # Wait for and process response
+        msg = self._socket.recv_string()
+        message = lib.deserialize_message(msg)
+        mgr_msgs = self.config['message registry']['manager']
+        try:
+            msg_words = mgr_msgs[message.type]
+        except KeyError:
+            raise WorkerError(
+                'message type not found for manager in {config_file} '
+                'message registry: {msg_type}'
+                .format(
+                    self, config_file=self.config['config_file'],
+                    msg_type=message.type))
+        self.logger.debug(
+            'received message from {msg.source}: ({msg.type}) {msg_words}'
+            .format(msg=message, msg_words=msg_words))
+        return message.payload
+

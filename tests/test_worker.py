@@ -15,12 +15,14 @@
 """Unit tests for nemo_nowcast.manager module.
 """
 import argparse
+from collections import namedtuple
 import signal
 from unittest.mock import (
     Mock,
     patch,
 )
 
+import pytest
 import zmq
 
 from nemo_nowcast.worker import (
@@ -339,6 +341,7 @@ class TestDoWork:
     def test_logger_critical_unhandled_exception(self):
         worker = NowcastWorker('worker_name', 'description')
         worker.logger = Mock(name='logger')
+        worker._tell_manager = Mock(name='_tell_manager')
         worker._context = Mock(name='context')
         worker.worker_func = Mock(name='worker_func', side_effect=Exception)
         worker._do_work()
@@ -363,3 +366,88 @@ class TestDoWork:
         worker.logger.debug.assert_called_once_with(
             'task completed; shutting down')
 
+
+class TestTellManager:
+    """Unit tests for NowcastWorker._tell_manager method.
+    """
+    def test_unregistered_worker(self):
+        worker = NowcastWorker('test_worker', 'description')
+        worker._parsed_args = Mock(debug=True)
+        worker.logger = Mock(name='logger')
+        worker.config = {
+            'config_file': 'nowcast.yaml',
+            'message registry': {
+                'workers': {
+        }}}
+        with pytest.raises(WorkerError):
+            payload = worker._tell_manager('success', 'payload')
+
+    def test_unregistered_worker_message_type(self):
+        worker = NowcastWorker('test_worker', 'description')
+        worker._parsed_args = Mock(debug=True)
+        worker.logger = Mock(name='logger')
+        worker.config = {
+            'config_file': 'nowcast.yaml',
+            'message registry': {
+                'workers': {
+                    'test_worker': {
+                        'success': 'successful test'}
+        }}}
+        with pytest.raises(WorkerError):
+            payload = worker._tell_manager('failure')
+
+    def test_debug_mode(self):
+        worker = NowcastWorker('test_worker', 'description')
+        worker._parsed_args = Mock(debug=True)
+        worker.logger = Mock(name='logger')
+        worker.config = {
+            'message registry': {
+                'workers': {
+                    'test_worker': {
+                        'success': 'successful test'}
+        }}}
+        response_payload = worker._tell_manager('success', 'payload')
+        assert worker.logger.debug.call_count == 1
+        assert response_payload is None
+
+    @patch('nemo_nowcast.lib.deserialize_message')
+    @patch('nemo_nowcast.lib.serialize_message')
+    def test_tell_manager(self, m_lsm, m_ldm):
+        worker = NowcastWorker('test_worker', 'description')
+        worker._parsed_args = Mock(debug=False)
+        worker._socket = Mock(name='_socket')
+        worker.logger = Mock(name='logger')
+        worker.config = {
+            'message registry': {
+                'manager': {'ack': 'message acknowledged'},
+                'workers': {
+                    'test_worker': {
+                        'success': 'successful test'}
+        }}}
+        message = namedtuple('Message', 'source, type, payload')
+        m_ldm.return_value = message(source='manager', type='ack', payload=None)
+        response_payload = worker._tell_manager('success', 'payload')
+        worker._socket.send_string.assert_called_once_with(m_lsm())
+        worker._socket.recv_string.assert_called_once_with()
+        assert worker.logger.debug.call_count == 2
+        assert response_payload == m_ldm().payload
+
+    @patch('nemo_nowcast.lib.deserialize_message')
+    @patch('nemo_nowcast.lib.serialize_message')
+    def test_unregistered_manager_message_type(self, m_lsm, m_ldm):
+        worker = NowcastWorker('test_worker', 'description')
+        worker._parsed_args = Mock(debug=False)
+        worker._socket = Mock(name='_socket')
+        worker.logger = Mock(name='logger')
+        worker.config = {
+            'config_file': 'nowcast.yaml',
+            'message registry': {
+                'manager': {'ack': 'message acknowledged'},
+                'workers': {
+                    'test_worker': {
+                        'success': 'successful test'}
+        }}}
+        message = namedtuple('Message', 'source, type, payload')
+        m_ldm.return_value = message(source='manager', type='foo', payload=None)
+        with pytest.raises(WorkerError):
+            response_payload = worker._tell_manager('success', 'payload')
