@@ -5,6 +5,12 @@ Change Log
 In Development
 ==============
 
+*
+
+
+v0.3
+====
+
 * Add nowcast worker module.
 
 
