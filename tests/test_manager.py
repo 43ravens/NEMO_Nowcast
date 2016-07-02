@@ -76,6 +76,14 @@ class TestNowcastManagerConstructor:
         mgr = manager.NowcastManager()
         assert mgr._parsed_args is None
 
+    def test_msg_registry(self):
+        mgr = manager.NowcastManager()
+        assert mgr._msg_registry is None
+
+    def test_next_workers_module(self):
+        mgr = manager.NowcastManager()
+        assert mgr._next_workers_module is None
+
     def test_context(self):
         mgr = manager.NowcastManager()
         assert isinstance(mgr._context, zmq.Context)
@@ -85,36 +93,66 @@ class TestNowcastManagerConstructor:
         assert mgr._socket is None
 
 
-@patch('nemo_nowcast.manager.lib.load_config')
+@patch('nemo_nowcast.manager.importlib')
 @patch('nemo_nowcast.manager.logging')
+@patch('nemo_nowcast.manager.lib.load_config')
 class TestNowcastManagerSetup:
     """Unit tests for NowcastManager.setup method.
     """
-    def test_parsed_args(self, m_logging, m_load_config):
+    def test_parsed_args(self, m_load_config, m_logging, m_importlib):
         mgr = manager.NowcastManager()
         mgr._cli = Mock(name='_cli')
         mgr.setup()
         assert mgr._parsed_args == mgr._cli()
 
-    def test_config(self, m_logging, m_load_config):
+    def test_config(self, m_load_config, m_logging, m_importlib):
         mgr = manager.NowcastManager()
         mgr._cli = Mock(name='_cli')
         mgr.setup()
         m_load_config.assert_called_once_with(mgr._parsed_args.config_file)
         assert mgr.config == m_load_config()
 
-    def test_logging_config(self, m_logging, m_load_config):
+    def test_msg_registry(self, m_load_config, m_logging, m_importlib):
+        mgr = manager.NowcastManager()
+        mgr._cli = Mock(name='_cli')
+        m_load_config.return_value = {
+            'logging': {},
+            'message registry': {
+                'next workers module': 'nowcast.next_workers',
+                'workers': {}}}
+        mgr.setup()
+        m_load_config.assert_called_once_with(mgr._parsed_args.config_file)
+        assert mgr._msg_registry == {
+            'next workers module': 'nowcast.next_workers',
+            'workers': {}}
+
+    def test_logging_config(self, m_load_config, m_logging, m_importlib):
         mgr = manager.NowcastManager()
         mgr._cli = Mock(name='_cli')
         mgr.setup()
         m_logging.config.dictConfig.assert_called_once_with(
             mgr.config['logging'])
 
-    def test_logging_info(self, m_logging, m_load_config):
+    def test_import_nest_workers_module(
+        self, m_load_config, m_logging, m_importlib,
+    ):
+        mgr = manager.NowcastManager()
+        mgr._cli = Mock(name='_cli')
+        m_load_config.return_value = {
+            'logging': {},
+            'message registry': {
+                'next workers module': 'nowcast.next_workers',
+                'workers': {}}}
+        mgr.setup()
+        m_importlib.import_module.assert_called_once_with(
+            'nowcast.next_workers')
+        assert mgr._next_workers_module == m_importlib.import_module()
+
+    def test_logging_info(self, m_load_config, m_logging, m_importlib):
         mgr = manager.NowcastManager()
         mgr._cli = Mock(name='_cli')
         mgr.setup()
-        assert mgr.logger.info.call_count == 2
+        assert mgr.logger.info.call_count == 3
 
 
 class TestCli:
@@ -225,15 +263,54 @@ class TestLoadChecklist:
         mgr.logger.warning.assert_called_with('running with empty checklist')
 
 
+class TestTryMessages:
+    """Unit tests for NowcastManager._try_messages method.
+    """
+    def test_rev_string(self):
+        mgr = manager.NowcastManager()
+        mgr._socket = Mock(name='_socket')
+        mgr._message_handler = Mock(
+            name='_message_handler', return_value=('reply', []))
+        mgr._try_messages()
+        mgr._socket.recv_string.assert_called_once_with()
+
+    def test_handle_message(self):
+        mgr = manager.NowcastManager()
+        mgr._socket = Mock(name='_socket')
+        mgr._message_handler = Mock(
+            name='_message_handler', return_value=('reply', []))
+        mgr._try_messages()
+        mgr._message_handler.assert_called_once_with(mgr._socket.recv_string())
+
+    def test_send_reply(self):
+        mgr = manager.NowcastManager()
+        mgr._socket = Mock(name='_socket')
+        mgr._message_handler = Mock(
+            name='_message_handler', return_value=('reply', []))
+        mgr._try_messages()
+        mgr._socket.send_string.assert_called_once_with('reply')
+
+    def test_launch_next_workers(self):
+        mgr = manager.NowcastManager()
+        mgr._socket = Mock(name='_socket')
+        mgr._message_handler = Mock(
+            name='_message_handler',
+            return_value=('reply', [('test_worker', ('args',))]))
+        mgr._launch_worker = Mock(name='_launch_worker')
+        mgr._try_messages()
+        mgr._launch_worker.assert_called_once_with('test_worker', ('args',))
+
+
+
 class TestMessageHandler:
     """Unit tests for NowcastManager._message_handler method.
     """
     def test_unregistered_worker_msg(self):
         mgr = manager.NowcastManager()
-        mgr.config = {'message registry': {'workers': {}}}
+        mgr._msg_registry = {'workers': {}}
         mgr._handle_unregistered_worker_msg = Mock(
             name='_handle_unregistered_worker_msg')
-        mgr._log_received_message = Mock(name='_log_received_message')
+        mgr._log_received_msg = Mock(name='_log_received_msg')
         msg = message(source='worker', type='foo', payload=None)
         msg_dict = {
             'source': msg.source, 'type': msg.type, 'payload': msg.payload}
@@ -241,14 +318,14 @@ class TestMessageHandler:
         mgr._handle_unregistered_worker_msg.assert_called_once_with(msg)
         assert reply == mgr._handle_unregistered_worker_msg()
         assert next_steps == []
-        assert not mgr._log_received_message.called
+        assert not mgr._log_received_msg.called
 
     def test_unregistered_msg_type(self):
         mgr = manager.NowcastManager()
-        mgr.config = {'message registry': {'workers': {'test_worker': {}}}}
+        mgr._msg_registry = {'workers': {'test_worker': {}}}
         mgr._handle_unregistered_msg_type = Mock(
             name='_handle_unregistered_msg_type')
-        mgr._log_received_message = Mock(name='_log_received_message')
+        mgr._log_received_msg = Mock(name='_log_received_msg')
         msg = message(source='test_worker', type='foo', payload=None)
         msg_dict = {
             'source': msg.source, 'type': msg.type, 'payload': msg.payload}
@@ -256,7 +333,23 @@ class TestMessageHandler:
         mgr._handle_unregistered_msg_type.assert_called_once_with(msg)
         assert reply == mgr._handle_unregistered_msg_type()
         assert next_steps == []
-        assert not mgr._log_received_message.called
+        assert not mgr._log_received_msg.called
+
+    def test_continue_msg(self):
+        mgr = manager.NowcastManager()
+        mgr._msg_registry = {'workers': {'test_worker': {'success': 'success'}}}
+        mgr._handle_continue_msg = Mock(
+            name='_handle_continue_msg',
+            return_value=('ack', 'next_worker'))
+        mgr._log_received_msg = Mock(name='_log_received_msg')
+        msg = message(source='test_worker', type='success', payload=None)
+        msg_dict = {
+            'source': msg.source, 'type': msg.type, 'payload': msg.payload}
+        reply, next_workers = mgr._message_handler(yaml.dump(msg_dict))
+        assert mgr._log_received_msg.called
+        mgr._handle_continue_msg.assert_called_once_with(msg)
+        assert reply == 'ack'
+        assert next_workers == 'next_worker'
 
 
 class TestHandleUnregisteredWorkerMsg:
@@ -273,6 +366,7 @@ class TestHandleUnregisteredWorkerMsg:
             'payload': None}
         assert yaml.safe_load(reply) == expected
 
+
 class TestHandleUnregisteredMsgType:
     """Unit test for NowcastManager._handle_unregistered_msg_type method.
     """
@@ -286,3 +380,133 @@ class TestHandleUnregisteredMsgType:
             'source': 'manager', 'type': 'unregistered message type',
             'payload': None}
         assert yaml.safe_load(reply) == expected
+
+
+class TestLogReceivedMessage:
+    """Unit test for NowcastManager._log_received_message method.
+    """
+    def test_handle_unregistered_msg_type(self):
+        mgr = manager.NowcastManager()
+        mgr.logger = Mock(name='logger')
+        mgr._msg_registry = {
+            'workers': {'test_worker': {'success': 'worker succeeded'}}}
+        msg = message(source='test_worker', type='success', payload=None)
+        mgr._log_received_msg(msg)
+        mgr.logger.debug.assert_called_once_with(
+            'received message from test_worker: (success) worker succeeded',
+            extra={'worker_msg': msg}
+        )
+
+
+@patch('nemo_nowcast.manager.importlib')
+class TestHandleContinueMsg:
+    """Unit tests for NowcastManager._handle_continue_msg method.
+    """
+    def test_update_checklist(self, m_importlib):
+        mgr = manager.NowcastManager()
+        mgr._update_checklist = Mock(name='_update_checklist')
+        mgr._next_workers_module = Mock(
+            name='nowcast.next_workers', test_worker=Mock())
+        msg = message(source='test_worker', type='success', payload=None)
+        mgr._handle_continue_msg(msg)
+        mgr._update_checklist.assert_called_once_with(msg)
+
+    def test_reload_next_workers_module(self, m_importlib):
+        mgr = manager.NowcastManager()
+        mgr._update_checklist = Mock(name='_update_checklist')
+        mgr._next_workers_module = Mock(
+            name='nowcast.next_workers', test_worker=Mock())
+        msg = message(source='test_worker', type='success', payload=None)
+        mgr._handle_continue_msg(msg)
+        m_importlib.reload.assert_called_once_with(mgr._next_workers_module)
+
+    def test_missing_after_worker_function(self, m_importlib):
+        mgr = manager.NowcastManager()
+        mgr._update_checklist = Mock(name='_update_checklist')
+        msg = message(source='test_worker', type='success', payload=None)
+        with pytest.raises(AttributeError):
+            mgr._handle_continue_msg(msg)
+
+    def test_reply(self, m_importlib):
+        mgr = manager.NowcastManager()
+        mgr._update_checklist = Mock(name='_update_checklist')
+        mgr._next_workers_module = Mock(
+            name='nowcast.next_workers', test_worker=Mock())
+        msg = message(source='test_worker', type='success', payload=None)
+        reply, next_workers = mgr._handle_continue_msg(msg)
+        expected = {'source': 'manager', 'type': 'ack', 'payload': None}
+        assert yaml.safe_load(reply) == expected
+
+    def test_next_workers(self, m_importlib):
+        mgr = manager.NowcastManager()
+        mgr._update_checklist = Mock(name='_update_checklist')
+        mgr._next_workers_module = Mock(
+            name='nowcast.next_workers', test_worker=Mock())
+        msg = message(source='test_worker', type='success', payload=None)
+        reply, next_workers = mgr._handle_continue_msg(msg)
+        assert next_workers == mgr._next_workers_module.after_test_worker()
+
+
+class TestUpdateChecklist:
+    """Unit tests for NowcastManager._update_checklist method.
+    """
+    def test_worker_checklist_keyerror(self):
+        mgr = manager.NowcastManager()
+        mgr._msg_registry = {'workers': {'test_worker': {}}}
+        msg = message(
+            source='test_worker', type='success', payload={'foo': 'bar'})
+        with pytest.raises(KeyError):
+            mgr._update_checklist(msg)
+
+    def test_update_existing_value(self):
+        mgr = manager.NowcastManager()
+        mgr.checklist = {'foo': 'bar'}
+        mgr._write_checklist_to_disk = Mock(name='_write_checklist_to_disk')
+        mgr._msg_registry = {
+            'workers': {'test_worker': {'checklist key': 'foo'}}}
+        msg = message(
+            source='test_worker', type='success', payload='baz')
+        mgr._update_checklist(msg)
+        assert mgr.checklist['foo'] == 'baz'
+
+    def test_keyerror_adds_key_and_value(self):
+        mgr = manager.NowcastManager()
+        mgr.checklist = {'foo': 'bar'}
+        mgr._write_checklist_to_disk = Mock(name='_write_checklist_to_disk')
+        mgr._msg_registry = {
+            'workers': {'test_worker': {'checklist key': 'fop'}}}
+        msg = message(
+            source='test_worker', type='success', payload='baz')
+        mgr._update_checklist(msg)
+        assert mgr.checklist['fop'] == 'baz'
+
+    def test_log_info_msg(self):
+        mgr = manager.NowcastManager()
+        mgr.checklist = {'foo': 'bar'}
+        mgr.logger = Mock(name='logger')
+        mgr._write_checklist_to_disk = Mock(name='_write_checklist_to_disk')
+        mgr._msg_registry = {
+            'workers': {'test_worker': {'checklist key': 'foo'}}}
+        msg = message(
+            source='test_worker', type='success', payload='baz')
+        mgr._update_checklist(msg)
+        mgr.logger.info.assert_called_once_with(
+            'checklist updated with [foo] items from test_worker worker',
+            extra={'worker_msg': msg})
+
+    def test_yaml_dump_checklist_to_disk(self):
+        mgr = manager.NowcastManager()
+        mgr.checklist = {'foo': 'bar'}
+        mgr._write_checklist_to_disk = Mock(name='_write_checklist_to_disk')
+        mgr._msg_registry = {
+            'workers': {'test_worker': {'checklist key': 'foo'}}}
+        msg = message(
+            source='test_worker', type='success', payload='baz')
+        mgr._update_checklist(msg)
+        mgr._write_checklist_to_disk.assert_called_once_with()
+
+
+class TestLaunchWorker:
+    """Unit tests for NowcastManager._launch_worker method.
+    """
+    pass

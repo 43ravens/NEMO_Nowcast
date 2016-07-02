@@ -15,6 +15,7 @@
 """NEMO_Nowcast manager.
 """
 import argparse
+import importlib
 import logging
 import logging.config
 import os
@@ -66,6 +67,12 @@ class NowcastManager:
         #: and option flags and values parsed from the command-line when the
         #: manager was started.
         self._parsed_args = None
+        #: The :kbd:`message registry` section of
+        #: :py:attr:`~nemo_nowcast.manager.config`.
+        self._msg_registry = None
+        #: Python module that contains functions to calculate lists of workers
+        #: to launch after previous workers end their work.
+        self._next_workers_module = None
         #: :py:class:`zmq.Context` instance that provides the basis for the
         #: nowcast messaging system.
         self._context = zmq.Context()
@@ -90,10 +97,16 @@ class NowcastManager:
         """
         self._parsed_args = self._cli()
         self.config = lib.load_config(self._parsed_args.config_file)
+        self._msg_registry = self.config['message registry']
         logging.config.dictConfig(self.config['logging'])
         self.logger.info('running in process {}'.format(os.getpid()))
         self.logger.info('read config from {.config_file}'.format(
             self._parsed_args))
+        self._next_workers_module = importlib.import_module(
+            self._msg_registry['next workers module'])
+        self.logger.info(
+            'next workers module loaded from {[next workers module]}'
+            .format(self._msg_registry))
 
     def _cli(self, args=None):
         """Configure command-line argument parser and return parsed arguments
@@ -183,11 +196,7 @@ class NowcastManager:
         while True:
             self.logger.debug('listening...')
             try:
-                message = self._socket.recv_string()
-                reply, next_steps = self._message_handler(message)
-                self._socket.send_string(reply)
-                for next_step in next_steps:
-                    next_step.func(*next_step.args)
+                self._try_messages()
             except zmq.ZMQError as e:
                 # Fatal ZeroMQ problem
                 self.logger.critical('ZMQError:', exc_info=e)
@@ -200,17 +209,31 @@ class NowcastManager:
                 self.logger.critical('unhandled exception:', exc_info=e)
                 self.logger.critical('shutting down')
 
+    def _try_messages(self):
+        """Try to process messages.
+
+        Extracted from the :kbd:`try:` block in :py:meth:`_process_messages`
+        so that it can be tested outside of the :kbd:`while True:` loop.
+        """
+        message = self._socket.recv_string()
+        reply, next_workers = self._message_handler(message)
+        self._socket.send_string(reply)
+        for worker, args in next_workers:
+            self._launch_worker(worker, args)
+
     def _message_handler(self, message):
         """Handle message from worker.
         """
         msg = lib.deserialize_message(message)
-        msg_registry = self.config['message registry']['workers']
-        if msg.source not in msg_registry:
+        if msg.source not in self._msg_registry['workers']:
             reply = self._handle_unregistered_worker_msg(msg)
             return reply, []
-        if msg.type not in msg_registry[msg.source]:
+        if msg.type not in self._msg_registry['workers'][msg.source]:
             reply = self._handle_unregistered_msg_type(msg)
             return reply, []
+        self._log_received_msg(msg)
+        reply, next_workers = self._handle_continue_msg(msg)
+        return reply, next_workers
 
     def _handle_unregistered_worker_msg(self, msg):
         """Emit error message to log about a message received from a worker
@@ -232,6 +255,63 @@ class NowcastManager:
             extra={'worker_msg': msg})
         reply = lib.serialize_message(self.name, 'unregistered message type')
         return reply
+
+    def _log_received_msg(self, msg):
+        """Emit debug message about message received from worker.
+        """
+        self.logger.debug(
+            'received message from {0.source}: ({0.type}) {msg_words}'
+            .format(
+                msg,
+                msg_words=self._msg_registry['workers'][msg.source][msg.type]),
+            extra={'worker_msg': msg})
+
+    def _handle_continue_msg(self, msg):
+        """Handle success, failure, or crash message from worker with
+        appropriate next step action(s).
+        """
+        self._update_checklist(msg)
+        importlib.reload(self._next_workers_module)
+        after_func = getattr(
+            self._next_workers_module, 'after_{}'.format(msg.source))
+        next_workers = after_func(msg)
+        reply = lib.serialize_message(self.name, 'ack')
+        return reply, next_workers
+
+    def _update_checklist(self, msg):
+        """Update the checklist value at worker's key with the items passed from
+        the worker.
+
+        If key is not present in the checklist, add it with the worker
+        items as its value.
+
+        Write the checklist to disk as a YAML file so that it can be
+        inspected and/or recovered if the manager instance is restarted.
+        """
+        try:
+            key = self._msg_registry['workers'][msg.source]['checklist key']
+        except KeyError:
+            raise KeyError(
+                'checklist key not found for {.source} worker'.format(msg))
+        try:
+            self.checklist[key].update(msg.payload)
+        except (KeyError, AttributeError):
+            self.checklist[key] = msg.payload
+        self.logger.info(
+            'checklist updated with [{0}] items from {1.source} worker'
+            .format(key, msg),
+            extra={'worker_msg': msg})
+        self._write_checklist_to_disk()
+
+    def _write_checklist_to_disk(self):
+        """Write the checklist to disk as a YAML file so that it can be
+        inspected and/or recovered if the manager instance is restarted.
+        """
+        with open(self.config['checklist file'], 'wt') as f:
+            yaml.dump(self.checklist, f)
+
+    def _launch_worker(self, worker, args):
+        pass
 
 
 if __name__ == '__main__':
