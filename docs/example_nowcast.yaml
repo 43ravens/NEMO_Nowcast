@@ -31,11 +31,15 @@ zmq:
 
 message registry:
   manager:
+    ack: message acknowledged
     unregistered worker: ERROR - message received from unregistered worker
     unregistered message type: ERROR - unregistered message type received from worker
 
+  next workers module: nowcast.next_workers
+
   workers:
     example:
+      checklist key: sleepyhead
       success: example worker slept well
       failure: example worker slept badly
       crash: example worker crashed
