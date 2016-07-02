@@ -15,7 +15,11 @@
 """Unit tests for lib module.
 """
 import argparse
-from unittest.mock import mock_open, patch
+from unittest.mock import (
+    Mock,
+    mock_open,
+    patch,
+)
 
 import pytest
 import yaml
@@ -57,16 +61,81 @@ class TestLoadConfig:
     """Unit tests for lib.load_config functions.
     """
     def test_load_config(self):
-        m_open = mock_open(read_data='foo: bar')
+        m_open = mock_open(
+            read_data=(
+                'foo: bar\n'
+                'checklist file: nowcast_checklist.yaml\n'
+                'logging:\n'
+                '  handlers: []'))
         with patch('nemo_nowcast.lib.open', m_open):
             config = lib.load_config('nowcast.yaml')
         assert config['foo'] == 'bar'
 
     def test_config_file_in_config(self):
-        m_open = mock_open(read_data='foo: bar')
+        m_open = mock_open(
+            read_data=(
+                'foo: bar\n'
+                'checklist file: nowcast_checklist.yaml\n'
+                'logging:\n'
+                '  handlers: []'))
         with patch('nemo_nowcast.lib.open', m_open):
             config = lib.load_config('nowcast.yaml')
         assert config['config_file'] == 'nowcast.yaml'
+
+    def test_replace_checklist_file_envvar(self):
+        m_open = mock_open(
+            read_data=(
+                'foo: bar\n'
+                'checklist file: $(NOWCAST.ENV.foo)/nowcast_checklist.yaml\n'
+                'logging:\n'
+                '  handlers: []'))
+        with patch('nemo_nowcast.lib._replace_env', return_value='bar'):
+            with patch('nemo_nowcast.lib.open', m_open):
+                config = lib.load_config('nowcast.yaml')
+        assert config['checklist file'] == 'bar/nowcast_checklist.yaml'
+
+    @patch('nemo_nowcast.lib._replace_env', return_value='bar')
+    def test_replace_log_file_envvar(self, m_replace_env):
+        m_open = mock_open(
+            read_data=(
+                'foo: bar\n'
+                'checklist file: $(NOWCAST.ENV.foo)/nowcast_checklist.yaml\n'
+                'logging:\n'
+                '  handlers:\n'
+                '    info_test:\n'
+                '      filename: $(NOWCAST.ENV.foo)/nowcast.log'))
+        with patch('nemo_nowcast.lib.open', m_open):
+            config = lib.load_config('nowcast.yaml')
+        filename = config['logging']['handlers']['info_test']['filename']
+        assert filename == 'bar/nowcast.log'
+
+    @patch('nemo_nowcast.lib._replace_env', return_value='bar')
+    def test_ignore_log_stream_handler(self, m_replace_env):
+        m_open = mock_open(
+            read_data=(
+                'foo: bar\n'
+                'checklist file: $(NOWCAST.ENV.foo)/nowcast_checklist.yaml\n'
+                'logging:\n'
+                '  handlers:\n'
+                '    console: {}'))
+        with patch('nemo_nowcast.lib.open', m_open):
+            config = lib.load_config('nowcast.yaml')
+        assert m_replace_env.call_count == 1
+
+
+class TestReplaceEnv:
+    """Unit tests for lib._replace_env function.
+    """
+    @patch.dict('nemo_nowcast.lib.os.environ', {'foo': 'bar'})
+    def test_replace_env(self):
+        var = Mock(name='re_var', group=Mock(return_value='foo'))
+        value = lib._replace_env(var)
+        assert value == 'bar'
+
+    def test_envvar_not_set(self):
+        var = Mock(name='re_var', group=Mock(return_value='foo'))
+        with pytest.raises(KeyError):
+            value = lib._replace_env(var)
 
 
 class TestDeserializeMessage:
