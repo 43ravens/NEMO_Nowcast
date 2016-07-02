@@ -190,6 +190,21 @@ class TestNowcastWorkerRun:
         m_logging.config.dictConfig.assert_called_once_with(
             worker.config['logging'])
 
+    def test_debug_mode_console_logging(self, m_logging, m_load_config):
+        worker = NowcastWorker('worker_name', 'description')
+        m_worker_func = Mock(name='worker_func')
+        m_success = Mock(name='success')
+        m_failure = Mock(name='failure')
+        worker.arg_parser.parse_args = Mock(name='parse_args', debug=True)
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._do_work = Mock(name='_do_work')
+        m_console_handler = Mock(name='m_console_handler')
+        m_console_handler.name = 'console'
+        m_logging.getLogger().handlers = [m_console_handler]
+        worker.run(m_worker_func, m_success, m_failure)
+        m_console_handler.setLevel.assert_called_once_with(m_logging.DEBUG)
+
     def test_logging_info(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
         m_worker_func = Mock(name='worker_func')

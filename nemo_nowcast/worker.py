@@ -172,6 +172,11 @@ class NowcastWorker:
         self._parsed_args = self.arg_parser.parse_args()
         self.config = lib.load_config(self._parsed_args.config_file)
         logging.config.dictConfig(self.config['logging'])
+        if self._parsed_args.debug:
+            root_logger = logging.getLogger()
+            for handler in root_logger.handlers:
+                if handler.name == 'console':
+                    handler.setLevel(logging.DEBUG)
         self.logger.info('running in process {}'.format(os.getpid()))
         self.logger.info('read config from {.config_file}'.format(
             self._parsed_args))
