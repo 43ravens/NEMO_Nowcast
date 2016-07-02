@@ -16,6 +16,8 @@
 """
 import argparse
 from collections import namedtuple
+import re
+import os
 
 import yaml
 
@@ -70,7 +72,25 @@ def load_config(config_file):
     with open(config_file, 'rt') as f:
         config = yaml.safe_load(f)
     config['config_file'] = config_file
+    envvar_pattern = re.compile(r'\$\(NOWCAST\.ENV\.(\w*)\)\w*')
+    config['checklist file'] = envvar_pattern.sub(
+        _replace_env, config['checklist file'])
+    handlers = config['logging']['handlers']
+    for handler in handlers:
+        try:
+            handlers[handler]['filename'] = envvar_pattern.sub(
+                _replace_env, handlers[handler]['filename'])
+        except KeyError:
+            # Not a file handler
+            pass
     return config
+
+
+def _replace_env(var):
+    try:
+        return os.environ[var.group(1)]
+    except KeyError:
+        raise KeyError('environment variable not set: {}'.format(var.group(1)))
 
 
 def deserialize_message(message):
