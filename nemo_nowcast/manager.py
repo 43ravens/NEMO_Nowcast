@@ -21,6 +21,7 @@ import logging.config
 import os
 import pprint
 import signal
+import subprocess
 
 import yaml
 import zmq
@@ -310,8 +311,24 @@ class NowcastManager:
         with open(self.config['checklist file'], 'wt') as f:
             yaml.dump(self.checklist, f)
 
-    def _launch_worker(self, worker, args):
-        pass
+    def _launch_worker(self, worker, args=[], host='localhost'):
+        """Use a subprocess to launch worker on host with args as the
+        worker's command-line arguments.
+
+        This method *does not* wait for the subprocess to complete.
+        """
+        if host == 'localhost':
+            cmd = [self.config['python'], '-m']
+            config_file = self.config['config_file']
+        else:
+            cmd = ['ssh', host, self.config['run'][host]['python'], '-m']
+            config_file = self.config['run'][host]['config_file']
+        cmd.extend([worker, config_file])
+        if args:
+            cmd.extend(args)
+        self.logger.info('launching {} worker on {}'.format(worker, host))
+        self.logger.debug(cmd)
+        subprocess.Popen(cmd)
 
 
 if __name__ == '__main__':

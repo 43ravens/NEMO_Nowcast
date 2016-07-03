@@ -1,7 +1,10 @@
 # Example system configuration file for a NEMO_Nowcast framework system
 
 # System status checklist file
-checklist file: /data1/dlatorne/nowcast-sys/nowcast_checklist.yaml
+checklist file: /nowcast-sys/nowcast_checklist.yaml
+
+# Python interpreter in environment with all dependencies installed
+python: /nowcast-sys/nowcast-env/bin/python
 
 logging:
   version: 1

@@ -17,6 +17,7 @@
 from collections import namedtuple
 import signal
 from unittest.mock import (
+    call,
     patch,
     Mock,
     mock_open,
@@ -506,7 +507,48 @@ class TestUpdateChecklist:
         mgr._write_checklist_to_disk.assert_called_once_with()
 
 
+@patch('nemo_nowcast.manager.subprocess')
 class TestLaunchWorker:
     """Unit tests for NowcastManager._launch_worker method.
     """
-    pass
+    def test_localhost(self, m_subprocess):
+        mgr = manager.NowcastManager()
+        mgr.config = {
+            'python': 'nowcast-env/bin/python3',
+            'config_file': 'nowcast.yaml',
+        }
+        mgr._launch_worker('nowcast.workers.test_worker', ('--debug',))
+        cmd = m_subprocess.Popen.call_args_list[0]
+        expected = call(
+            ['nowcast-env/bin/python3', '-m', 'nowcast.workers.test_worker',
+             'nowcast.yaml', '--debug'])
+        assert cmd == expected
+
+    def test_remote_host(self, m_subprocess):
+        mgr = manager.NowcastManager()
+        mgr.config = {
+            'run': {
+                'remotehost': {'python': 'nowcast-env/bin/python3',
+                'config_file': 'nowcast.yaml',
+        }}}
+        mgr._launch_worker(
+            'nowcast.workers.test_worker', ('--debug',), host='remotehost')
+        cmd = m_subprocess.Popen.call_args_list[0]
+        expected = call(
+            ['ssh', 'remotehost',
+             'nowcast-env/bin/python3', '-m', 'nowcast.workers.test_worker',
+             'nowcast.yaml', '--debug'])
+        assert cmd == expected
+
+    def test_no_cmdline_args(self, m_subprocess):
+        mgr = manager.NowcastManager()
+        mgr.config = {
+            'python': 'nowcast-env/bin/python3',
+            'config_file': 'nowcast.yaml',
+        }
+        mgr._launch_worker('nowcast.workers.test_worker')
+        cmd = m_subprocess.Popen.call_args_list[0]
+        expected = call(
+            ['nowcast-env/bin/python3', '-m', 'nowcast.workers.test_worker',
+             'nowcast.yaml'])
+        assert cmd == expected
