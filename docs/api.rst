@@ -26,8 +26,10 @@ Class and Exception for Building Workers
     :special-members: __init__
 
 
-Example Worker
-==============
+.. _ExampleWorkers:
+
+Example Workers
+===============
 
 .. automodule:: nemo_nowcast.workers.example
     :members:
