@@ -24,8 +24,9 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   development
+   architecture/index
    api
+   development
 
 
 Indices and Tables
