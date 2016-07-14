@@ -103,8 +103,14 @@ class NowcastManager:
         self.logger.info('running in process {}'.format(os.getpid()))
         self.logger.info('read config from {.config_file}'.format(
             self._parsed_args))
-        self._next_workers_module = importlib.import_module(
-            self._msg_registry['next workers module'])
+        try:
+            self._next_workers_module = importlib.import_module(
+                self._msg_registry['next workers module'])
+        except ImportError:
+            self.logger.critical(
+                'could not find next workers module: {[next workers module]}'
+                .format(self._msg_registry), exc_info=True)
+            raise
         self.logger.info(
             'next workers module loaded from {[next workers module]}'
             .format(self._msg_registry))
