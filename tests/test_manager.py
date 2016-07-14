@@ -94,26 +94,29 @@ class TestNowcastManagerConstructor:
         assert mgr._socket is None
 
 
-@patch('nemo_nowcast.manager.importlib')
 @patch('nemo_nowcast.manager.logging')
 @patch('nemo_nowcast.manager.lib.load_config')
 class TestNowcastManagerSetup:
     """Unit tests for NowcastManager.setup method.
     """
+
+    @patch('nemo_nowcast.manager.importlib')
     def test_parsed_args(self, m_load_config, m_logging, m_importlib):
         mgr = manager.NowcastManager()
         mgr._cli = Mock(name='_cli')
         mgr.setup()
         assert mgr._parsed_args == mgr._cli()
 
-    def test_config(self, m_load_config, m_logging, m_importlib):
+    @patch('nemo_nowcast.manager.importlib')
+    def test_config(self, m_importlib, m_load_config, m_logging):
         mgr = manager.NowcastManager()
         mgr._cli = Mock(name='_cli')
         mgr.setup()
         m_load_config.assert_called_once_with(mgr._parsed_args.config_file)
         assert mgr.config == m_load_config()
 
-    def test_msg_registry(self, m_load_config, m_logging, m_importlib):
+    @patch('nemo_nowcast.manager.importlib')
+    def test_msg_registry(self, m_importlib, m_load_config, m_logging):
         mgr = manager.NowcastManager()
         mgr._cli = Mock(name='_cli')
         m_load_config.return_value = {
@@ -127,15 +130,17 @@ class TestNowcastManagerSetup:
             'next workers module': 'nowcast.next_workers',
             'workers': {}}
 
-    def test_logging_config(self, m_load_config, m_logging, m_importlib):
+    @patch('nemo_nowcast.manager.importlib')
+    def test_logging_config(self, m_importlib, m_load_config, m_logging):
         mgr = manager.NowcastManager()
         mgr._cli = Mock(name='_cli')
         mgr.setup()
         m_logging.config.dictConfig.assert_called_once_with(
             mgr.config['logging'])
 
-    def test_import_nest_workers_module(
-        self, m_load_config, m_logging, m_importlib,
+    @patch('nemo_nowcast.manager.importlib')
+    def test_import_next_workers_module(
+        self, m_importlib, m_load_config, m_logging,
     ):
         mgr = manager.NowcastManager()
         mgr._cli = Mock(name='_cli')
@@ -149,7 +154,19 @@ class TestNowcastManagerSetup:
             'nowcast.next_workers')
         assert mgr._next_workers_module == m_importlib.import_module()
 
-    def test_logging_info(self, m_load_config, m_logging, m_importlib):
+    def test_next_workers_module_import_error(self, m_load_config, m_logging):
+        mgr = manager.NowcastManager()
+        mgr._cli = Mock(name='_cli')
+        m_load_config.return_value = {
+            'logging': {},
+            'message registry': {
+                'next workers module': 'nowcast.next_workers',
+                'workers': {}}}
+        with pytest.raises(ImportError):
+            mgr.setup()
+
+    @patch('nemo_nowcast.manager.importlib')
+    def test_logging_info(self, m_importlib, m_load_config, m_logging):
         mgr = manager.NowcastManager()
         mgr._cli = Mock(name='_cli')
         mgr.setup()
