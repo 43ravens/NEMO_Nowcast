@@ -52,3 +52,13 @@ The :py:obj:`NEMO_Nowcast` package provides Python modules that implement:
   and message broker processes interact
 
 The :ref:`ExampleWorkers` and the workers provided for use in nowcast system deployments serve as examples of how to write your own worker modules.
+
+The sections below provide detailed descriptions of the elements of the framework architecture.
+
+.. toctree::
+   :maxdepth: 2
+
+   messaging
+   message_broker
+   manager
+   worker
