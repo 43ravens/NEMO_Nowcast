@@ -15,25 +15,13 @@
 .. limitations under the License.
 
 
-.. include:: ../README.rst
+.. _BuildingANowcastSystem:
 
-
-Contents
-========
+*************************
+Building a Nowcast System
+*************************
 
 .. toctree::
    :maxdepth: 2
 
-   architecture/index
-   nowcast_system/index
-   api
-   development
-
-
-Indices and Tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+   config

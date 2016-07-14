@@ -1,5 +1,3 @@
-.. NEMO Nowcast Framework documentation master file
-
 .. Copyright 2016 Doug Latornell, 43ravens
 
 .. Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,25 +13,9 @@
 .. limitations under the License.
 
 
-.. include:: ../README.rst
+.. _NowcastConfigFile:
 
+Nowcast Configuration File
+==========================
 
-Contents
-========
-
-.. toctree::
-   :maxdepth: 2
-
-   architecture/index
-   nowcast_system/index
-   api
-   development
-
-
-Indices and Tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+**TODO**

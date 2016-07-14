@@ -15,25 +15,8 @@
 .. limitations under the License.
 
 
-.. include:: ../README.rst
+.. _SystemManager:
 
-
-Contents
-========
-
-.. toctree::
-   :maxdepth: 2
-
-   architecture/index
-   nowcast_system/index
-   api
-   development
-
-
-Indices and Tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+*******
+Manager
+*******
