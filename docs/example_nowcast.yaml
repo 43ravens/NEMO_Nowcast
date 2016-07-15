@@ -58,3 +58,8 @@ message registry:
       success: sleep worker slept well
       failure: sleep worker slept badly
       crash: sleep worker crashed
+    awaken:
+      checklist key: sleepyhead
+      success: awaken worker awoke - where's the coffee?
+      failure: awaken worker failed to awake
+      crash: awaken worker crashed
