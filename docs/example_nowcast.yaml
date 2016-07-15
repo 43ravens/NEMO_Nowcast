@@ -1,10 +1,10 @@
 # Example system configuration file for a NEMO_Nowcast framework system
 
 # System status checklist file
-checklist file: /nowcast-sys/nowcast_checklist.yaml
+checklist file: $(NOWCAST.ENV.NOWCAST_LOGS)/nowcast_checklist.yaml
 
 # Python interpreter in environment with all dependencies installed
-python: /nowcast-sys/nowcast-env/bin/python
+python: $(NOWCAST.ENV.NOWCAST_ENV)/bin/python
 
 # Logging system configuration
 logging:
