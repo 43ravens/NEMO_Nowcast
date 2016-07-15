@@ -14,11 +14,31 @@
 
 """Functions to calculate lists of workers to launch after previous workers
 end their work.
+
+Function names **must** be of the form :py:func:`after_worker_name`.
 """
 
 
 def after_sleep(msg):
     """Calculate the list of workers to launch after the sleep example worker
+    ends.
+
+    :arg msg: Nowcast system message.
+    :type msg: :py:class:`collections.namedtuple`
+
+    :returns: Worker(s) to launch next
+    :rtype: list
+    """
+    next_workers = {
+        'crash': [],
+        'failure': [],
+        'success': [],
+    }
+    return next_workers[msg.type]
+
+
+def after_awaken(msg):
+    """Calculate the list of workers to launch after the awaken example worker
     ends.
 
     :arg msg: Nowcast system message.
