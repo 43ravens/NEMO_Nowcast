@@ -12,11 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Functions to calculate lists of workers to launch after previous workers
+"""Example :py:mod:`next_workers` module.
+
+This should be implemented as :py:mod:`nowcast.next_workers` in a nowcast
+system package the is built on top of the :kbd:`NEMO_Nowcast` package.
+Please see the documentation at
+http://nemo-nowcast.readthedocs.io/en/latest/nowcast_system/index.html.
+
+Functions to calculate lists of workers to launch after previous workers
 end their work.
 
 Function names **must** be of the form :py:func:`after_worker_name`.
 """
+from nemo_nowcast.worker import NextWorker
 
 
 def after_sleep(msg):
@@ -26,13 +34,14 @@ def after_sleep(msg):
     :arg msg: Nowcast system message.
     :type msg: :py:class:`collections.namedtuple`
 
-    :returns: Worker(s) to launch next
+    :returns: Sequence of :py:class:`nemo_nowcast.worker.NextWorker` instances
+              for worker(s) to launch next.
     :rtype: list
     """
     next_workers = {
         'crash': [],
         'failure': [],
-        'success': [],
+        'success': [NextWorker('nemo_nowcast.workers.awaken')],
     }
     return next_workers[msg.type]
 
@@ -44,8 +53,8 @@ def after_awaken(msg):
     :arg msg: Nowcast system message.
     :type msg: :py:class:`collections.namedtuple`
 
-    :returns: Worker(s) to launch next
-    :rtype: list
+    :returns: Sequence of :py:class:`nemo_nowcast.worker.NextWorker` instances
+              for worker(s) to launch next.
     """
     next_workers = {
         'crash': [],

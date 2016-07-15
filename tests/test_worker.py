@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Unit tests for nemo_nowcast.manager module.
+"""Unit tests for nemo_nowcast.worker module.
 """
 import argparse
 from collections import namedtuple
@@ -26,9 +26,25 @@ import pytest
 import zmq
 
 from nemo_nowcast.worker import (
+    NextWorker,
     NowcastWorker,
     WorkerError,
 )
+
+
+class TestNextWorker:
+    """Unit tests for NextWorker class.
+    """
+    def test_default_args(self):
+        next_worker = NextWorker('nowcast.workers.download_weather')
+        assert next_worker.name == 'nowcast.workers.download_weather'
+        assert next_worker.args == []
+
+    def test_specified_args(self):
+        next_worker = NextWorker(
+            'nowcast.workers.download_weather', ['--debug', '00'])
+        assert next_worker.name == 'nowcast.workers.download_weather'
+        assert next_worker.args == ['--debug', '00']
 
 
 class TestNowcastWorkerConstructor:

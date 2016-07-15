@@ -225,8 +225,8 @@ class NowcastManager:
         message = self._socket.recv_string()
         reply, next_workers = self._message_handler(message)
         self._socket.send_string(reply)
-        for worker, args in next_workers:
-            self._launch_worker(worker, args)
+        for worker in next_workers:
+            self._launch_worker(worker)
 
     def _message_handler(self, message):
         """Handle message from worker.
@@ -328,7 +328,7 @@ class NowcastManager:
         with open(self.config['checklist file'], 'wt') as f:
             yaml.dump(self.checklist, f)
 
-    def _launch_worker(self, worker, args=[], host='localhost'):
+    def _launch_worker(self, worker, host='localhost'):
         """Use a subprocess to launch worker on host with args as the
         worker's command-line arguments.
 
@@ -340,11 +340,13 @@ class NowcastManager:
         else:
             cmd = ['ssh', host, self.config['run'][host]['python'], '-m']
             config_file = self.config['run'][host]['config_file']
-        cmd.extend([worker, config_file])
-        if args:
-            cmd.extend(args)
-        self.logger.info('launching {} worker on {}'.format(worker, host))
-        self.logger.debug(cmd)
+        cmd.extend([worker.name, config_file])
+        if worker.args:
+            cmd.extend(worker.args)
+        self.logger.info(
+            'launching {} on {}'.format(worker, host),
+            extra={'worker': worker, 'host': host})
+        self.logger.debug('cmd = {}'.format(cmd), extra={'cmd': cmd})
         subprocess.Popen(cmd)
 
 

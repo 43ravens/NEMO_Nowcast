@@ -28,6 +28,7 @@ import yaml
 import zmq
 
 from nemo_nowcast import manager
+from nemo_nowcast.worker import NextWorker
 
 # Message data structure
 message = namedtuple('Message', 'source, type, payload')
@@ -311,13 +312,12 @@ class TestTryMessages:
     def test_launch_next_workers(self):
         mgr = manager.NowcastManager()
         mgr._socket = Mock(name='_socket')
+        next_worker = NextWorker('nowcast.workers.next_worker')
         mgr._message_handler = Mock(
-            name='_message_handler',
-            return_value=('reply', [('test_worker', ('args',))]))
+            name='_message_handler', return_value=('reply', [next_worker]))
         mgr._launch_worker = Mock(name='_launch_worker')
         mgr._try_messages()
-        mgr._launch_worker.assert_called_once_with('test_worker', ('args',))
-
+        mgr._launch_worker.assert_called_once_with(next_worker)
 
 
 class TestMessageHandler:
@@ -542,7 +542,8 @@ class TestLaunchWorker:
             'python': 'nowcast-env/bin/python3',
             'config_file': 'nowcast.yaml',
         }
-        mgr._launch_worker('nowcast.workers.test_worker', ('--debug',))
+        mgr._launch_worker(
+            NextWorker('nowcast.workers.test_worker', ['--debug']))
         cmd = m_subprocess.Popen.call_args_list[0]
         expected = call(
             ['nowcast-env/bin/python3', '-m', 'nowcast.workers.test_worker',
@@ -557,7 +558,8 @@ class TestLaunchWorker:
                 'config_file': 'nowcast.yaml',
         }}}
         mgr._launch_worker(
-            'nowcast.workers.test_worker', ('--debug',), host='remotehost')
+            NextWorker('nowcast.workers.test_worker', ['--debug']),
+            host='remotehost')
         cmd = m_subprocess.Popen.call_args_list[0]
         expected = call(
             ['ssh', 'remotehost',
@@ -571,7 +573,7 @@ class TestLaunchWorker:
             'python': 'nowcast-env/bin/python3',
             'config_file': 'nowcast.yaml',
         }
-        mgr._launch_worker('nowcast.workers.test_worker')
+        mgr._launch_worker(NextWorker('nowcast.workers.test_worker'))
         cmd = m_subprocess.Popen.call_args_list[0]
         expected = call(
             ['nowcast-env/bin/python3', '-m', 'nowcast.workers.test_worker',

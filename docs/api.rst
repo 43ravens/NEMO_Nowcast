@@ -23,7 +23,7 @@ Class and Exception for Building Workers
 
 .. automodule:: nemo_nowcast.worker
     :members:
-    :special-members: __init__
+    :special-members: __init__, __new__
 
 
 .. _ExampleWorkers:
@@ -35,4 +35,13 @@ Example Workers
     :members:
 
 .. automodule:: nemo_nowcast.workers.awaken
+    :members:
+
+
+.. _ExampleNextWorkersModule:
+
+Example :py:mod:`NextWorkers` Module
+====================================
+
+.. automodule:: nemo_nowcast.next_workers
     :members:
