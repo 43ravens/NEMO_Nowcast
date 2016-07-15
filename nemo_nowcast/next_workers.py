@@ -32,7 +32,7 @@ def after_sleep(msg):
     ends.
 
     :arg msg: Nowcast system message.
-    :type msg: :py:class:`collections.namedtuple`
+    :type msg: :py:func:`collections.namedtuple`
 
     :returns: Sequence of :py:class:`nemo_nowcast.worker.NextWorker` instances
               for worker(s) to launch next.
@@ -51,7 +51,7 @@ def after_awaken(msg):
     ends.
 
     :arg msg: Nowcast system message.
-    :type msg: :py:class:`collections.namedtuple`
+    :type msg: :py:func:`collections.namedtuple`
 
     :returns: Sequence of :py:class:`nemo_nowcast.worker.NextWorker` instances
               for worker(s) to launch next.

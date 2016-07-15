@@ -20,7 +20,7 @@ Messaging System
 ****************
 
 Inside the code of a worker and the nowcast manager,
-a nowcast message is a Python :py:class:`~collections.namedtuple`:
+a nowcast message is a Python :py:func:`~collections.namedtuple`:
 
 .. code-block:: python
 
