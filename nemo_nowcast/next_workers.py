@@ -17,8 +17,9 @@ end their work.
 """
 
 
-def after_example(msg):
-    """Calculate the list of workers to launch after the example worker ends.
+def after_sleep(msg):
+    """Calculate the list of workers to launch after the sleep example worker
+    ends.
 
     :arg msg: Nowcast system message.
     :type msg: :py:class:`collections.namedtuple`

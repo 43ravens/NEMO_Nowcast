@@ -12,29 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Unit tests for nemo_nowcast.manager module.
+"""Unit tests for nemo_nowcast.workers.sleep module.
 """
 from unittest.mock import (
     Mock,
     patch,
 )
 
-from nemo_nowcast.workers import example
+from nemo_nowcast.workers import sleep
 
 
-@patch('nemo_nowcast.workers.example.NowcastWorker')
+@patch('nemo_nowcast.workers.sleep.NowcastWorker')
 class TestMain:
     """Unit tests for main function.
     """
     def test_instantiate_worker(self, m_worker):
-        example.main()
+        sleep.main()
         args, kwargs = m_worker.call_args
-        assert args == ('example',)
+        assert args == ('sleep',)
         assert 'description' in kwargs
         assert 'package' in kwargs
 
     def test_add_sleep_time_arg(self, m_worker):
-        example.main()
+        sleep.main()
         worker = m_worker()
         args, kwargs = worker.arg_parser.set_defaults.call_args_list[0]
         assert kwargs['sleep_time'] == 5
@@ -44,9 +44,9 @@ class TestMain:
         assert 'help' in kwargs
 
     def test_run_worker(self, m_worker):
-        example.main()
+        sleep.main()
         args, kwargs = m_worker().run.call_args
-        assert args == (example.example, example.success, example.failure)
+        assert args == (sleep.sleep, sleep.success, sleep.failure)
 
 
 class TestSuccess:
@@ -54,15 +54,15 @@ class TestSuccess:
     """
     def test_success_log_info(self):
         parsed_args = Mock(sleep_time=5)
-        with patch('nemo_nowcast.workers.example.logger') as m_logger:
-            example.success(parsed_args)
+        with patch('nemo_nowcast.workers.sleep.logger') as m_logger:
+            sleep.success(parsed_args)
         assert m_logger.info.called
         assert m_logger.info.call_args[1]['extra']['sleep_time'] == 5
 
     def test_success_msg_type(self):
         parsed_args = Mock(sleep_time=5)
-        with patch('nemo_nowcast.workers.example.logger') as m_logger:
-            msg_type = example.success(parsed_args)
+        with patch('nemo_nowcast.workers.sleep.logger') as m_logger:
+            msg_type = sleep.success(parsed_args)
         assert msg_type == 'success'
 
 
@@ -71,25 +71,25 @@ class TestFailure:
     """
     def test_failure_log_critical(self):
         parsed_args = Mock(sleep_time=5)
-        with patch('nemo_nowcast.workers.example.logger') as m_logger:
-            example.failure(parsed_args)
+        with patch('nemo_nowcast.workers.sleep.logger') as m_logger:
+            sleep.failure(parsed_args)
         assert m_logger.critical.called
         assert m_logger.critical.call_args[1]['extra']['sleep_time'] == 5
 
     def test_failure_msg_type(self):
         parsed_args = Mock(sleep_time=5)
-        with patch('nemo_nowcast.workers.example.logger') as m_logger:
-            msg_type = example.failure(parsed_args)
+        with patch('nemo_nowcast.workers.sleep.logger') as m_logger:
+            msg_type = sleep.failure(parsed_args)
         assert msg_type == 'failure'
 
 
 class TestExample:
-    """Unit tests for example function.
+    """Unit tests for sleep function.
     """
-    @patch('nemo_nowcast.workers.example.time.sleep')
+    @patch('nemo_nowcast.workers.sleep.time.sleep')
     def test_example(self, m_sleep):
         parsed_args = Mock(sleep_time=5)
         config = {}
-        checklist = example.example(parsed_args, config)
+        checklist = sleep.sleep(parsed_args, config)
         m_sleep.assert_called_once_with(5)
         assert checklist == {'sleep time': 5}

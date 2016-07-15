@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""NEMO_Nowcast framework worker example.
+"""NEMO_Nowcast framework sleep worker example.
 
 An example implementation of a worker module that does nothing other than sleep
 for a specified number of seconds.
@@ -23,7 +23,7 @@ import time
 from nemo_nowcast.worker import NowcastWorker
 
 
-NAME = 'example'
+NAME = 'sleep'
 logger = logging.getLogger(NAME)
 
 
@@ -44,7 +44,7 @@ def main():
             'number of seconds to sleep for; defaults to {[sleep_time]}'
             .format(arg_defaults))
     )
-    worker.run(example, success, failure)
+    worker.run(sleep, success, failure)
 
 
 def success(parsed_args):
@@ -63,7 +63,7 @@ def failure(parsed_args):
     return msg_type
 
 
-def example(parsed_args, config):
+def sleep(parsed_args, config):
     time.sleep(parsed_args.sleep_time)
     checklist = {'sleep time': parsed_args.sleep_time}
     return checklist
