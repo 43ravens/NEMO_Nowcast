@@ -31,5 +31,8 @@ Class and Exception for Building Workers
 Example Workers
 ===============
 
-.. automodule:: nemo_nowcast.workers.example
+.. automodule:: nemo_nowcast.workers.sleep
+    :members:
+
+.. automodule:: nemo_nowcast.workers.awaken
     :members:
