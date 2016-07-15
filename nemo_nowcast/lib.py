@@ -105,7 +105,7 @@ def deserialize_message(message):
               * :py:attr:`type`: the message type
               * :py:attr:`payload`: the message payload
 
-    :rtype: :py:class:`collections.namedtuple`
+    :rtype: :py:func:`collections.namedtuple`
     """
     msg = yaml.safe_load(message)
     message = namedtuple('Message', 'source, type, payload')
