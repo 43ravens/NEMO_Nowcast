@@ -440,10 +440,18 @@ class TestHandleContinueMsg:
 
     def test_missing_after_worker_function(self, m_importlib):
         mgr = manager.NowcastManager()
+        mgr.logger = Mock(name='logger')
+        mgr._msg_registry = {'next workers module': 'nowcast.next_workers'}
         mgr._update_checklist = Mock(name='_update_checklist')
+        mgr._next_workers_module = Mock(name='nowcast.next_workers', spec=[])
         msg = message(source='test_worker', type='success', payload=None)
-        with pytest.raises(AttributeError):
-            mgr._handle_continue_msg(msg)
+        reply, next_workers = mgr._handle_continue_msg(msg)
+        expected = {
+            'source': 'manager',
+            'type': 'no after_worker function',
+            'payload': None}
+        assert yaml.safe_load(reply) == expected
+        assert mgr.logger.critical.call_count == 1
 
     def test_reply(self, m_importlib):
         mgr = manager.NowcastManager()

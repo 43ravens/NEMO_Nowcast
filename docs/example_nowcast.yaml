@@ -37,6 +37,7 @@ message registry:
     ack: message acknowledged
     unregistered worker: ERROR - message received from unregistered worker
     unregistered message type: ERROR - unregistered message type received from worker
+    no after_worker function: ERROR - after_worker function not found in next_workers module
 
   next workers module: nowcast.next_workers
 
