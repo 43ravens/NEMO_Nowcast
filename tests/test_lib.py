@@ -65,6 +65,7 @@ class TestLoadConfig:
             read_data=(
                 'foo: bar\n'
                 'checklist file: nowcast_checklist.yaml\n'
+                'python: python\n'
                 'logging:\n'
                 '  handlers: []'))
         with patch('nemo_nowcast.lib.open', m_open):
@@ -76,6 +77,7 @@ class TestLoadConfig:
             read_data=(
                 'foo: bar\n'
                 'checklist file: nowcast_checklist.yaml\n'
+                'python: python\n'
                 'logging:\n'
                 '  handlers: []'))
         with patch('nemo_nowcast.lib.open', m_open):
@@ -87,6 +89,7 @@ class TestLoadConfig:
             read_data=(
                 'foo: bar\n'
                 'checklist file: $(NOWCAST.ENV.foo)/nowcast_checklist.yaml\n'
+                'python: python\n'
                 'logging:\n'
                 '  handlers: []'))
         with patch('nemo_nowcast.lib._replace_env', return_value='bar'):
@@ -94,12 +97,26 @@ class TestLoadConfig:
                 config = lib.load_config('nowcast.yaml')
         assert config['checklist file'] == 'bar/nowcast_checklist.yaml'
 
+    def test_replace_python_interpreter_envvar(self):
+        m_open = mock_open(
+            read_data=(
+                'foo: bar\n'
+                'checklist file: nowcast_checklist.yaml\n'
+                'python: $(NOWCAST.ENV.foo)/bin/python\n'
+                'logging:\n'
+                '  handlers: []'))
+        with patch('nemo_nowcast.lib._replace_env', return_value='bar'):
+            with patch('nemo_nowcast.lib.open', m_open):
+                config = lib.load_config('nowcast.yaml')
+        assert config['python'] == 'bar/bin/python'
+
     @patch('nemo_nowcast.lib._replace_env', return_value='bar')
     def test_replace_log_file_envvar(self, m_replace_env):
         m_open = mock_open(
             read_data=(
                 'foo: bar\n'
-                'checklist file: $(NOWCAST.ENV.foo)/nowcast_checklist.yaml\n'
+                'checklist file: nowcast_checklist.yaml\n'
+                'python: python\n'
                 'logging:\n'
                 '  handlers:\n'
                 '    info_test:\n'
@@ -114,13 +131,14 @@ class TestLoadConfig:
         m_open = mock_open(
             read_data=(
                 'foo: bar\n'
-                'checklist file: $(NOWCAST.ENV.foo)/nowcast_checklist.yaml\n'
+                'checklist file: nowcast_checklist.yaml\n'
+                'python: python\n'
                 'logging:\n'
                 '  handlers:\n'
                 '    console: {}'))
         with patch('nemo_nowcast.lib.open', m_open):
             config = lib.load_config('nowcast.yaml')
-        assert m_replace_env.call_count == 1
+        assert m_replace_env.call_count == 0
 
 
 class TestReplaceEnv:
