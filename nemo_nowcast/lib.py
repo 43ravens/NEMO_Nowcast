@@ -73,8 +73,9 @@ def load_config(config_file):
         config = yaml.safe_load(f)
     config['config_file'] = config_file
     envvar_pattern = re.compile(r'\$\(NOWCAST\.ENV\.(\w*)\)\w*')
-    config['checklist file'] = envvar_pattern.sub(
-        _replace_env, config['checklist file'])
+    envvar_sub_keys = ('checklist file', 'python')
+    for key in envvar_sub_keys:
+        config[key] = envvar_pattern.sub(_replace_env, config[key])
     handlers = config['logging']['handlers']
     for handler in handlers:
         try:
