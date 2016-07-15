@@ -5,7 +5,10 @@ Change Log
 In Development
 ==============
 
-* Add example nowcast worker module.
+* Add framework documentation.
+* Add ability to substitute environment variable values into nowcast
+  system YAML configuration file.
+* Add sleep example nowcast worker module.
 
 
 v0.3

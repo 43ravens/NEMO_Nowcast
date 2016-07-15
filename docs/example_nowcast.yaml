@@ -42,7 +42,7 @@ message registry:
   next workers module: nowcast.next_workers
 
   workers:
-    example:
+    sleep:
       checklist key: sleepyhead
       success: example worker slept well
       failure: example worker slept badly
