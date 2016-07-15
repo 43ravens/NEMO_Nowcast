@@ -15,6 +15,7 @@
 """NEMO_Nowcast worker classes.
 """
 import argparse
+from collections import namedtuple
 import logging
 import logging.config
 import os
@@ -31,8 +32,28 @@ class WorkerError(Exception):
     """
 
 
+class NextWorker(namedtuple('NextWorker', 'name, args')):
+    """Construct a :py:class:`nemo_nowcast.worker.NextWorker` instance.
+
+    Intended for use in a nowcast system implementation's
+    :py:mod:`nowcast.next_workers` module where :py:func:`after_worker_name`
+    functions return lists of :py:class:`nemo_nowcast.worker.NextWorker`
+    instances that provide the sequence of workers and their arguments
+    that are to be launched next.
+
+    :arg str name: Name of the worker module including its package path,
+                   in dotted notation;
+                   e.g. :kbd:`nowcast.workers.download_weather`.
+
+    :arg list args: Arguments to use when the worker is launched.
+                    Defaults to an empty list.
+    """
+    def __new__(cls, name, args=[]):
+        return super(NextWorker, cls).__new__(cls, name, args)
+
+
 class NowcastWorker:
-    """Construct a :py:class:`nemo_nowcast.manager.NowcastWorker` instance.
+    """Construct a :py:class:`nemo_nowcast.worker.NowcastWorker` instance.
     """
     def __init__(self, name, description, package='nowcast.workers'):
         #: The name of the worker instance.
@@ -303,4 +324,3 @@ class NowcastWorker:
             'received message from {msg.source}: ({msg.type}) {msg_words}'
             .format(msg=message, msg_words=msg_words))
         return message.payload
-
