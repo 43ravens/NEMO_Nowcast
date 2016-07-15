@@ -83,7 +83,7 @@ class TestFailure:
         assert msg_type == 'failure'
 
 
-class TestExample:
+class TestSleep:
     """Unit tests for sleep function.
     """
     @patch('nemo_nowcast.workers.sleep.time.sleep')

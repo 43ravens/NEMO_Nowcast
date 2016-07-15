@@ -55,6 +55,6 @@ message registry:
       # :kbd:`example` worker
       checklist key: sleepyhead
       # Message types that the :kbd:`example` worker can send and their meanings
-      success: example worker slept well
-      failure: example worker slept badly
-      crash: example worker crashed
+      success: sleep worker slept well
+      failure: sleep worker slept badly
+      crash: sleep worker crashed
