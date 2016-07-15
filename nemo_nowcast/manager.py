@@ -274,13 +274,24 @@ class NowcastManager:
             extra={'worker_msg': msg})
 
     def _handle_continue_msg(self, msg):
-        """Handle success, failure, or crash message from worker with
-        appropriate next step action(s).
+        """Handle success, failure, or crash message from worker by generating
+        list of subsequent workers to launch.
         """
         self._update_checklist(msg)
         importlib.reload(self._next_workers_module)
-        after_func = getattr(
-            self._next_workers_module, 'after_{}'.format(msg.source))
+        try:
+            after_func = getattr(
+                self._next_workers_module,
+                'after_{worker}'.format(worker=msg.source))
+        except AttributeError:
+            self.logger.critical(
+                'could not find after_{worker} in {next_workers} module'
+                .format(
+                    worker=msg.source,
+                    next_workers=self._msg_registry['next workers module']),
+                exc_info=True)
+            reply = lib.serialize_message(self.name, 'no after_worker function')
+            return reply, []
         next_workers = after_func(msg)
         reply = lib.serialize_message(self.name, 'ack')
         return reply, next_workers
