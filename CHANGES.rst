@@ -6,9 +6,10 @@ In Development
 ==============
 
 * Add framework documentation.
+* Add example next_workers module.
 * Add ability to substitute environment variable values into nowcast
   system YAML configuration file.
-* Add sleep example nowcast worker module.
+* Add sleep & awaken example nowcast worker modules.
 
 
 v0.3
