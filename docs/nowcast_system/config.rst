@@ -15,7 +15,35 @@
 
 .. _NowcastConfigFile:
 
+**************************
 Nowcast Configuration File
-==========================
+**************************
+
+**TODO**
+
+
+.. _ZeroMQServerAndPortsConfig:
+
+ZeroMQ Server and Ports
+=======================
+
+**TODO**
+
+.. code-block:: yaml
+
+    # Message system
+    zmq:
+      server: localhost
+      ports:
+        # traffic between manager and message broker
+        manager: 4343
+        # traffic between workers and message broker
+        workers: 4344
+
+
+.. _MessageRegistryConfig:
+
+Message Registry
+================
 
 **TODO**
