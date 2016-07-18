@@ -44,7 +44,7 @@ or :kbd:`manager`.
     >>> print(msg.source)
     'download_weather'
 
-The :kbd:`type` attribute's value is a key associated with the message sender in the :kbd:`message registry` section of the :ref:`NowcastConfigFile`.
+The :kbd:`type` attribute's value is a key associated with the message sender in the :ref:`MessageRegistryConfig` section of the :ref:`NowcastConfigFile`.
 For example,
 the message registry entries for a worker implemented in :py:mod:`~nowcast.workers.download_weather` might be:
 
@@ -78,7 +78,7 @@ The value associated with the :kbd:`payload` attribute can be any Python object
 (including :py:obj:`None`)
 that can be a value in a dictionary.
 The payload value is inserted into a :kbd:`checklist` dictionary that the nowcast manager uses to maintain information about the state of the nowcast system.
-The key at which the payload value is inserted into the checklist is defined for each worker in the :kbd:`message registry` section of the :ref:`NowcastConfigFile`:
+The key at which the payload value is inserted into the checklist is defined for each worker in the :ref:`MessageRegistryConfig` section of the :ref:`NowcastConfigFile`:
 
 .. code-block:: yaml
 
@@ -109,7 +109,7 @@ Workers send a message to the manager when they have something significant to re
   (only from workers running on remote hosts)
 
 When the manager receives a message from a worker it acknowledges the message with a return message.
-Those messages are also defined in the :kbd:`message registry` section of the :ref:`NowcastConfigFile`:
+Those messages are also defined in the :ref:`MessageRegistryConfig` section of the :ref:`NowcastConfigFile`:
 
 .. code-block:: yaml
 
@@ -138,7 +138,7 @@ Message Serialization and Deserialization
 Before messages can be passed among a worker,
 the :ref:`MessageBroker`,
 and the :ref:`SystemManager` they must be transformed into strings for transmission across the network.
-That is done by transforming the message tuple into Python dictionary object and that into a `YAML document`_,
+That is done by transforming the message tuple into a `YAML document`_,
 a process that is known as "serialization".
 The message recipient transforms the YAML document back into a message :py:func:`~collections.namedtuple`
 ("deserialization").
@@ -188,19 +188,7 @@ and the manager on the TCP network layer using dedicated ports.
   and waits for an acknowledgment from the manager.
 
 The server on which the broker is running,
-and the workers and manager port numbers that the system uses are defined in the :ref:`NowcastConfigFile`:
-
-.. code-block:: yaml
-
-    # Message system
-    zmq:
-      server: localhost
-      ports:
-        # traffic between manager and message broker
-        manager: 4343
-        # traffic between workers and message broker
-        workers: 4344
-
+and the workers and manager port numbers that the system uses are defined in the :ref:`ZeroMQServerAndPortsConfig` section of the :ref:`NowcastConfigFile`.
 The nowcast messaging system is based on the `ZeroMQ`_ distributed messaging framework.
 You probably don't need to delve into the details of ZeroMQ,
 but it is important to note that this is one of the situations where the nowcast system "stands on the shoulders of giants" rather than "re-inventing the wheel".
