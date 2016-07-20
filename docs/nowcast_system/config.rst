@@ -22,6 +22,34 @@ Nowcast Configuration File
 **TODO**
 
 
+.. _LoggingConfig:
+
+Logging
+=======
+
+**TODO**
+
+.. code-block:: yaml
+
+    # Logging system configuration
+    logging:
+      version: 1
+      disable_existing_loggers: False
+      formatters:
+        simple:
+          format: '%(asctime)s %(levelname)s [%(name)s] %(message)s'
+      handlers:
+        console:
+          class: logging.StreamHandler
+          level: DEBUG
+          formatter: simple
+          stream: ext://sys.stdout
+      root:
+        level: DEBUG
+        handlers:
+         - console
+
+
 .. _ZeroMQServerAndPortsConfig:
 
 ZeroMQ Server and Ports
