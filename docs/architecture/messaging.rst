@@ -189,6 +189,10 @@ and the manager on the TCP network layer using dedicated ports.
 
 The server on which the broker is running,
 and the workers and manager port numbers that the system uses are defined in the :ref:`ZeroMQServerAndPortsConfig` section of the :ref:`NowcastConfigFile`.
+
+.. note::
+    If the manager or some of the workers run on different machines than the message broker it is necessary to ensure that the appropriate firewall rules are in place to allow traffic to pass between those machines via the worker and/or manager port(s).
+
 The nowcast messaging system is based on the `ZeroMQ`_ distributed messaging framework.
 You probably don't need to delve into the details of ZeroMQ,
 but it is important to note that this is one of the situations where the nowcast system "stands on the shoulders of giants" rather than "re-inventing the wheel".
