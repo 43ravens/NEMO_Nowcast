@@ -109,19 +109,8 @@ Workers send a message to the manager when they have something significant to re
   (only from workers running on remote hosts)
 
 When the manager receives a message from a worker it acknowledges the message with a return message.
-Those messages are also defined in the :ref:`MessageRegistryConfig` section of the :ref:`NowcastConfigFile`:
-
-.. code-block:: yaml
-
-    message registry:
-      manager:
-        ack: message acknowledged
-        unregistered worker: ERROR - message received from unregistered worker
-        unregistered message type: ERROR - unregistered message type received from worker
-        no after_worker function: ERROR - after_worker function not found in next_workers module
-
-So,
-an "all is good" acknowledgment message from the manager in response to a message from a worker looks like:
+Those messages are also defined in the :ref:`MessageRegistryConfig` section of the :ref:`NowcastConfigFile`.
+An "all is good" acknowledgment message from the manager in response to a message from a worker looks like:
 
 .. code-block:: python
 
