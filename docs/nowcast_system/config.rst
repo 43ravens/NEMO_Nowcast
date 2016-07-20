@@ -47,3 +47,37 @@ Message Registry
 ================
 
 **TODO**
+
+.. code-block:: yaml
+
+    message registry:
+      # Message types that the manager process can send and their meanings
+      # Don't change this section without making corresponding changes in
+      # the nemo_nowcast.manager module of the NEMO_Nowcast package.
+      manager:
+        ack: message acknowledged
+        unregistered worker: ERROR - message received from unregistered worker
+        unregistered message type: ERROR - unregistered message type received from worker
+        no after_worker function: ERROR - after_worker function not found in next_workers module
+
+      # Module from which to load :py:func:`after_<worker_name>` functions
+      # that provide lists of workers to launch when :kbd:`worker_name` finishes
+      next workers module: nowcast.next_workers
+
+      workers:
+        # Worker module name
+        sleep:
+          # The key in the system checklist that the manager maintains that is to
+          # be used to hold message payload information provided by the
+          # :kbd:`example` worker
+          checklist key: sleepyhead
+          # Message types that the :kbd:`example` worker can send and their meanings
+          success: sleep worker slept well
+          failure: sleep worker slept badly
+          crash: sleep worker crashed
+        awaken:
+          checklist key: sleepyhead
+          success: awaken worker awoke - where's the coffee?
+          failure: awaken worker failed to awake
+          crash: awaken worker crashed
+
