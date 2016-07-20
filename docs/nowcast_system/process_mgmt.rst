@@ -1,5 +1,3 @@
-.. NEMO Nowcast Framework documentation master file
-
 .. Copyright 2016 Doug Latornell, 43ravens
 
 .. Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +13,10 @@
 .. limitations under the License.
 
 
-.. _BuildingANowcastSystem:
+.. _NowcastProcessMgmt:
 
-*************************
-Building a Nowcast System
-*************************
+**************************
+Nowcast Process Management
+**************************
 
-.. toctree::
-   :maxdepth: 2
-
-   config
-   process_mgmt
+**TODO**
