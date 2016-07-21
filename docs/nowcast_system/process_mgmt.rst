@@ -20,3 +20,14 @@ Nowcast Process Management
 **************************
 
 **TODO**
+
+
+.. _ExampleCircusConfigFile:
+
+Example Circus Configuration File
+=================================
+
+Here is the complete example circus configuration INI file that is discussed in the sections above:
+
+.. literalinclude:: example_circus.ini
+    :language: ini
