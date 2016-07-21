@@ -28,6 +28,7 @@ This improves the robustness of the system with respect to:
 * fatal errors or bugs in the manager or worker code
 * network latency and reliability
 * operation across a distributed collection of computers
+* the occasional need in the maintenance of a nowcast system to stop and restart the manager
 * etc.
 
 When the broker is started it binds to a workers port to listen for messages from workers,
