@@ -5,6 +5,7 @@ Change Log
 In Development
 ==============
 
+* Add rotate_logs built-in worker.
 * Add framework documentation.
 * Add example next_workers module.
 * Add ability to substitute environment variable values into nowcast

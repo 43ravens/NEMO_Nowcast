@@ -49,6 +49,18 @@ Class and Exception for Building Workers
     :special-members: __init__, __new__
 
 
+.. _NEMO_NowcastBuiltinWorkers:
+
+Built-in Workers
+================
+
+The framework provides a few worker modules for tasks that are generic enough that they are likely to be required in most nowcast systems.
+Please see :ref:`BuiltinWorkers` for descriptions of these workers and their intended use.
+
+.. automodule:: nemo_nowcast.workers.rotate_logs
+    :members:
+
+
 .. _ExampleWorkers:
 
 Example Workers
