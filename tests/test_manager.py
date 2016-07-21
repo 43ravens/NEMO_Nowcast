@@ -430,7 +430,7 @@ class TestHandleContinueMsg:
         assert not mgr._update_checklist.called
 
     @pytest.mark.parametrize('payload', ['payload', True, False, {'foo': '43'}])
-    def test_update_checklist(self, payload, m_importlib):
+    def test_update_checklist(self, m_importlib, payload):
         mgr = manager.NowcastManager()
         mgr._update_checklist = Mock(name='_update_checklist')
         mgr._next_workers_module = Mock(
