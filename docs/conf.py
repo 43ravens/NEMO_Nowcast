@@ -74,6 +74,11 @@ exclude_patterns = ['_build']
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
+# Supress nonlocal image URI warning generated due to readthedocs badge
+# in README.rst
+suppress_warnings = ['image.nonlocal_uri']
+
+
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
