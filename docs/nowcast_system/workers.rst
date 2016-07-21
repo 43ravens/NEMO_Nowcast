@@ -15,18 +15,10 @@
 .. limitations under the License.
 
 
-.. _BuildingANowcastSystem:
+.. _CreatingNowcastWorkers:
 
-*************************
-Building a Nowcast System
-*************************
+************************
+Creating Nowcast Workers
+************************
 
-.. toctree::
-   :maxdepth: 2
-
-   toy-example
-   elements
-   workers
-   config
-   builtin-workers
-   process_mgmt
+**TODO**:
