@@ -15,17 +15,10 @@
 .. limitations under the License.
 
 
-.. _BuildingANowcastSystem:
+.. _ToyExample:
 
-*************************
-Building a Nowcast System
-*************************
+************************************
+A "Toy" Example of a  Nowcast System
+************************************
 
-.. toctree::
-   :maxdepth: 2
-
-   toy-example
-   elements
-   config
-   builtin-workers
-   process_mgmt
+**TODO**:
