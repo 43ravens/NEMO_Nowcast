@@ -277,7 +277,8 @@ class NowcastManager:
         """Handle success, failure, or crash message from worker by generating
         list of subsequent workers to launch.
         """
-        self._update_checklist(msg)
+        if msg.payload is not None:
+            self._update_checklist(msg)
         importlib.reload(self._next_workers_module)
         try:
             after_func = getattr(

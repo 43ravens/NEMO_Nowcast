@@ -420,12 +420,22 @@ class TestLogReceivedMessage:
 class TestHandleContinueMsg:
     """Unit tests for NowcastManager._handle_continue_msg method.
     """
-    def test_update_checklist(self, m_importlib):
+    def test_no_checklist_update_when_no_payload(self, m_importlib):
         mgr = manager.NowcastManager()
         mgr._update_checklist = Mock(name='_update_checklist')
         mgr._next_workers_module = Mock(
             name='nowcast.next_workers', test_worker=Mock())
         msg = message(source='test_worker', type='success', payload=None)
+        mgr._handle_continue_msg(msg)
+        assert not mgr._update_checklist.called
+
+    @pytest.mark.parametrize('payload', ['payload', True, False, {'foo': '43'}])
+    def test_update_checklist(self, payload, m_importlib):
+        mgr = manager.NowcastManager()
+        mgr._update_checklist = Mock(name='_update_checklist')
+        mgr._next_workers_module = Mock(
+            name='nowcast.next_workers', test_worker=Mock())
+        msg = message(source='test_worker', type='success', payload=payload)
         mgr._handle_continue_msg(msg)
         mgr._update_checklist.assert_called_once_with(msg)
 
