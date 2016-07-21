@@ -109,3 +109,13 @@ Message Registry
           failure: awaken worker failed to awake
           crash: awaken worker crashed
 
+
+.. _ExampleNowcastConfigFile:
+
+Example Nowcast Configuration File
+==================================
+
+Here is the complete example nowcast configuration YAML file that is discussed in the sections above:
+
+.. literalinclude:: example_nowcast.yaml
+    :language: yaml
