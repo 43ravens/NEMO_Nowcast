@@ -23,7 +23,7 @@ Manager
 
 The :ref:`NEMO_NowcastManager` is a long-running process that keeps track of the state of the nowcast system.
 It launches workers to execute tasks required to complete daily NEMO nowcast model runs,
-and listens for messages from those workers that tell of their :kbd:`success` or failure,
+and listens for messages from those workers that tell of their success or failure,
 their progress,
 or their need for information about the system state.
 
@@ -63,7 +63,7 @@ Please review :ref:`BuildingANowcastSystem` if you encounter this problem.
 
 When the manager received a registered message type from a registered worker it uses the message type to decide how to handle the message.
 The most common type of message for a worker to send is a :kbd:`success` message,
-indicating that it has :kbd:`success`fully completed its job.
+indicating that it has successfully completed its job.
 :kbd:`failure` and :kbd:`crash` messages are handled in a similar way to :kbd:`success` messages.
 A :kbd:`failure` message indicates that the worker has not completed its job in some way that is anticipated in its code
 (i.e. not an unhandled error conditions).
