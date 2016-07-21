@@ -24,8 +24,8 @@ Nowcast Configuration File
 
 .. _LoggingConfig:
 
-Logging
-=======
+Logging Configuration
+=====================
 
 **TODO**
 
