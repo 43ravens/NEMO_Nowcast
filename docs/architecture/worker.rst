@@ -30,7 +30,7 @@ That enables system failures to be overcome by running one or more workers manua
 
 The design intent of workers is inspired by the "do one thing and do it well" aspect of the Unix philosophy.
 Having small,
-independent workers facilitates restarting the nowcast system automation at (almost) any point in the daily processing in the event or problems.
+independent workers facilitates restarting the nowcast system automation at (almost) any point in the daily processing in the event of problems.
 To the extent possible,
 workers should be `idempotent`_ so that they can be run multiple times if necessary to recover from problems.
 Workers should use :ref:`Logging` to record significant events in the nowcast system log files to facilitate monitoring of the system,
