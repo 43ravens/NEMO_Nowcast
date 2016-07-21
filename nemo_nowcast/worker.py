@@ -323,4 +323,4 @@ class NowcastWorker:
         self.logger.debug(
             'received message from {msg.source}: ({msg.type}) {msg_words}'
             .format(msg=message, msg_words=msg_words))
-        return message.payload
+        return message

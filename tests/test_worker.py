@@ -456,7 +456,7 @@ class TestTellManager:
         worker._socket.send_string.assert_called_once_with(m_lsm())
         worker._socket.recv_string.assert_called_once_with()
         assert worker.logger.debug.call_count == 2
-        assert response_payload == m_ldm().payload
+        assert response_payload == m_ldm()
 
     @patch('nemo_nowcast.lib.deserialize_message')
     @patch('nemo_nowcast.lib.serialize_message')
