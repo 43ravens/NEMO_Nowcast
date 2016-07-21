@@ -75,8 +75,8 @@ Example Workers
 
 .. _ExampleNextWorkersModule:
 
-Example :py:mod:`NextWorkers` Module
-====================================
+Example :py:mod:`next_workers` Module
+=====================================
 
 .. automodule:: nemo_nowcast.next_workers
     :members:
