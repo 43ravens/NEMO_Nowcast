@@ -13,6 +13,8 @@
 .. limitations under the License.
 
 
+.. _FrameworkArchitecture:
+
 ***********************************
 NEMO Nowcast Framework Architecture
 ***********************************
