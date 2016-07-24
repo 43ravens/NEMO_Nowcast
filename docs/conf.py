@@ -33,7 +33,7 @@ extensions = [
     'sphinx.ext.viewcode',
 ]
 
-# intersphinxKC configuration
+# Intersphinx configuration
 intersphinx_mapping = {
     'python': ('https://docs.python.org/', None),
 }
