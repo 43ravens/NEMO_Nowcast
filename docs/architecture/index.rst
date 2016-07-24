@@ -66,3 +66,4 @@ The sections below provide detailed descriptions of the elements of the framewor
    message_broker
    manager
    worker
+   scheduled_workers
