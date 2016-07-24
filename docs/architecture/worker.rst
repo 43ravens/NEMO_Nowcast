@@ -1,5 +1,3 @@
-.. NEMO Nowcast Framework documentation master file
-
 .. Copyright 2016 Doug Latornell, 43ravens
 
 .. Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +13,11 @@
 .. limitations under the License.
 
 
-.. _Worker:
+.. _Workers:
 
-******
-Worker
-******
+*******
+Workers
+*******
 
 Workers are short-lived processes that are launched when the nowcast system state is such that it is time for them to do their job.
 Their processes end when their job is completed and they have communicated their success or failure to the manager.

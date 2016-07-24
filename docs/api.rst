@@ -49,6 +49,16 @@ Class and Exception for Building Workers
     :special-members: __init__, __new__
 
 
+.. _NEMO_NowcastScheduledWorkers:
+
+Scheduled Workers
+=================
+
+**TODO**:
+
+* not implemented yet
+
+
 .. _NEMO_NowcastBuiltinWorkers:
 
 Built-in Workers

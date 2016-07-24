@@ -75,3 +75,13 @@ To implement that in your nowcast system:
        NextWorker('nemo_nowcast.workers.rotate_logs')
 
    object to the list of next workers returned by the :py:func:`after_worker_name` function for the worker that you want the log file rotation operation to follow.
+
+
+.. _ClearChecklistWorker:
+
+:py:mod:`clear_checklist` Worker
+================================
+
+**TODO**:
+
+* not yet implemented

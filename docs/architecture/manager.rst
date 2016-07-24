@@ -1,5 +1,3 @@
-.. NEMO Nowcast Framework documentation master file
-
 .. Copyright 2016 Doug Latornell, 43ravens
 
 .. Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,9 +45,10 @@ Those messages are defined in the :ref:`MessageRegistryConfig` section of the :r
 
 When the manager starts up it connects to the manager port of the :ref:`MessageBroker`.
 The manager spends most of its time listening for message from workers.
-It also has an internal scheduler that facilitates the launch of workers at a specific time of day.
-However,
-most workers are launched as a result of a :kbd:`success` message from another worker.
+Most workers are launched as a result of a :kbd:`success` message from another worker.
+For special cases in which a worker's launch time depends on factors outside of the nowcast system
+(such as the availability of atmospheric forcing model product files)
+the :ref:`ScheduledWorkers` process  facilitates the launch of workers at a specific time of day.
 
 When the manager receives a message from a worker it checks the :ref:`MessageRegistryConfig` to confirm that the worker is registered,
 and that the type of message the worker is sending is registered.

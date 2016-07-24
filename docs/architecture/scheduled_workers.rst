@@ -13,12 +13,15 @@
 .. limitations under the License.
 
 
-.. _CreatingNowcastWorkers:
+.. _ScheduledWorkers:
 
-************************
-Creating Nowcast Workers
-************************
+*****************
+Scheduled Workers
+*****************
 
 **TODO**:
 
-* based on http://salishsea-meopar-tools.readthedocs.io/en/latest/SalishSeaNowcast/workers.html
+* feature not yet implemented
+* separate process process under circusd that launches worker(s) as scheduled time(s)
+* intended for use for tasks that depend on timing that is controlled outside the  nowcast system;
+  primary example is download_weather worker that needs to start at a time after the weather model product files become available (on, for example, the EC FTP server)

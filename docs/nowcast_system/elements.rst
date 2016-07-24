@@ -1,5 +1,3 @@
-.. NEMO Nowcast Framework documentation master file
-
 .. Copyright 2016 Doug Latornell, 43ravens
 
 .. Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,9 +19,30 @@
 Elements of a Nowcast System
 ****************************
 
+**TODO**:
+
+* Python package; e.g. `GoMSS_Nowcast`_
+
+  .. _GoMSS_Nowcast: https://bitbucket.org/gomss-nowcast/gomss_nowcast
+
+* version control is highly recommended
+* nowcast system configuration
+* workers
+* next_workers module
+* process management with circus
+* distribute releases via an anaconda.org channel or conda-forge
+
+
 .. _Logging:
 
 Logging
 =======
 
-*TODO*
+*TODO*:
+
+* logging levels and readability of log files
+* log file rotation and growth limitation
+* environment variable substitution in logging config
+* serve log files on web page if possible, or use log aggregation service
+* exception logging to Sentry
+* machine readable logging; JSON via Driftwood
