@@ -17,6 +17,12 @@
 Iterate through the nowcast system logging handlers, calling the
 :py:meth:`doRollover` method on any that are instances of
 :py:class:`logging.handlers.RotatingFileHandler`.
+
+This worker is normally launched in automation at the end of a nowcast
+processing cycle (e.g. end of the day).
+
+It can also be launched from the command-line by the nowcast administrator
+as necessary for system maintenance.
 """
 import logging
 
