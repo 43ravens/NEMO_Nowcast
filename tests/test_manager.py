@@ -66,10 +66,6 @@ class TestNowcastManagerConstructor:
         mgr = manager.NowcastManager()
         assert mgr.logger.name == 'manager'
 
-    def test_checklist_logger_name(self):
-        mgr = manager.NowcastManager()
-        assert mgr.checklist_logger.name == 'checklist'
-
     def test_checklist(self):
         mgr = manager.NowcastManager()
         assert mgr.checklist == {}
