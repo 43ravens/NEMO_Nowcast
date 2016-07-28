@@ -57,7 +57,7 @@ def failure(parsed_args):
     return msg_type
 
 
-def rotate_logs(parsed_args, config):
+def rotate_logs(parsed_args, config, *args):
     logger.info('rotating log files')
     checklist = []
     root_logger = logging.getLogger()

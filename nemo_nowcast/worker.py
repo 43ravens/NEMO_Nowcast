@@ -245,22 +245,22 @@ class NowcastWorker:
         """
         try:
             checklist = self.worker_func(
-                self._parsed_args, self.config)
+                self._parsed_args, self.config, self.tell_manager)
             msg_type = self.success(self._parsed_args)
-            self._tell_manager(msg_type, checklist)
+            self.tell_manager(msg_type, checklist)
         except WorkerError:
             msg_type = self.failure(self._parsed_args)
-            self._tell_manager(msg_type)
+            self.tell_manager(msg_type)
         except SystemExit:
             # Normal termination
             pass
         except:
             self.logger.critical('unhandled exception:', exc_info=True)
-            self._tell_manager('crash')
+            self.tell_manager('crash')
         self._context.destroy()
         self.logger.debug('task completed; shutting down')
 
-    def _tell_manager(self, msg_type, payload=None):
+    def tell_manager(self, msg_type, payload=None):
         """Exchange messages with the nowcast manager process.
 
         Message is composed of worker's name, msg_type, and payload.
