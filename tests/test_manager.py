@@ -332,10 +332,10 @@ class TestMessageHandler:
         msg = message(source='worker', type='foo', payload=None)
         msg_dict = {
             'source': msg.source, 'type': msg.type, 'payload': msg.payload}
-        reply, next_steps = mgr._message_handler(yaml.dump(msg_dict))
+        reply, next_workers = mgr._message_handler(yaml.dump(msg_dict))
         mgr._handle_unregistered_worker_msg.assert_called_once_with(msg)
         assert reply == mgr._handle_unregistered_worker_msg()
-        assert next_steps == []
+        assert next_workers == []
         assert not mgr._log_received_msg.called
 
     def test_unregistered_msg_type(self):
@@ -347,11 +347,31 @@ class TestMessageHandler:
         msg = message(source='test_worker', type='foo', payload=None)
         msg_dict = {
             'source': msg.source, 'type': msg.type, 'payload': msg.payload}
-        reply, next_steps = mgr._message_handler(yaml.dump(msg_dict))
+        reply, next_workers = mgr._message_handler(yaml.dump(msg_dict))
         mgr._handle_unregistered_msg_type.assert_called_once_with(msg)
         assert reply == mgr._handle_unregistered_msg_type()
-        assert next_steps == []
+        assert next_workers == []
         assert not mgr._log_received_msg.called
+
+    def test_clear_checklist_msg(self):
+        mgr = manager.NowcastManager()
+        mgr._msg_registry = {
+            'workers': {
+                'test_worker': {
+                    'clear checklist':
+                        'request that manager clear system checklist'}}}
+        mgr._clear_checklist = Mock(
+            name='_clear_checklist', return_value='checklist cleared')
+        mgr._log_received_msg = Mock(name='_log_received_msg')
+        msg = message(
+            source='test_worker', type='clear checklist', payload=None)
+        msg_dict = {
+            'source': msg.source, 'type': msg.type, 'payload': msg.payload}
+        reply, next_workers = mgr._message_handler(yaml.dump(msg_dict))
+        assert mgr._log_received_msg.called
+        mgr._clear_checklist.assert_called_once_with()
+        assert reply == 'checklist cleared'
+        assert next_workers == []
 
     def test_continue_msg(self):
         mgr = manager.NowcastManager()
@@ -589,3 +609,42 @@ class TestLaunchWorker:
             ['nowcast-env/bin/python3', '-m', 'nowcast.workers.test_worker',
              'nowcast.yaml'])
         assert cmd == expected
+
+
+class TestClearChecklist:
+    """Unit tests for NowcastManager._clear_checklist method.
+    """
+    def test_without_checklist_logging(self):
+        mgr = manager.NowcastManager()
+        mgr.checklist = {'foo': 'bar'}
+        mgr.logger = Mock(name='logger')
+        mgr._write_checklist_to_disk = Mock(name='_write_checklist_to_disk')
+        mgr._clear_checklist()
+        assert mgr.checklist == {}
+        assert mgr.logger.info.call_count == 1
+
+    def test_with_checklist_logging(self):
+        mgr = manager.NowcastManager()
+        mgr.checklist = {'foo': 'bar'}
+        mgr.logger = Mock(name='logger')
+        mgr._write_checklist_to_disk = Mock(name='_write_checklist_to_disk')
+        with patch('nemo_nowcast.manager.logging') as m_logging:
+            m_root = m_logging.getLogger()
+            m_root.handlers = [Mock(name='checklist', level=1000)]
+            m_root.handlers[0].name = 'checklist'
+            mgr._clear_checklist()
+        mgr.logger.log.assert_called_once_with(
+            1000, "checklist:\n{'foo': 'bar'}")
+        assert mgr.checklist == {}
+        assert mgr.logger.info.call_count == 2
+
+    def test_checklist_cleared_msg_type(self):
+        mgr = manager.NowcastManager()
+        mgr.checklist = {'foo': 'bar'}
+        mgr.logger = Mock(name='logger')
+        mgr._write_checklist_to_disk = Mock(name='_write_checklist_to_disk')
+        reply = mgr._clear_checklist()
+        expected = {
+            'source': 'manager', 'type': 'checklist cleared', 'payload': None}
+        assert yaml.safe_load(reply) == expected
+

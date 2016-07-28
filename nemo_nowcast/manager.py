@@ -240,6 +240,9 @@ class NowcastManager:
             reply = self._handle_unregistered_msg_type(msg)
             return reply, []
         self._log_received_msg(msg)
+        if msg.type == 'clear checklist':
+            reply = self._clear_checklist()
+            return reply, []
         reply, next_workers = self._handle_continue_msg(msg)
         return reply, next_workers
 
@@ -350,6 +353,32 @@ class NowcastManager:
             extra={'worker': worker, 'host': host})
         self.logger.debug('cmd = {}'.format(cmd), extra={'cmd': cmd})
         subprocess.Popen(cmd)
+
+    def _clear_checklist(self):
+        """Write the checklist to a log file, then clear it.
+
+        This method is intended to be called in response to a "clear checklist"
+        message from the :py:mod:`nemo_nowcast.workers.clear_checklist` worker.
+        That worker is typically run once per nowcast cycle (e.g. daily) at the
+        end of peocessing, just before rotating the log files via the
+        :py:mod:`nemo_nowcast.workers.rotate_logs` worker.
+        """
+        for handler in logging.getLogger().handlers:
+            if handler.name == 'checklist':
+                checklist_handler = handler
+                break
+        else:
+            checklist_handler = None
+        if checklist_handler is not None:
+            self.logger.info('writing checklist to log file')
+            self.logger.log(
+                checklist_handler.level,
+                'checklist:\n{}'.format(pprint.pformat(self.checklist)))
+        self.checklist.clear()
+        self._write_checklist_to_disk()
+        self.logger.info('checklist cleared')
+        reply = lib.serialize_message(self.name, 'checklist cleared')
+        return reply
 
 
 if __name__ == '__main__':

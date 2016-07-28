@@ -2,9 +2,10 @@
 Change Log
 **********
 
-In Development
-==============
+v1.0
+====
 
+* Add clear_checklist built-in worker.
 * Add rotate_logs built-in worker.
 * Add framework documentation.
 * Add example next_workers module.
