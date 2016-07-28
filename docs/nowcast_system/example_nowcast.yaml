@@ -39,6 +39,7 @@ message registry:
   # the nemo_nowcast.manager module of the NEMO_Nowcast package.
   manager:
     ack: message acknowledged
+    checklist cleared: system checklist cleared
     unregistered worker: ERROR - message received from unregistered worker
     unregistered message type: ERROR - unregistered message type received from worker
     no after_worker function: ERROR - after_worker function not found in next_workers module
