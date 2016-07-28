@@ -54,13 +54,6 @@ class NowcastManager:
         #: Logger for the manager.
         #: Configured by the :kbd:`logging` section of the configuration file.
         self.logger = logging.getLogger(self.name)
-        #: Logger for the nowcast system checklist that the manager maintains.
-        #: Used to store the checklist on disk whenever it is updated.
-        #: Doing so facilitates user inspection of the checklist and thence
-        #: the present state of the nowcast system.
-        #: It also allows the manager to be restarted with its state preserved.
-        #: Configured by the :kbd:`logging` section of the configuration file.
-        self.checklist_logger = logging.getLogger('checklist')
         #: Nowcast system checklist: :py:class:`dict` containing the present
         #: state of the nowcast system.
         self.checklist = {}
