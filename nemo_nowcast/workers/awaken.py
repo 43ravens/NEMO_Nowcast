@@ -52,7 +52,7 @@ def failure(parsed_args):
     return msg_type
 
 
-def awaken(parsed_args, config):
+def awaken(parsed_args, config, *args):
     checklist = {'awoke': True}
     return checklist
 

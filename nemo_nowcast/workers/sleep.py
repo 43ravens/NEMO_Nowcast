@@ -63,7 +63,7 @@ def failure(parsed_args):
     return msg_type
 
 
-def sleep(parsed_args, config):
+def sleep(parsed_args, config, *args):
     time.sleep(parsed_args.sleep_time)
     checklist = {'sleep time': parsed_args.sleep_time}
     return checklist

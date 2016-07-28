@@ -316,16 +316,16 @@ class TestDoWork:
     """
     def test_worker_func(self):
         worker = NowcastWorker('worker_name', 'description')
-        worker._tell_manager = Mock(name='_tell_manager')
+        worker.tell_manager = Mock(name='tell_manager')
         worker.worker_func = Mock(name='worker_func')
         worker.success = Mock(name='success_func')
         worker._do_work()
         worker.worker_func.assert_called_once_with(
-            worker._parsed_args, worker.config)
+            worker._parsed_args, worker.config, worker.tell_manager)
 
     def test_success_func(self):
         worker = NowcastWorker('worker_name', 'description')
-        worker._tell_manager = Mock(name='_tell_manager')
+        worker.tell_manager = Mock(name='tell_manager')
         worker.worker_func = Mock(name='worker_func')
         worker.success = Mock(name='success_func')
         worker._do_work()
@@ -333,16 +333,16 @@ class TestDoWork:
 
     def test_success_tell_manager(self):
         worker = NowcastWorker('worker_name', 'description')
-        worker._tell_manager = Mock(name='_tell_manager')
+        worker.tell_manager = Mock(name='tell_manager')
         worker.worker_func = Mock(name='worker_func', return_value='checklist')
         worker.success = Mock(name='success_func', return_value='success')
         worker._do_work()
         # noinspection PyUnresolvedReferences
-        worker._tell_manager.assert_called_once_with('success', 'checklist')
+        worker.tell_manager.assert_called_once_with('success', 'checklist')
 
     def test_failure_func(self):
         worker = NowcastWorker('worker_name', 'description')
-        worker._tell_manager = Mock(name='_tell_manager')
+        worker.tell_manager = Mock(name='tell_manager')
         worker.worker_func = Mock(name='worker_func', side_effect=WorkerError)
         worker.failure = Mock(name='failure_func')
         worker._do_work()
@@ -350,12 +350,12 @@ class TestDoWork:
 
     def test_failure_tell_manager(self):
         worker = NowcastWorker('worker_name', 'description')
-        worker._tell_manager = Mock(name='_tell_manager')
+        worker.tell_manager = Mock(name='tell_manager')
         worker.worker_func = Mock(name='worker_func', side_effect=WorkerError)
         worker.failure = Mock(name='failure_func', return_value='failure')
         worker._do_work()
         # noinspection PyUnresolvedReferences
-        worker._tell_manager.assert_called_once_with('failure')
+        worker.tell_manager.assert_called_once_with('failure')
 
     def test_system_exit_context_destroy(self):
         worker = NowcastWorker('worker_name', 'description')
@@ -367,7 +367,7 @@ class TestDoWork:
     def test_logger_critical_unhandled_exception(self):
         worker = NowcastWorker('worker_name', 'description')
         worker.logger = Mock(name='logger')
-        worker._tell_manager = Mock(name='_tell_manager')
+        worker.tell_manager = Mock(name='tell_manager')
         worker._context = Mock(name='context')
         worker.worker_func = Mock(name='worker_func', side_effect=Exception)
         worker._do_work()
@@ -377,11 +377,11 @@ class TestDoWork:
     def test_crash_tell_manager(self):
         worker = NowcastWorker('worker_name', 'description')
         worker.logger = Mock(name='logger')
-        worker._tell_manager = Mock(name='_tell_manager')
+        worker.tell_manager = Mock(name='tell_manager')
         worker.worker_func = Mock(name='worker_func', side_effect=Exception)
         worker._do_work()
         # noinspection PyUnresolvedReferences
-        worker._tell_manager.assert_called_once_with('crash')
+        worker.tell_manager.assert_called_once_with('crash')
 
     def test_logger_debug_task_completed(self):
         worker = NowcastWorker('worker_name', 'description')
@@ -406,7 +406,7 @@ class TestTellManager:
                 'workers': {
         }}}
         with pytest.raises(WorkerError):
-            payload = worker._tell_manager('success', 'payload')
+            payload = worker.tell_manager('success', 'payload')
 
     def test_unregistered_worker_message_type(self):
         worker = NowcastWorker('test_worker', 'description')
@@ -420,7 +420,7 @@ class TestTellManager:
                         'success': 'successful test'}
         }}}
         with pytest.raises(WorkerError):
-            payload = worker._tell_manager('failure')
+            payload = worker.tell_manager('failure')
 
     def test_debug_mode(self):
         worker = NowcastWorker('test_worker', 'description')
@@ -432,7 +432,7 @@ class TestTellManager:
                     'test_worker': {
                         'success': 'successful test'}
         }}}
-        response_payload = worker._tell_manager('success', 'payload')
+        response_payload = worker.tell_manager('success', 'payload')
         assert worker.logger.debug.call_count == 1
         assert response_payload is None
 
@@ -452,7 +452,7 @@ class TestTellManager:
         }}}
         message = namedtuple('Message', 'source, type, payload')
         m_ldm.return_value = message(source='manager', type='ack', payload=None)
-        response_payload = worker._tell_manager('success', 'payload')
+        response_payload = worker.tell_manager('success', 'payload')
         worker._socket.send_string.assert_called_once_with(m_lsm())
         worker._socket.recv_string.assert_called_once_with()
         assert worker.logger.debug.call_count == 2
@@ -476,4 +476,4 @@ class TestTellManager:
         message = namedtuple('Message', 'source, type, payload')
         m_ldm.return_value = message(source='manager', type='foo', payload=None)
         with pytest.raises(WorkerError):
-            response_payload = worker._tell_manager('success', 'payload')
+            response_payload = worker.tell_manager('success', 'payload')
