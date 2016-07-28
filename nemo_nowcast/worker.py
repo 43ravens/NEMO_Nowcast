@@ -194,8 +194,7 @@ class NowcastWorker:
         self.config = lib.load_config(self._parsed_args.config_file)
         logging.config.dictConfig(self.config['logging'])
         if self._parsed_args.debug:
-            root_logger = logging.getLogger()
-            for handler in root_logger.handlers:
+            for handler in logging.getLogger().handlers:
                 if handler.name == 'console':
                     handler.setLevel(logging.DEBUG)
         self.logger.info('running in process {}'.format(os.getpid()))
