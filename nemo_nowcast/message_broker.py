@@ -34,7 +34,7 @@ context = zmq.Context()
 
 
 def main():
-    """Set up and run the nowcast system messgae broker.
+    """Set up and run the nowcast system message broker.
 
     Set-up includes:
 
@@ -51,7 +51,7 @@ def main():
 
     After the set-up is complete, launch the broker message queuing process.
 
-    See :command:`python -m nowcast.message_broker -help`
+    See :command:`python -m nemo_nowcast.message_broker -help`
     for details of the command-line interface.
     """
     parser = lib.base_arg_parser(
