@@ -33,7 +33,7 @@ def main():
     """
     Setup and run the nowcast system manager.
 
-    See :command:`python -m nowcast.manager -help`
+    See :command:`python -m nemo_nowcast.manager -help`
     for details of the command-line interface.
     """
     mgr = NowcastManager()
