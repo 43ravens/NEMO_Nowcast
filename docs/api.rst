@@ -49,14 +49,13 @@ Class and Exception for Building Workers
     :special-members: __init__, __new__
 
 
-.. _NEMO_NowcastScheduledWorkers:
+.. _NEMO_NowcastWorkerLaunchScheduler:
 
-Scheduled Workers
-=================
+Worker Launch Scheduler
+=======================
 
-**TODO**:
-
-* not implemented yet
+.. automodule:: nemo_nowcast.scheduler
+    :members:
 
 
 .. _NEMO_NowcastBuiltinWorkers:

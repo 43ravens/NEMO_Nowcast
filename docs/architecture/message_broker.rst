@@ -19,7 +19,7 @@
 Message Broker
 **************
 
-The :ref:`NEMO_NowcastMessageBroker` is also a long-running process that queues messages in both directions between the manager and the workers.
+The :ref:`NEMO_NowcastMessageBroker` is a long-running process that queues messages in both directions between the manager and the workers.
 Mediating the message transfers via queues means that it is not necessary to maintain direct connections between the manager and any active workers.
 This improves the robustness of the system with respect to:
 

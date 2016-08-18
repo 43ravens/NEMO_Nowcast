@@ -48,7 +48,7 @@ The manager spends most of its time listening for message from workers.
 Most workers are launched as a result of a :kbd:`success` message from another worker.
 For special cases in which a worker's launch time depends on factors outside of the nowcast system
 (such as the availability of atmospheric forcing model product files)
-the :ref:`ScheduledWorkers` process  facilitates the launch of workers at a specific time of day.
+the :ref:`Scheduler` process  facilitates the launch of workers at a specific time of day.
 
 When the manager receives a message from a worker it checks the :ref:`MessageRegistryConfig` to confirm that the worker is registered,
 and that the type of message the worker is sending is registered.
