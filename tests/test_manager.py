@@ -17,7 +17,6 @@
 from collections import namedtuple
 import signal
 from unittest.mock import (
-    call,
     patch,
     Mock,
     mock_open,
@@ -278,10 +277,11 @@ class TestLoadChecklist:
         mgr.logger.warning.assert_called_with('running with empty checklist')
 
 
+@patch('nemo_nowcast.lib.launch_worker')
 class TestTryMessages:
     """Unit tests for NowcastManager._try_messages method.
     """
-    def test_rev_string(self):
+    def test_rev_string(self, m_launch_worker):
         mgr = manager.NowcastManager()
         mgr._socket = Mock(name='_socket')
         mgr._message_handler = Mock(
@@ -289,7 +289,7 @@ class TestTryMessages:
         mgr._try_messages()
         mgr._socket.recv_string.assert_called_once_with()
 
-    def test_handle_message(self):
+    def test_handle_message(self, m_launch_worker):
         mgr = manager.NowcastManager()
         mgr._socket = Mock(name='_socket')
         mgr._message_handler = Mock(
@@ -297,7 +297,7 @@ class TestTryMessages:
         mgr._try_messages()
         mgr._message_handler.assert_called_once_with(mgr._socket.recv_string())
 
-    def test_send_reply(self):
+    def test_send_reply(self, m_launch_worker):
         mgr = manager.NowcastManager()
         mgr._socket = Mock(name='_socket')
         mgr._message_handler = Mock(
@@ -305,15 +305,15 @@ class TestTryMessages:
         mgr._try_messages()
         mgr._socket.send_string.assert_called_once_with('reply')
 
-    def test_launch_next_workers(self):
+    def test_launch_next_workers(self, m_launch_worker):
         mgr = manager.NowcastManager()
         mgr._socket = Mock(name='_socket')
         next_worker = NextWorker('nowcast.workers.next_worker')
         mgr._message_handler = Mock(
             name='_message_handler', return_value=('reply', [next_worker]))
-        mgr._launch_worker = Mock(name='_launch_worker')
         mgr._try_messages()
-        mgr._launch_worker.assert_called_once_with(next_worker)
+        m_launch_worker.assert_called_once_with(
+            next_worker, mgr.config, mgr.name)
 
 
 class TestMessageHandler:
@@ -556,55 +556,6 @@ class TestUpdateChecklist:
             source='test_worker', type='success', payload='baz')
         mgr._update_checklist(msg)
         mgr._write_checklist_to_disk.assert_called_once_with()
-
-
-@patch('nemo_nowcast.manager.subprocess')
-class TestLaunchWorker:
-    """Unit tests for NowcastManager._launch_worker method.
-    """
-    def test_localhost(self, m_subprocess):
-        mgr = manager.NowcastManager()
-        mgr.config = {
-            'python': 'nowcast-env/bin/python3',
-            'config_file': 'nowcast.yaml',
-        }
-        mgr._launch_worker(
-            NextWorker('nowcast.workers.test_worker', ['--debug']))
-        cmd = m_subprocess.Popen.call_args_list[0]
-        expected = call(
-            ['nowcast-env/bin/python3', '-m', 'nowcast.workers.test_worker',
-             'nowcast.yaml', '--debug'])
-        assert cmd == expected
-
-    def test_remote_host(self, m_subprocess):
-        mgr = manager.NowcastManager()
-        mgr.config = {
-            'run': {
-                'remotehost': {'python': 'nowcast-env/bin/python3',
-                'config_file': 'nowcast.yaml',
-        }}}
-        mgr._launch_worker(
-            NextWorker('nowcast.workers.test_worker', ['--debug']),
-            host='remotehost')
-        cmd = m_subprocess.Popen.call_args_list[0]
-        expected = call(
-            ['ssh', 'remotehost',
-             'nowcast-env/bin/python3', '-m', 'nowcast.workers.test_worker',
-             'nowcast.yaml', '--debug'])
-        assert cmd == expected
-
-    def test_no_cmdline_args(self, m_subprocess):
-        mgr = manager.NowcastManager()
-        mgr.config = {
-            'python': 'nowcast-env/bin/python3',
-            'config_file': 'nowcast.yaml',
-        }
-        mgr._launch_worker(NextWorker('nowcast.workers.test_worker'))
-        cmd = m_subprocess.Popen.call_args_list[0]
-        expected = call(
-            ['nowcast-env/bin/python3', '-m', 'nowcast.workers.test_worker',
-             'nowcast.yaml'])
-        assert cmd == expected
 
 
 class TestClearChecklist:

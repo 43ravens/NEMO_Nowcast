@@ -21,7 +21,6 @@ import logging.config
 import os
 import pprint
 import signal
-import subprocess
 
 import yaml
 import zmq
@@ -220,7 +219,7 @@ class NowcastManager:
         reply, next_workers = self._message_handler(message)
         self._socket.send_string(reply)
         for worker in next_workers:
-            self._launch_worker(worker)
+            lib.launch_worker(worker, self.config, self.name)
 
     def _message_handler(self, message):
         """Handle message from worker.
@@ -325,27 +324,6 @@ class NowcastManager:
         """
         with open(self.config['checklist file'], 'wt') as f:
             yaml.dump(self.checklist, f)
-
-    def _launch_worker(self, worker, host='localhost'):
-        """Use a subprocess to launch worker on host with args as the
-        worker's command-line arguments.
-
-        This method *does not* wait for the subprocess to complete.
-        """
-        if host == 'localhost':
-            cmd = [self.config['python'], '-m']
-            config_file = self.config['config_file']
-        else:
-            cmd = ['ssh', host, self.config['run'][host]['python'], '-m']
-            config_file = self.config['run'][host]['config_file']
-        cmd.extend([worker.name, config_file])
-        if worker.args:
-            cmd.extend(worker.args)
-        self.logger.info(
-            'launching {} on {}'.format(worker, host),
-            extra={'worker': worker, 'host': host})
-        self.logger.debug('cmd = {}'.format(cmd), extra={'cmd': cmd})
-        subprocess.Popen(cmd)
 
     def _clear_checklist(self):
         """Write the checklist to a log file, then clear it.

@@ -16,8 +16,10 @@
 """
 import argparse
 from collections import namedtuple
-import re
+import logging
 import os
+import re
+import subprocess
 
 import yaml
 
@@ -135,3 +137,26 @@ def serialize_message(source, msg_type, payload=None):
     """
     message = {'source': source, 'type': msg_type, 'payload': payload}
     return yaml.dump(message)
+
+
+def launch_worker(worker, config, logger_name, host='localhost'):
+    """Use a subprocess to launch worker on host with args as the
+    worker's command-line arguments.
+
+    This method *does not* wait for the subprocess to complete.
+    """
+    logger = logging.getLogger(logger_name)
+    if host == 'localhost':
+        cmd = [config['python'], '-m']
+        config_file = config['config_file']
+    else:
+        cmd = ['ssh', host, config['run'][host]['python'], '-m']
+        config_file = config['run'][host]['config_file']
+    cmd.extend([worker.name, config_file])
+    if worker.args:
+        cmd.extend(worker.args)
+    logger.info(
+        'launching {} on {}'.format(worker, host),
+        extra={'worker': worker, 'host': host})
+    logger.debug('cmd = {}'.format(cmd), extra={'cmd': cmd})
+    subprocess.Popen(cmd)
