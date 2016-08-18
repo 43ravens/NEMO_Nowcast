@@ -23,4 +23,5 @@ dependencies:
 - pyzmq
 - coverage
 - pytest
+- schedule
 - sphinx
