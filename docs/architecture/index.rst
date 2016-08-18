@@ -26,7 +26,7 @@ The messages are passed between the manager and workers by way of a "message bro
 .. figure:: ManagerBrokerWorkers.svg
     :align: center
 
-    Schematic of a nowcast system mangaer, message broker, and workers exchanging messages.
+    Schematic of a nowcast system manager, message broker, and workers exchanging messages, and a scheduler launching a worker.
 
 Workers are short-lived processes that are launched when the nowcast system state is such that it is time for them to do their job.
 Their processes end when their job is completed and they have communicated their success or failure to the manager.
@@ -47,6 +47,13 @@ This improves the robustness of the system with respect to:
 * the occasional need in the maintenance of a nowcast system to stop and restart the manager
 * etc.
 
+A "scheduler" process is also available to launch workers at specified times.
+Scheduled workers are used only for special circumstances
+(typically downloading atmospheric forcing model products).
+Most workers are launched by the manager process in response to system state events.
+The scheduler is also a long-running process.
+It periodically checks the system clock and launches workers when their scheduled time to run is reached.
+
 The :py:obj:`NEMO_Nowcast` package provides Python modules that implement:
 
 * the message broker: :py:mod:`nemo_nowcast.message_broker`
@@ -56,6 +63,7 @@ The :py:obj:`NEMO_Nowcast` package provides Python modules that implement:
 * :ref:`ExampleWorkers` and configuration files sufficient to create a "toy" system that demonstrates how the workers,
   manager,
   and message broker processes interact
+* the scheduler: :py:mod:`nemo_nowcast.scheduler`
 
 The :ref:`ExampleWorkers` and the :ref:`BuiltinWorkers` provided for use in nowcast system deployments serve as examples of how to write your own worker modules.
 
@@ -68,4 +76,4 @@ The sections below provide detailed descriptions of the elements of the framewor
    message_broker
    manager
    worker
-   scheduled_workers
+   scheduler

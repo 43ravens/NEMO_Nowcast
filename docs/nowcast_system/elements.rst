@@ -38,7 +38,7 @@ Elements of a Nowcast System
 Logging
 =======
 
-*TODO*:
+**TODO**:
 
 * logging levels and readability of log files
 * log file rotation and growth limitation
@@ -46,3 +46,11 @@ Logging
 * serve log files on web page if possible, or use log aggregation service
 * exception logging to Sentry
 * machine readable logging; JSON via Driftwood
+
+
+.. _NextWorkersModule:
+
+Next Workers Module
+===================
+
+**TODO**

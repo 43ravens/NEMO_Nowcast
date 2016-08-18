@@ -110,6 +110,46 @@ Message Registry
           crash: awaken worker crashed
 
 
+.. _ScheduledWorkersConfig:
+
+Scheduled Workers
+=================
+
+The :kbd:`scheduled workers` section is an optional configuration section that is used to specify the worker that the :ref:`Scheduler` should launch,
+when to launch them,
+and what command-line options (if any) to use for the launch.
+The period between system clock checks that the scheduler should use can also be specified;
+it defaults to 60 seconds if not specified.
+
+.. note::
+    Scheduled launching of workers is intended for use only in special cases in which a worker's launch time depends on factors outside of the nowcast system
+    (such as the availability of atmospheric forcing model product files).
+
+    The first choice for launching workers should be by the manager process in response to system state events
+    (via the :ref:`NextWorkersModule`).
+
+Example :kbd:`scheduled workers` configuration section:
+
+.. code-block:: yaml
+
+    # Workers scheduled to run at specific times
+    scheduled workers:
+      # Worker module
+      nowcast.workers.download_weather:
+        # Time period for worker launch repetition
+        every: day
+        # Time at which to launch the worker
+        # (quotes are required to ensure that time is interpreted as a string)
+        at: '05:15'
+        # Optional command-line options for the worker
+        # (quoted is necessary to force interpretation as a string)
+        cmd line opts: '12'
+
+      # Optional number of seconds that scheduler sleeps between checks for worker
+      # launch times; defaults to 60 if excluded
+      schedule sleep: 120
+
+
 .. _ExampleNowcastConfigFile:
 
 Example Nowcast Configuration File

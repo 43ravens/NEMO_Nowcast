@@ -5,6 +5,7 @@ Change Log
 v1.0
 ====
 
+* Add worker launch scheduler module.
 * Add clear_checklist built-in worker.
 * Add rotate_logs built-in worker.
 * Add framework documentation.

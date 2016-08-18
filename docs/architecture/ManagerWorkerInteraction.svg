@@ -26,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.68493451"
-     inkscape:cx="-47.197356"
+     inkscape:cx="-294.66627"
      inkscape:cy="612.46731"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -49,7 +49,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -58,6 +58,20 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-197.19732,-13.99422)">
+    <g
+       id="g8849">
+      <path
+         sodipodi:nodetypes="ccccc"
+         inkscape:connector-curvature="0"
+         id="path8698"
+         d="m 588.72805,909.7682 -24.36155,0.8413 9.58114,4.7369 -4.28957,9.2839 z"
+         style="display:inline;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.11141906px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:8, 8;stroke-dashoffset:0;stroke-opacity:1"
+         d="m 582.07859,912.09582 -96.82015,37.29693"
+         id="path8837"
+         inkscape:connector-curvature="0" />
+    </g>
     <path
        inkscape:connector-curvature="0"
        inkscape:connector-type="polyline"
@@ -372,7 +386,7 @@
            height="425.1593"
            x="-425.1593"
            y="167.33673" /></flowRegion><flowPara
-         id="flowPara8510"></flowPara></flowRoot>    <flowRoot
+         id="flowPara8510" /></flowRoot>    <flowRoot
        style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="flowRoot8512"
        xml:space="preserve"><flowRegion
@@ -382,7 +396,7 @@
            height="425.1593"
            width="543.47821"
            id="rect8516" /></flowRegion><flowPara
-         id="flowPara8518"></flowPara></flowRoot>    <g
+         id="flowPara8518" /></flowRoot>    <g
        id="g8783"
        transform="translate(0,426)">
       <path
@@ -588,7 +602,7 @@
            height="405.43948"
            x="-409.38345"
            y="172.85828" /></flowRegion><flowPara
-         id="flowPara8636"></flowPara></flowRoot>    <g
+         id="flowPara8636" /></flowRoot>    <g
        id="g8638"
        transform="translate(580,466)">
       <rect
@@ -921,20 +935,6 @@
              x="636.45032"
              y="1138.9645">worker</tspan></text>
       </g>
-    </g>
-    <g
-       id="g8849">
-      <path
-         sodipodi:nodetypes="ccccc"
-         inkscape:connector-curvature="0"
-         id="path8698"
-         d="m 588.72805,909.7682 -24.36155,0.8413 9.58114,4.7369 -4.28957,9.2839 z"
-         style="display:inline;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.11141906px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-      <path
-         style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:8, 8;stroke-dashoffset:0;stroke-opacity:1"
-         d="m 582.07859,912.09582 -96.82015,37.29693"
-         id="path8837"
-         inkscape:connector-curvature="0" />
     </g>
   </g>
 </svg>
