@@ -94,9 +94,9 @@ class TestPrepSchedule:
 
 
 class TestCreateScheduledJob:
-    """Unit test for scheduler._create_scheduled_job function.
+    """Unit tests for scheduler._create_scheduled_job function.
     """
-    def test(self):
+    def test_no_worker_cmd_line_opts(self):
         params = {'every': 'day', 'at': '15:43'}
         config = {'scheduled workers': {'nemo_nowcast.workers.sleep': params}}
         job = scheduler._create_scheduled_job(
@@ -104,6 +104,17 @@ class TestCreateScheduledJob:
         expected = (
             "Every 1 day at 15:43:00 do launch_worker(NextWorker("
             "name='nemo_nowcast.workers.sleep', args=[])")
+        assert str(job).startswith(expected)
+
+    def test_worker_cmd_line_opts(self):
+        params = {
+            'every': 'day', 'at': '15:43', 'cmd line opts': '--sleep-time 2'}
+        config = {'scheduled workers': {'nemo_nowcast.workers.sleep': params}}
+        job = scheduler._create_scheduled_job(
+            'nemo_nowcast.workers.sleep', params, config)
+        expected = (
+            "Every 1 day at 15:43:00 do launch_worker(NextWorker("
+            "name='nemo_nowcast.workers.sleep', args=['--sleep-time', '2'])")
         assert str(job).startswith(expected)
 
 
