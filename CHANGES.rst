@@ -2,6 +2,12 @@
 Change Log
 **********
 
+In development
+==============
+
+* Fix bugs that arise when scheduled workers config is missing or empty.
+
+
 v1.0
 ====
 

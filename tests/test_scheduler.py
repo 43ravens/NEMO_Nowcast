@@ -82,15 +82,15 @@ class TestMain:
 class TestPrepSchedule:
     """Unit tests for scheduler._prep_schedule function.
     """
-    def test_sleep_seconds_from_config(self):
-        config = {'scheduled workers': {'schedule sleep': 10}}
+    @pytest.mark.parametrize('config, expected', [
+        ({'scheduled workers': {'schedule sleep': 10}}, 10),
+        ({'scheduled workers': {}}, 60),
+        ({'scheduled workers': None}, 60),
+        ({}, 60),
+    ])
+    def test_sleep_seconds_from_config(self, config, expected):
         sleep_seconds = scheduler._prep_schedule(config)
-        assert sleep_seconds == 10
-
-    def test_sleep_seconds_default(self):
-        config = {'scheduled workers': {}}
-        sleep_seconds = scheduler._prep_schedule(config)
-        assert sleep_seconds == 60
+        assert sleep_seconds == expected
 
 
 class TestCreateScheduledJob:
