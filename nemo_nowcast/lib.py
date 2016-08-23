@@ -21,6 +21,7 @@ import os
 import re
 import subprocess
 
+import arrow
 import yaml
 
 
@@ -160,3 +161,30 @@ def launch_worker(worker, config, logger_name, host='localhost'):
         extra={'worker': worker, 'host': host})
     logger.debug('cmd = {}'.format(cmd), extra={'cmd': cmd})
     subprocess.Popen(cmd)
+
+
+def arrow_date(string, tz='Canada/Pacific'):
+    """Convert a YYYY-MM-DD string to a timezone-aware arrow object
+    or raise :py:exc:`argparse.ArgumentTypeError`.
+
+    The time part of the resulting arrow object is set to 00:00:00.
+
+    :arg string: YYYY-MM-DD string to convert.
+    :type string: str
+
+    :arg tz: Timezone of the date.
+    :type tz: str
+
+    :returns: Date string converted to an :py:class:`arrow.Arrow` object
+              with tz as its timezone.
+
+    :raises: :py:exc:`argparse.ArgumentTypeError`
+    """
+    try:
+        arw = arrow.get(string, 'YYYY-MM-DD')
+        return arrow.get(arw.date(), tz)
+    except arrow.parser.ParserError:
+        msg = (
+            'unrecognized date format: {} - '
+            'please use YYYY-MM-DD'.format(string))
+        raise argparse.ArgumentTypeError(msg)
