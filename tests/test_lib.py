@@ -15,6 +15,7 @@
 """Unit tests for lib module.
 """
 import argparse
+from datetime import datetime
 from unittest.mock import (
     call,
     Mock,
@@ -22,6 +23,7 @@ from unittest.mock import (
     patch,
 )
 
+import arrow
 import pytest
 import yaml
 
@@ -187,7 +189,6 @@ class TestSerializeMessage:
         assert yaml.safe_load(msg) == expected
 
 
-
 @patch('nemo_nowcast.lib.subprocess')
 class TestLaunchWorker:
     """Unit tests for lib.launch_worker method.
@@ -209,8 +210,9 @@ class TestLaunchWorker:
     def test_remote_host(self, m_subprocess):
         config = {
             'run': {
-                'remotehost': {'python': 'nowcast-env/bin/python3',
-                'config_file': 'nowcast.yaml',
+                'remotehost': {
+                    'python': 'nowcast-env/bin/python3',
+                    'config_file': 'nowcast.yaml',
         }}}
         lib.launch_worker(
             NextWorker('nowcast.workers.test_worker', ['--debug']),
@@ -235,3 +237,21 @@ class TestLaunchWorker:
             ['nowcast-env/bin/python3', '-m', 'nowcast.workers.test_worker',
              'nowcast.yaml'])
         assert cmd == expected
+
+
+class TestArrowDate:
+    """Unit tests for arrow_date() function.
+    """
+    def test_arrow_date_default_timezone(self):
+        arw = lib.arrow_date('2015-07-26')
+        expected = arrow.get(datetime(2015, 7, 26, 0, 0, 0), 'Canada/Pacific')
+        assert arw == expected
+
+    def test_arrow_date_timezone(self):
+        arw = lib.arrow_date('2015-07-26', 'Canada/Atlantic')
+        expected = arrow.get(datetime(2015, 7, 26, 0, 0, 0), 'Canada/Atlantic')
+        assert arw == expected
+
+    def test_arrow_date_parse_erroe(self):
+        with pytest.raises(argparse.ArgumentTypeError):
+            lib.arrow_date('205-7-261')
