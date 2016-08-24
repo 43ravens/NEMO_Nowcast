@@ -5,6 +5,10 @@ Change Log
 In development
 ==============
 
+* Refactored workers.NextWorker into attrs-decorated package with launch
+  method moved in from lib module.
+* Added arrow and attrs as dependencies (available from gomss-nowcast
+  channel on anaconda.org).
 * Fix bugs that arise when scheduled workers config is missing or empty.
 
 

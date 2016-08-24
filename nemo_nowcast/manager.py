@@ -219,7 +219,7 @@ class NowcastManager:
         reply, next_workers = self._message_handler(message)
         self._socket.send_string(reply)
         for worker in next_workers:
-            lib.launch_worker(worker, self.config, self.name)
+            worker.launch(self.config, self.name)
 
     def _message_handler(self, message):
         """Handle message from worker.

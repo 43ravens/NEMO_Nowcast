@@ -18,6 +18,7 @@ channels:
 
 dependencies:
 - arrow
+- attrs
 - circus
 - pip
 - python=3

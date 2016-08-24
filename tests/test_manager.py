@@ -277,11 +277,10 @@ class TestLoadChecklist:
         mgr.logger.warning.assert_called_with('running with empty checklist')
 
 
-@patch('nemo_nowcast.lib.launch_worker')
 class TestTryMessages:
     """Unit tests for NowcastManager._try_messages method.
     """
-    def test_rev_string(self, m_launch_worker):
+    def test_recv_string(self):
         mgr = manager.NowcastManager()
         mgr._socket = Mock(name='_socket')
         mgr._message_handler = Mock(
@@ -289,7 +288,7 @@ class TestTryMessages:
         mgr._try_messages()
         mgr._socket.recv_string.assert_called_once_with()
 
-    def test_handle_message(self, m_launch_worker):
+    def test_handle_message(self):
         mgr = manager.NowcastManager()
         mgr._socket = Mock(name='_socket')
         mgr._message_handler = Mock(
@@ -297,7 +296,7 @@ class TestTryMessages:
         mgr._try_messages()
         mgr._message_handler.assert_called_once_with(mgr._socket.recv_string())
 
-    def test_send_reply(self, m_launch_worker):
+    def test_send_reply(self):
         mgr = manager.NowcastManager()
         mgr._socket = Mock(name='_socket')
         mgr._message_handler = Mock(
@@ -305,15 +304,15 @@ class TestTryMessages:
         mgr._try_messages()
         mgr._socket.send_string.assert_called_once_with('reply')
 
-    def test_launch_next_workers(self, m_launch_worker):
+    def test_launch_next_workers(self):
         mgr = manager.NowcastManager()
         mgr._socket = Mock(name='_socket')
         next_worker = NextWorker('nowcast.workers.next_worker')
+        next_worker.launch = Mock(name='launch')
         mgr._message_handler = Mock(
             name='_message_handler', return_value=('reply', [next_worker]))
         mgr._try_messages()
-        m_launch_worker.assert_called_once_with(
-            next_worker, mgr.config, mgr.name)
+        next_worker.launch.assert_called_once_with(mgr.config, mgr.name)
 
 
 class TestMessageHandler:

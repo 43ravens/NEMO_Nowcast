@@ -20,7 +20,9 @@ import logging
 import logging.config
 import os
 import signal
+import subprocess
 
+import attr
 import zmq
 
 from nemo_nowcast import lib
@@ -32,7 +34,8 @@ class WorkerError(Exception):
     """
 
 
-class NextWorker(namedtuple('NextWorker', 'name, args')):
+@attr.s
+class NextWorker:
     """Construct a :py:class:`nemo_nowcast.worker.NextWorker` instance.
 
     Intended for use in a nowcast system implementation's
@@ -40,16 +43,42 @@ class NextWorker(namedtuple('NextWorker', 'name, args')):
     functions return lists of :py:class:`nemo_nowcast.worker.NextWorker`
     instances that provide the sequence of workers and their arguments
     that are to be launched next.
-
-    :arg str name: Name of the worker module including its package path,
-                   in dotted notation;
-                   e.g. :kbd:`nowcast.workers.download_weather`.
-
-    :arg list args: Arguments to use when the worker is launched.
-                    Defaults to an empty list.
     """
-    def __new__(cls, name, args=[]):
-        return super(NextWorker, cls).__new__(cls, name, args)
+    #: Name of the worker module including its package path,
+    #: in dotted notation;
+    #: e.g. :kbd:`nowcast.workers.download_weather`.
+    module = attr.ib()
+    #: Arguments to use when the worker is launched.
+    #: Defaults to an empty list.
+    args = attr.ib(default=attr.Factory(list))
+    #: Host to launch the worker on.
+    #: Defaults to :kbd:`localhost`
+    host = attr.ib(default='localhost')
+
+    def launch(self, config, logger_name):
+        """Use a subprocess to launch worker on host with args as the
+        worker's command-line arguments.
+
+        :arg dict config: Nowcast system configuration that was read from
+                          the configuration file.
+
+        :arg str logger_name: Name of the logger to emit messages on.
+
+        This method *does not* wait for the subprocess to complete.
+        """
+        logger = logging.getLogger(logger_name)
+        if self.host == 'localhost':
+            cmd = [config['python'], '-m']
+            config_file = config['config_file']
+        else:
+            cmd = ['ssh', self.host, config['run'][self.host]['python'], '-m']
+            config_file = config['run'][self.host]['config_file']
+        cmd.extend([self.module, config_file])
+        if self.args:
+            cmd.extend(self.args)
+        logger.info('launching {}'.format(self), extra={'worker': self})
+        logger.debug('cmd = {}'.format(cmd), extra={'cmd': cmd})
+        subprocess.Popen(cmd)
 
 
 class NowcastWorker:

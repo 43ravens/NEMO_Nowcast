@@ -2,6 +2,7 @@
 
 alabaster==0.7.8
 arrow==0.8.0
+attrs==16.0.0
 Babel==2.3.3
 circus==0.13.0
 coverage==4.0.3

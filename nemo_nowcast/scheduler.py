@@ -100,7 +100,7 @@ def _create_scheduled_job(worker_module, params, config):
         args = []
     worker = NextWorker(worker_module, args)
     job = schedule.every().__getattribute__(params['every']).at(params['at']).do(
-        lib.launch_worker, worker, config, NAME)
+        worker.launch, config, NAME)
     return job
 
 
