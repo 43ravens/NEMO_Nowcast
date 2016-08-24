@@ -17,7 +17,6 @@
 import argparse
 from datetime import datetime
 from unittest.mock import (
-    call,
     Mock,
     mock_open,
     patch,
@@ -28,7 +27,6 @@ import pytest
 import yaml
 
 from nemo_nowcast import lib
-from nemo_nowcast.worker import NextWorker
 
 
 class TestBasicArgParser:
@@ -187,56 +185,6 @@ class TestSerializeMessage:
         msg = lib.serialize_message(source, msg_type, payload)
         expected = {'source': source, 'type': msg_type, 'payload': payload}
         assert yaml.safe_load(msg) == expected
-
-
-@patch('nemo_nowcast.lib.subprocess')
-class TestLaunchWorker:
-    """Unit tests for lib.launch_worker method.
-    """
-    def test_localhost(self, m_subprocess):
-        config = {
-            'python': 'nowcast-env/bin/python3',
-            'config_file': 'nowcast.yaml',
-        }
-        lib.launch_worker(
-            NextWorker('nowcast.workers.test_worker', ['--debug']),
-            config, 'test_runner')
-        cmd = m_subprocess.Popen.call_args_list[0]
-        expected = call(
-            ['nowcast-env/bin/python3', '-m', 'nowcast.workers.test_worker',
-             'nowcast.yaml', '--debug'])
-        assert cmd == expected
-
-    def test_remote_host(self, m_subprocess):
-        config = {
-            'run': {
-                'remotehost': {
-                    'python': 'nowcast-env/bin/python3',
-                    'config_file': 'nowcast.yaml',
-        }}}
-        lib.launch_worker(
-            NextWorker('nowcast.workers.test_worker', ['--debug']),
-            config, 'test_runner', host='remotehost')
-        cmd = m_subprocess.Popen.call_args_list[0]
-        expected = call(
-            ['ssh', 'remotehost',
-             'nowcast-env/bin/python3', '-m', 'nowcast.workers.test_worker',
-             'nowcast.yaml', '--debug'])
-        assert cmd == expected
-
-    def test_no_cmdline_args(self, m_subprocess):
-        config = {
-            'python': 'nowcast-env/bin/python3',
-            'config_file': 'nowcast.yaml',
-        }
-        lib.launch_worker(
-            NextWorker('nowcast.workers.test_worker'),
-            config, 'test_runner')
-        cmd = m_subprocess.Popen.call_args_list[0]
-        expected = call(
-            ['nowcast-env/bin/python3', '-m', 'nowcast.workers.test_worker',
-             'nowcast.yaml'])
-        assert cmd == expected
 
 
 class TestArrowDate:

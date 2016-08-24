@@ -18,6 +18,7 @@ import argparse
 from collections import namedtuple
 import signal
 from unittest.mock import (
+    call,
     Mock,
     patch,
 )
@@ -32,19 +33,74 @@ from nemo_nowcast.worker import (
 )
 
 
-class TestNextWorker:
-    """Unit tests for NextWorker class.
+class TestNextWorkerConstructor:
+    """Unit tests for NextWorker class constructor.
     """
     def test_default_args(self):
         next_worker = NextWorker('nowcast.workers.download_weather')
-        assert next_worker.name == 'nowcast.workers.download_weather'
+        assert next_worker.module == 'nowcast.workers.download_weather'
         assert next_worker.args == []
+        assert next_worker.host == 'localhost'
 
     def test_specified_args(self):
         next_worker = NextWorker(
             'nowcast.workers.download_weather', ['--debug', '00'])
-        assert next_worker.name == 'nowcast.workers.download_weather'
+        assert next_worker.module == 'nowcast.workers.download_weather'
         assert next_worker.args == ['--debug', '00']
+
+    def test_specified_host(self):
+        next_worker = NextWorker(
+            'nowcast.workers.run_NEMO', host='west.cloud')
+        assert next_worker.module == 'nowcast.workers.run_NEMO'
+        assert next_worker.host == 'west.cloud'
+
+
+@patch('nemo_nowcast.worker.subprocess')
+class TestNextWorkerLaunch:
+    """Unit tests for NextWorker.lauch method.
+    """
+    def test_localhost(self, m_subprocess):
+        config = {
+            'python': 'nowcast-env/bin/python3',
+            'config_file': 'nowcast.yaml',
+        }
+        next_worker = NextWorker('nowcast.workers.test_worker', ['--debug'])
+        next_worker.launch(config, 'test_runner')
+        cmd = m_subprocess.Popen.call_args_list[0]
+        expected = call(
+            ['nowcast-env/bin/python3', '-m', 'nowcast.workers.test_worker',
+             'nowcast.yaml', '--debug'])
+        assert cmd == expected
+
+    def test_remote_host(self, m_subprocess):
+        config = {
+            'run': {
+                'remotehost': {
+                    'python': 'nowcast-env/bin/python3',
+                    'config_file': 'nowcast.yaml',
+        }}}
+        next_worker = NextWorker(
+            'nowcast.workers.test_worker', ['--debug'], 'remotehost')
+        next_worker.launch(config, 'test_runner')
+        cmd = m_subprocess.Popen.call_args_list[0]
+        expected = call(
+            ['ssh', 'remotehost',
+             'nowcast-env/bin/python3', '-m', 'nowcast.workers.test_worker',
+             'nowcast.yaml', '--debug'])
+        assert cmd == expected
+
+    def test_no_cmdline_args(self, m_subprocess):
+        config = {
+            'python': 'nowcast-env/bin/python3',
+            'config_file': 'nowcast.yaml',
+        }
+        next_worker = NextWorker('nowcast.workers.test_worker')
+        next_worker.launch(config, 'test_runner')
+        cmd = m_subprocess.Popen.call_args_list[0]
+        expected = call(
+            ['nowcast-env/bin/python3', '-m', 'nowcast.workers.test_worker',
+             'nowcast.yaml'])
+        assert cmd == expected
 
 
 class TestNowcastWorkerConstructor:
