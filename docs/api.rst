@@ -26,7 +26,7 @@ Message Broker
 ==============
 
 .. automodule:: nemo_nowcast.message_broker
-    :members:
+    :members: main
 
 
 .. _NEMO_NowcastManager:
@@ -41,12 +41,12 @@ Manager
 
 .. _NEMO_NowcastWorkerClasses:
 
-Class and Exception for Building Workers
-========================================
+Classes and Exception for Building Workers
+==========================================
 
 .. automodule:: nemo_nowcast.worker
     :members:
-    :special-members: __init__, __new__
+    :special-members: __init__
 
 
 .. _NEMO_NowcastWorkerLaunchScheduler:
@@ -55,7 +55,7 @@ Worker Launch Scheduler
 =======================
 
 .. automodule:: nemo_nowcast.scheduler
-    :members:
+    :members: main
 
 
 .. _NEMO_NowcastBuiltinWorkers:
@@ -67,6 +67,9 @@ The framework provides a few worker modules for tasks that are generic enough th
 Please see :ref:`BuiltinWorkers` for descriptions of these workers and their intended use.
 
 .. automodule:: nemo_nowcast.workers.rotate_logs
+    :members:
+
+.. automodule:: nemo_nowcast.workers.clear_checklist
     :members:
 
 
