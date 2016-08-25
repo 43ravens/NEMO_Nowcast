@@ -5,6 +5,8 @@ Change Log
 In development
 ==============
 
+* Add lib.get_web_data() function to robustly download content from URLs
+  via retries with exponential backoff.
 * Refactored workers.NextWorker into attrs-decorated package with launch
   method moved in from lib module.
 * Added arrow and attrs as dependencies (available from gomss-nowcast
