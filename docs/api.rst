@@ -70,6 +70,15 @@ Please see :ref:`BuiltinWorkers` for descriptions of these workers and their int
     :members:
 
 
+.. _NEMO_NowcastLib:
+
+Utility Functions
+=================
+
+.. automodule:: nemo_nowcast.lib
+    :members:
+
+
 .. _ExampleWorkers:
 
 Example Workers

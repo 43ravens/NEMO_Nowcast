@@ -17,14 +17,19 @@ channels:
   - defaults
 
 dependencies:
-- arrow
-- attrs
-- circus
-- pip
-- python=3
-- PyYAML
-- pyzmq
-- coverage
-- pytest
-- schedule
-- sphinx
+  - arrow
+  - attrs
+  - circus
+  - pip
+  - python=3
+  - PyYAML
+  - pyzmq
+  - requests
+  - schedule
+
+  # For unit tests
+  - coverage
+  - pytest
+
+  # For documentation
+  - sphinx
