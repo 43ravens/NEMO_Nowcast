@@ -78,6 +78,8 @@ class NowcastManager:
     #: :py:class:`zmq.Context.socket` instance that is connected to the
     #: message broker to enable nowcast system messages to be exchanged
     #: with worker processes.
+    #: Created when the
+    #: py:meth:`~NEMO_Nowcast.NowcastManager.run` method is called.
     _socket = attr.ib(default=None)
 
     def setup(self):
