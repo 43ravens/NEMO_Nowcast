@@ -26,6 +26,7 @@ from unittest.mock import (
 import pytest
 import zmq
 
+import nemo_nowcast.lib
 from nemo_nowcast.worker import (
     NextWorker,
     NowcastWorker,
@@ -110,6 +111,10 @@ class TestNowcastWorkerConstructor:
         worker = NowcastWorker('worker_name', 'description')
         assert worker.name == 'worker_name'
 
+    def test_description(self):
+        worker = NowcastWorker('worker_name', 'description')
+        assert worker.description == 'description'
+
     def test_package_default(self):
         worker = NowcastWorker('worker_name', 'description')
         assert worker.package == 'nowcast.workers'
@@ -118,17 +123,17 @@ class TestNowcastWorkerConstructor:
         worker = NowcastWorker('worker_name', 'description', package='foo.bar')
         assert worker.package == 'foo.bar'
 
-    def test_description(self):
-        worker = NowcastWorker('worker_name', 'description')
-        assert worker.description == 'description'
-
     def test_config(self):
         worker = NowcastWorker('worker_name', 'description')
-        assert worker.config is None
+        assert worker.config == {}
 
     def test_logger_name(self):
         worker = NowcastWorker('worker_name', 'description')
-        assert worker.logger.name == 'worker_name'
+        assert worker.logger is None
+
+    def test_arg_parser(self):
+        worker = NowcastWorker('worker_name', 'description')
+        assert worker.arg_parser is None
 
     def test_worker_func(self):
         worker = NowcastWorker('worker_name', 'description')
@@ -141,16 +146,6 @@ class TestNowcastWorkerConstructor:
     def test_failure(self):
         worker = NowcastWorker('worker_name', 'description')
         assert worker.failure is None
-
-    def test_arg_parser(self):
-        worker = NowcastWorker('worker_name', 'description')
-        assert isinstance(worker.arg_parser, argparse.ArgumentParser)
-
-    def test_add_debug_arg(self):
-        worker = NowcastWorker('worker_name', 'description')
-        assert isinstance(
-            worker.arg_parser._get_option_tuples('--debug')[0][0],
-            argparse._StoreTrueAction)
 
     def test_parsed_args(self):
         worker = NowcastWorker('worker_name', 'description')
@@ -165,6 +160,17 @@ class TestNowcastWorkerConstructor:
         assert worker._socket is None
 
 
+class TestInitCli:
+    """Unit test for NowcastWorker.init_cli method.
+    """
+    def test_debug_arg(self):
+        worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
+        assert isinstance(
+            worker.arg_parser._get_option_tuples('--debug')[0][0],
+            argparse._StoreTrueAction)
+
+
 class TestAddArgument:
     """Unit test for NowcastWorker.add_argument method.
     """
@@ -172,6 +178,7 @@ class TestAddArgument:
         """add_argument() wraps argparse.ArgumentParser.add_argument()
         """
         worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
         with patch('nemo_nowcast.worker.argparse.ArgumentParser') as m_parser:
             worker.add_argument(
                 '--yesterday', action='store_true',
@@ -183,14 +190,14 @@ class TestAddArgument:
         )
 
 
-# noinspection PyUnresolvedReferences
-@patch('nemo_nowcast.worker.lib.load_config')
+@patch('nemo_nowcast.lib.load_config')
 @patch('nemo_nowcast.worker.logging')
 class TestNowcastWorkerRun:
     """Unit tests for NowcastWorker.run method.
     """
     def test_worker_func(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
@@ -203,6 +210,7 @@ class TestNowcastWorkerRun:
 
     def test_success_func(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
@@ -215,6 +223,7 @@ class TestNowcastWorkerRun:
 
     def test_failure_func(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
@@ -227,6 +236,7 @@ class TestNowcastWorkerRun:
 
     def test_parse_args(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
@@ -239,6 +249,7 @@ class TestNowcastWorkerRun:
 
     def test_config(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
@@ -251,6 +262,7 @@ class TestNowcastWorkerRun:
 
     def test_logging_config(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
@@ -264,6 +276,7 @@ class TestNowcastWorkerRun:
 
     def test_debug_mode_console_logging(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
@@ -279,6 +292,7 @@ class TestNowcastWorkerRun:
 
     def test_logging_info(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
@@ -291,6 +305,7 @@ class TestNowcastWorkerRun:
 
     def test_init_zmq_interface(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
@@ -303,6 +318,7 @@ class TestNowcastWorkerRun:
 
     def test_install_signal_handlers(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
@@ -315,6 +331,7 @@ class TestNowcastWorkerRun:
 
     def test_do_work(self, m_logging, m_load_config):
         worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
@@ -372,6 +389,8 @@ class TestDoWork:
     """
     def test_worker_func(self):
         worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
+        worker.logger = Mock(name='logger')
         worker.tell_manager = Mock(name='tell_manager')
         worker.worker_func = Mock(name='worker_func')
         worker.success = Mock(name='success_func')
@@ -381,6 +400,8 @@ class TestDoWork:
 
     def test_success_func(self):
         worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
+        worker.logger = Mock(name='logger')
         worker.tell_manager = Mock(name='tell_manager')
         worker.worker_func = Mock(name='worker_func')
         worker.success = Mock(name='success_func')
@@ -389,6 +410,8 @@ class TestDoWork:
 
     def test_success_tell_manager(self):
         worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
+        worker.logger = Mock(name='logger')
         worker.tell_manager = Mock(name='tell_manager')
         worker.worker_func = Mock(name='worker_func', return_value='checklist')
         worker.success = Mock(name='success_func', return_value='success')
@@ -398,6 +421,8 @@ class TestDoWork:
 
     def test_failure_func(self):
         worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
+        worker.logger = Mock(name='logger')
         worker.tell_manager = Mock(name='tell_manager')
         worker.worker_func = Mock(name='worker_func', side_effect=WorkerError)
         worker.failure = Mock(name='failure_func')
@@ -406,6 +431,8 @@ class TestDoWork:
 
     def test_failure_tell_manager(self):
         worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
+        worker.logger = Mock(name='logger')
         worker.tell_manager = Mock(name='tell_manager')
         worker.worker_func = Mock(name='worker_func', side_effect=WorkerError)
         worker.failure = Mock(name='failure_func', return_value='failure')
@@ -415,6 +442,8 @@ class TestDoWork:
 
     def test_system_exit_context_destroy(self):
         worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
+        worker.logger = Mock(name='logger')
         worker._context = Mock(name='context')
         worker.worker_func = Mock(name='worker_func', side_effect=SystemExit)
         worker._do_work()

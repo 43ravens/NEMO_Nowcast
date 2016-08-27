@@ -15,7 +15,6 @@
 """NEMO_Nowcast worker classes.
 """
 import argparse
-from collections import namedtuple
 import logging
 import logging.config
 import os
@@ -25,7 +24,7 @@ import subprocess
 import attr
 import zmq
 
-from nemo_nowcast import lib
+import nemo_nowcast.lib
 
 
 class WorkerError(Exception):
@@ -81,36 +80,88 @@ class NextWorker:
         subprocess.Popen(cmd)
 
 
+@attr.s
 class NowcastWorker:
     """Construct a :py:class:`nemo_nowcast.worker.NowcastWorker` instance.
     """
-    def __init__(self, name, description, package='nowcast.workers'):
-        #: The name of the worker instance.
-        #: Used in the nowcast messaging system and for logging.
-        self.name = name
-        #: Description of the worker.
-        #: Used in the command-line interface.
-        #: Typically the worker module docstring;
-        #: i.e. :kbd:`description=__doc__`.
-        self.description = description
-        #: Name of the package that the worker is part of;
-        #: used to build the usage message.
-        #: Use dotted notation;
-        #: e.g. :kbd:`nowcast.workers`.
-        self.package = package
-        #: :py:class:`dict` containing the nowcast system configuration
-        #: that was read from the configuration file.
-        self.config = None
-        #: Logger for the worker.
-        #: Configured by the :kbd:`logging` section of the configuration file.
-        self.logger = logging.getLogger(self.name)
-        #: :py:class:`argparse.ArgumentParser` instance configured to provide
-        #: the default worker command-line interface that requires
-        #: a nowcast config file name,
-        #: and provides :kbd:`--debug`,
-        #: :kbd:`--help`,
-        #: and :kbd:`-h` options
-        self.arg_parser = lib.base_arg_parser(
+    #: The name of the worker instance.
+    #: Used in the nowcast messaging system and for logging.
+    name = attr.ib()
+    #: Description of the worker.
+    #: Used in the command-line interface.
+    #: Typically the worker module docstring;
+    #: i.e. :kbd:`description=__doc__`.
+    description = attr.ib()
+    #: Name of the package that the worker is part of;
+    #: used to build the usage message.
+    #: Use dotted notation;
+    #: e.g. :kbd:`nowcast.workers`.
+    package = attr.ib(default='nowcast.workers')
+    #: :py:class:`dict` containing the nowcast system configuration
+    #: that is read from the configuration file in the
+    #: :py:meth:`~NEMO_Nowcast.NowcastWorker.setup` method.
+    config = attr.ib(default=attr.Factory(dict))
+    #: Logger for the worker.
+    #: Configured from the :kbd:`logging` section of the configuration file
+    #: in the :py:meth:`~NEMO_Nowcast.NowcastWorker.setup` method.
+    logger = attr.ib(default=None)
+    #: :py:class:`argparse.ArgumentParser` instance configured in the
+    #: :py:meth:`~NEMO_Nowcast.NowcastWorker.setup` method
+    #: to provide the default worker command-line interface that requires
+    #: a nowcast config file name,
+    #: and provides :kbd:`--debug`,
+    #: :kbd:`--help`,
+    #: and :kbd:`-h` options.
+    arg_parser = attr.ib(default=None)
+    #: Function to be called to do the worker's job.
+    #: Called with the worker's parsed command-line arguments
+    #: :py:class:`argparse.Namespace` instance,
+    #: the worker's configuration dict,
+    #: and the :py:meth:`~NEMO_Nowcast.NowcastWorker.tell_manager` method.
+    #: Passed as an argument to the
+    #: :py:meth:`~NEMO_Nowcast.NowcastWorker.run` method.
+    worker_func = attr.ib(default=None)
+    #: Function to be called when the worker finishes successfully.
+    #: Called with the worker's parsed command-line arguments
+    #: :py:class:`argparse.Namespace` instance.
+    #: Must return a string whose value is a success message type defined
+    #: for the worker in the nowcast configuration file.
+    #: Passed as an argument to the
+    #: :py:meth:`~NEMO_Nowcast.NowcastWorker.run` method.
+    success = attr.ib(default=None)
+    #: Function to be called when the worker fails. Called with the
+    #: worker's parsed command-line arguments
+    #: :py:class:`argparse.Namespace`; instance.
+    #: Must return a string whose value is a failure message type defined
+    #: for the worker in the nowcast configuration file.
+    #: Passed as an argument to the
+    #: :py:meth:`~NEMO_Nowcast.NowcastWorker.run` method.
+    failure = attr.ib(default=None)
+    #: :py:class:`argparse.Namespace` instance containing the arguments
+    #: and option flags and values parsed from the command-line when the
+    #: :py:meth:`~NEMO_Nowcast.NowcastWorker.setup method is called.
+    _parsed_args = attr.ib(default=None)
+    #: :py:class:`zmq.Context` instance that provides the basis for the
+    #: nowcast messaging system.
+    _context = attr.ib(default=attr.Factory(zmq.Context))
+    #: :py:class:`zmq.Context.socket` instance that is connected to the
+    #: message broker to enable nowcast system messages to be exchanged
+    #: with manager process.
+    #: Created when the
+    #: py:meth:`~NEMO_Nowcast.NowcastWorker.run` method is called.
+    _socket = attr.ib(default=None)
+
+    def init_cli(self):
+        """Initialize the worker's command-line interface.
+
+        The default worker command-line interface requires a nowcast config
+        file name, and provides :kbd:`--debug`, :kbd:`--help`,
+        and :kbd:`-h` options.
+
+        Use the :py:meth:`~NEMO_Nowcast.NowcastWorker.add_argument` method
+        to add worker-specific arguments to the interface.
+        """
+        self.arg_parser = nemo_nowcast.lib.base_arg_parser(
             self.name, description=self.description, package=self.package)
         self.arg_parser.add_argument(
             '--debug', action='store_true',
@@ -124,34 +175,6 @@ class NowcastWorker:
             from the command-line.
             ''',
         )
-        #: Function to be called to do the worker's job.
-        #: Called with the worker's parsed command-line arguments
-        #: :py:class:`argparse.Namespace` instance,
-        #: and the worker's configuration dict.
-        self.worker_func = None
-        #: Function to be called when the worker finishes successfully.
-        #: Called with the worker's parsed command-line arguments
-        #: :py:class:`argparse.Namespace` instance.
-        #: Must return a string whose value is a success message type defined
-        # for the worker in the nowcast configuration file.
-        self.success = None
-        #: Function to be called when the worker fails. Called with the
-        # worker's parsed command-line arguments
-        #: :py:class:`argparse.Namespace`; instance.
-        #: Must return a string whose value is a failure message type defined
-        # for the worker in the nowcast configuration file.
-        self.failure = None
-        #: :py:class:`argparse.Namespace` instance containing the arguments
-        #: and option flags and values parsed from the command-line when the
-        #: worker was started.
-        self._parsed_args = None
-        #: :py:class:`zmq.Context` instance that provides the basis for the
-        #: nowcast messaging system.
-        self._context = zmq.Context()
-        #: :py:class:`zmq.Context.socket` instance that is connected to the
-        #: message broker to enable nowcast system messages to be exchanged
-        #: with manager process.
-        self._socket = None
 
     def add_argument(self, *args, **kwargs):
         """Add an argument to the worker's command-line interface.
@@ -181,10 +204,10 @@ class NowcastWorker:
 
         * Configuring the worker's logging interface
 
+        * Installing handlers for signals from the operating system
+
         * Configuring the worker's interface to the nowcast messaging
           framework
-
-        * Installing handlers for signals from the operating system
 
         :arg worker_func: Function to be called to do the worker's job.
                           Called with the worker's parsed command-line
@@ -220,7 +243,9 @@ class NowcastWorker:
         self.worker_func = worker_func
         self.success, self.failure = success, failure
         self._parsed_args = self.arg_parser.parse_args()
-        self.config = lib.load_config(self._parsed_args.config_file)
+        self.config = nemo_nowcast.lib.load_config(
+            self._parsed_args.config_file)
+        self.logger = logging.getLogger(self.name)
         logging.config.dictConfig(self.config['logging'])
         if self._parsed_args.debug:
             for handler in logging.getLogger().handlers:
@@ -229,26 +254,9 @@ class NowcastWorker:
         self.logger.info('running in process {}'.format(os.getpid()))
         self.logger.info('read config from {.config_file}'.format(
             self._parsed_args))
-        self._init_zmq_interface()
         self._install_signal_handlers()
+        self._init_zmq_interface()
         self._do_work()
-
-    def _init_zmq_interface(self):
-        """Initialize a ZeroMQ request/reply (REQ/REP) interface.
-
-        :returns: ZeroMQ socket for communication with nowcast manager process.
-        """
-        if self._parsed_args.debug:
-            self.logger.debug('**debug mode** no connection to manager')
-            return
-        self._socket = self._context.socket(zmq.REQ)
-        zmq_host = self.config['zmq']['server']
-        zmq_port = self.config['zmq']['ports']['workers']
-        self._socket.connect(
-            'tcp://{host}:{port}'.format(host=zmq_host, port=zmq_port))
-        self.logger.info(
-            'connected to {host} port {port}'
-            .format(host=zmq_host, port=zmq_port))
 
     def _install_signal_handlers(self):
         """Set up interrupt and kill signal handlers.
@@ -266,6 +274,23 @@ class NowcastWorker:
             self._socket.close()
             raise SystemExit
         signal.signal(signal.SIGTERM, sigterm_handler)
+
+    def _init_zmq_interface(self):
+        """Initialize a ZeroMQ request/reply (REQ/REP) interface.
+
+        :returns: ZeroMQ socket for communication with nowcast manager process.
+        """
+        if self._parsed_args.debug:
+            self.logger.debug('**debug mode** no connection to manager')
+            return
+        self._socket = self._context.socket(zmq.REQ)
+        zmq_host = self.config['zmq']['server']
+        zmq_port = self.config['zmq']['ports']['workers']
+        self._socket.connect(
+            'tcp://{host}:{port}'.format(host=zmq_host, port=zmq_port))
+        self.logger.info(
+            'connected to {host} port {port}'
+            .format(host=zmq_host, port=zmq_port))
 
     def _do_work(self):
         """Execute the worker function, communicate its success or failure to
@@ -330,14 +355,15 @@ class NowcastWorker:
                 .format(msg_type=msg_type, msg_words=msg_words))
             return
         # Send message to nowcast manager
-        message = lib.serialize_message(self.name, msg_type, payload)
+        message = nemo_nowcast.lib.serialize_message(
+            self.name, msg_type, payload)
         self._socket.send_string(message)
         self.logger.debug(
             'sent message: ({msg_type}) {msg_words}'
             .format(msg_type=msg_type, msg_words=worker_msgs[msg_type]))
         # Wait for and process response
         msg = self._socket.recv_string()
-        message = lib.deserialize_message(msg)
+        message = nemo_nowcast.lib.deserialize_message(msg)
         mgr_msgs = self.config['message registry']['manager']
         try:
             msg_words = mgr_msgs[message.type]
