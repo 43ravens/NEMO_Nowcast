@@ -22,6 +22,7 @@ import os
 import pprint
 import signal
 
+import attr
 import yaml
 import zmq
 
@@ -40,39 +41,44 @@ def main():
     mgr.run()
 
 
+@attr.s
 class NowcastManager:
     """Construct a :py:class:`nemo_nowcast.manager.NowcastManager` instance.
     """
-    def __init__(self, name='manager'):
-        #: The name of the manager instance.
-        #: Used in the nowcast messaging system and for logging.
-        self.name = name
-        #: :py:class:`dict` containing the nowcast system configuration
-        #: that was read from the configuration file.
-        self.config = None
-        #: Logger for the manager.
-        #: Configured by the :kbd:`logging` section of the configuration file.
-        self.logger = logging.getLogger(self.name)
-        #: Nowcast system checklist: :py:class:`dict` containing the present
-        #: state of the nowcast system.
-        self.checklist = {}
-        #: :py:class:`argparse.Namespace` instance containing the arguments
-        #: and option flags and values parsed from the command-line when the
-        #: manager was started.
-        self._parsed_args = None
-        #: The :kbd:`message registry` section of
-        #: :py:attr:`~nemo_nowcast.manager.config`.
-        self._msg_registry = None
-        #: Python module that contains functions to calculate lists of workers
-        #: to launch after previous workers end their work.
-        self._next_workers_module = None
-        #: :py:class:`zmq.Context` instance that provides the basis for the
-        #: nowcast messaging system.
-        self._context = zmq.Context()
-        #: :py:class:`zmq.Context.socket` instance that is connected to the
-        #: message broker to enable nowcast system messages to be exchanged
-        #: with worker processes.
-        self._socket = None
+    #: The name of the manager instance.
+    #: Used in the nowcast messaging system and for logging.
+    name = attr.ib(default='manager')
+    #: :py:class:`dict` containing the nowcast system configuration
+    #: that is read from the configuration file in the
+    #: :py:meth:`~NEMO_Nowcast.NowcastManager.setup` method.
+    config = attr.ib(default=attr.Factory(dict))
+    #: Logger for the manager.
+    #: Configured from the :kbd:`logging` section of the configuration file
+    #: in the :py:meth:`~NEMO_Nowcast.NowcastManager.setup` method .
+    logger = attr.ib(default=None)
+    #: Nowcast system checklist: :py:class:`dict` containing the present
+    #: state of the nowcast system.
+    checklist = attr.ib(default=attr.Factory(dict))
+    #: :py:class:`argparse.Namespace` instance containing the arguments
+    #: and option flags and values parsed from the command-line when the
+    #: :py:meth:`~NEMO_Nowcast.NowcastManager.setup method is called.
+    _parsed_args = attr.ib(default=None)
+    #: The :kbd:`message registry` section of
+    #: :py:attr:`~nemo_nowcast.manager.config`.
+    _msg_registry = attr.ib(default=None)
+    #: Name of the Python module that contains functions to calculate
+    #: lists of workers to launch after previous workers end their work.
+    #: Set from the :kbd:`message registry` section of
+    #: :py:attr:`~nemo_nowcast.manager.config` in the
+    #: py:meth:`~NEMO_Nowcast.NowcastManager.setup` method.
+    _next_workers_module = attr.ib(default=None)
+    #: :py:class:`zmq.Context` instance that provides the basis for the
+    #: nowcast messaging system.
+    _context = attr.ib(default=attr.Factory(zmq.Context))
+    #: :py:class:`zmq.Context.socket` instance that is connected to the
+    #: message broker to enable nowcast system messages to be exchanged
+    #: with worker processes.
+    _socket = attr.ib(default=None)
 
     def setup(self):
         """Set up the nowcast system manager process including:
@@ -83,6 +89,8 @@ class NowcastManager:
         * Configuring the logging system as specified in the configuration file
         * Logging the manager's PID, and the file path/name that was used to
           configure it.
+        * Importing the :py:mod:`next_workers` module specified in the
+          configuration file.
 
         The set-up is repeated if the manager process receives a HUP signal
         so that the configuration can be re-loaded without having to stop and
@@ -91,6 +99,7 @@ class NowcastManager:
         self._parsed_args = self._cli()
         self.config = lib.load_config(self._parsed_args.config_file)
         self._msg_registry = self.config['message registry']
+        self.logger = logging.getLogger(self.name)
         logging.config.dictConfig(self.config['logging'])
         self.logger.info('running in process {}'.format(os.getpid()))
         self.logger.info('read config from {.config_file}'.format(
