@@ -59,11 +59,11 @@ class TestNowcastManagerConstructor:
 
     def test_config(self):
         mgr = manager.NowcastManager()
-        assert mgr.config is None
+        assert mgr.config == {}
 
-    def test_logger_name(self):
+    def test_logger(self):
         mgr = manager.NowcastManager()
-        assert mgr.logger.name == 'manager'
+        assert mgr.logger is None
 
     def test_checklist(self):
         mgr = manager.NowcastManager()
@@ -125,6 +125,13 @@ class TestNowcastManagerSetup:
         assert mgr._msg_registry == {
             'next workers module': 'nowcast.next_workers',
             'workers': {}}
+
+    @patch('nemo_nowcast.manager.importlib')
+    def test_logger_name(self, m_importlib, m_load_config, m_logging):
+        mgr = manager.NowcastManager()
+        mgr._cli = Mock(name='_cli')
+        mgr.setup()
+        m_logging.getLogger.assert_called_once_with('manager')
 
     @patch('nemo_nowcast.manager.importlib')
     def test_logging_config(self, m_importlib, m_load_config, m_logging):
@@ -265,6 +272,7 @@ class TestLoadChecklist:
         mgr = manager.NowcastManager()
         p_open = patch('nemo_nowcast.manager.open', mock_open(), create=True)
         mgr.config = {'checklist file': 'nowcast_checklist.yaml'}
+        mgr.logger = Mock(name='logger')
         with p_open as m_open:
             mgr._load_checklist()
         m_open.assert_called_once_with('nowcast_checklist.yaml', 'rt')
@@ -511,6 +519,7 @@ class TestUpdateChecklist:
 
     def test_update_existing_value(self):
         mgr = manager.NowcastManager()
+        mgr.logger = Mock(name='logger')
         mgr.checklist = {'foo': 'bar'}
         mgr._write_checklist_to_disk = Mock(name='_write_checklist_to_disk')
         mgr._msg_registry = {
@@ -522,6 +531,7 @@ class TestUpdateChecklist:
 
     def test_keyerror_adds_key_and_value(self):
         mgr = manager.NowcastManager()
+        mgr.logger = Mock(name='logger')
         mgr.checklist = {'foo': 'bar'}
         mgr._write_checklist_to_disk = Mock(name='_write_checklist_to_disk')
         mgr._msg_registry = {
@@ -547,6 +557,7 @@ class TestUpdateChecklist:
 
     def test_yaml_dump_checklist_to_disk(self):
         mgr = manager.NowcastManager()
+        mgr.logger = Mock(name='logger')
         mgr.checklist = {'foo': 'bar'}
         mgr._write_checklist_to_disk = Mock(name='_write_checklist_to_disk')
         mgr._msg_registry = {
