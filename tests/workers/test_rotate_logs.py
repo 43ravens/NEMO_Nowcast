@@ -32,6 +32,10 @@ class TestMain:
         assert 'description' in kwargs
         assert 'package' in kwargs
 
+    def test_init_cli(self, m_worker):
+        rotate_logs.main()
+        m_worker().init_cli.assert_called_once_with()
+
     def test_run_worker(self, m_worker):
         rotate_logs.main()
         args, kwargs = m_worker().run.call_args

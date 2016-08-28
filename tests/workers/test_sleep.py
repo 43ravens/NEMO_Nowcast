@@ -33,6 +33,10 @@ class TestMain:
         assert 'description' in kwargs
         assert 'package' in kwargs
 
+    def test_init_cli(self, m_worker):
+        sleep.main()
+        m_worker().init_cli.assert_called_once_with()
+
     def test_add_sleep_time_arg(self, m_worker):
         sleep.main()
         worker = m_worker()
