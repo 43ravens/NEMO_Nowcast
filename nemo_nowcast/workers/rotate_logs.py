@@ -26,7 +26,6 @@ as necessary for system maintenance.
 """
 import logging
 
-import nemo_nowcast.lib
 from nemo_nowcast.worker import NowcastWorker
 
 

@@ -20,7 +20,6 @@ for a specified number of seconds.
 import logging
 import time
 
-import nemo_nowcast.lib
 from nemo_nowcast.worker import NowcastWorker
 
 
