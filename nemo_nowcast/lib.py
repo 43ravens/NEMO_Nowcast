@@ -16,17 +16,11 @@
 """
 import argparse
 from collections import namedtuple
-import logging
 import os
 import re
-import socket
-import time
 
 import arrow
-import requests
 import yaml
-
-from nemo_nowcast.worker import WorkerError
 
 
 def base_arg_parser(
@@ -169,113 +163,3 @@ def arrow_date(string, tz='Canada/Pacific'):
             'unrecognized date format: {} - '
             'please use YYYY-MM-DD'.format(string))
         raise argparse.ArgumentTypeError(msg)
-
-
-def get_web_data(
-    file_url, filepath, logger_name,
-    session=None,
-    wait_exponential_multiplier=2,
-    wait_exponential_max=60 * 60,
-):
-    """Download content from file_url and storeit in filepath.
-
-    If the first download attempt fails, retry at exponentially increasing
-    intervals until wait_exponential_max is exceeded.
-    The first retry occurs after wait_exponential_multiplier seconds
-    The delay until the next retry is calculated by multiplying the previous
-    delay by wait_exponential_multiplier.
-
-    So, with the default argument values, the first retry will occur
-    2 seconds after the download fails, and subsequent retries will
-    occur at 4, 8, 16, 32, 64, ..., 2048 seconds after each failure.
-
-    :param str file_url: URL to download content from.
-
-    :param filepath: File path/name at which to store the downloaded content.
-    :type filepath: :py:class:`pathlib.Path`
-
-    :param str logger_name: Name of the :py:class:`logging.Logger` to emit
-                            messages on.
-
-    :param session: Session object to use for TCP connection pooling
-                    to improve performance for multiple requests to the same
-                    host.
-                    Defaults to :py:obj:`None` for simplicity,
-                    in which case a session is created within the function.
-                    If the function is called within loop,
-                    the recommended use pattern is to create the session
-                    outside the loop as a context manager:
-
-                    .. code-block:: python
-
-                        with requests.Session() as session:
-                            for thing in iterable:
-                                nemo_nowcast.lib.get_web_data(
-                                    file_url, filepath, logger_name, session)
-
-    :type session: :py:class:`requests.Session`
-
-    :param wait_exponential_multiplier: Multiplicative factor that increases
-                                        the time interval between retries.
-                                        Also the number of seconds to wait
-                                        before the first retry.
-    :type wait_exponential_multiplier: int or float
-
-    :param wait_exponential_max: Maximum number of seconds for the final retry
-                                 wait interval.
-                                 The actual wait time is less than or equal to
-                                 the limit so it may be significantly less than
-                                 the limit;
-                                 e.g. with the default argument values the
-                                 final retry wait interval will be 2048
-                                 seconds.
-    :type wait_exponential_max: int or float
-
-    :return: :py:class:`requests.Response` headers
-    :rtype: dict
-
-    :raises: :py:exc:`nemo_nowcast.workers.WorkerError`
-    """
-    logger = logging.getLogger(logger_name)
-    if session is None:
-        session = requests.Session()
-    def _get_data():
-        try:
-            response = session.get(file_url, stream=True)
-            response.raise_for_status()
-            return _handle_response_content(response, filepath)
-        except (
-            requests.exceptions.ConnectionError,
-            requests.exceptions.HTTPError,
-            socket.error,
-        ) as e:
-            logger.debug('received {msg} from {url}'.format(msg=e, url=file_url))
-            raise e
-    try:
-        _get_data()
-    except:
-        wait_seconds = wait_exponential_multiplier
-        retries = 0
-        while wait_seconds < wait_exponential_max:
-            logger.debug('waiting {} seconds until retry'.format(wait_seconds))
-            time.sleep(wait_seconds)
-            try:
-                _get_data()
-            except:
-                wait_seconds *= wait_exponential_multiplier
-                retries += 1
-        logger.error(
-            'giving up; download from {url} failed {fail_count} times'
-            .format(url=file_url, fail_count=retries+1))
-        raise WorkerError
-
-
-def _handle_response_content(response, filepath):
-    """Store response content stream at filepath.
-    """
-    with filepath.open('wb') as f:
-        for block in response.iter_content():
-            if not block:
-                break
-            f.write(block)
-    return response.headers

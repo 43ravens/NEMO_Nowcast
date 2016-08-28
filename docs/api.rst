@@ -36,7 +36,6 @@ Manager
 
 .. automodule:: nemo_nowcast.manager
     :members: main, NowcastManager
-    :special-members: __init__
 
 
 .. _NEMO_NowcastWorkerClasses:
@@ -46,7 +45,6 @@ Classes and Exception for Building Workers
 
 .. automodule:: nemo_nowcast.worker
     :members:
-    :special-members: __init__
 
 
 .. _NEMO_NowcastWorkerLaunchScheduler:
@@ -73,13 +71,15 @@ Please see :ref:`BuiltinWorkers` for descriptions of these workers and their int
     :members:
 
 
-.. _NEMO_NowcastLib:
+.. _NEMO_NowcastUtilityFunctions:
 
 Utility Functions
 =================
 
 .. automodule:: nemo_nowcast.lib
     :members:
+
+.. autofunction:: nemo_nowcast.worker.get_web_data
 
 
 .. _ExampleWorkers:

@@ -26,7 +26,6 @@ from unittest.mock import (
 import pytest
 import zmq
 
-import nemo_nowcast.lib
 from nemo_nowcast.worker import (
     NextWorker,
     NowcastWorker,

@@ -5,9 +5,11 @@ Change Log
 In development
 ==============
 
-* Add lib.get_web_data() function to robustly download content from URLs
-  via retries with exponential backoff.
-* Refactored workers.NextWorker into attrs-decorated package with launch
+* Refactored manager.NowcastManager and worker.NowcastWorker
+  into attr.s-decorated classes.
+* Add worker.NowcastWorker.get_web_data() function to robustly download
+  content from URLs via retries with exponential backoff.
+* Refactored workers.NextWorker into attr.s-decorated class with launch
   method moved in from lib module.
 * Added arrow and attrs as dependencies (available from gomss-nowcast
   channel on anaconda.org).
