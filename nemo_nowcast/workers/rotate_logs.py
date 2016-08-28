@@ -43,6 +43,7 @@ def main():
     """
     worker = NowcastWorker(
         NAME, description=__doc__, package='nemo_nowcast.workers')
+    worker.init_cli()
     worker.run(rotate_logs, success, failure)
 
 

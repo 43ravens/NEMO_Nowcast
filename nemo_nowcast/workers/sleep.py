@@ -37,6 +37,7 @@ def main():
     """
     worker = NowcastWorker(
         NAME, description=__doc__, package='nemo_nowcast.workers')
+    worker.init_cli()
     arg_defaults = {'sleep_time': 5}
     worker.arg_parser.set_defaults(**arg_defaults)
     worker.arg_parser.add_argument(
