@@ -5,14 +5,17 @@ Change Log
 In development
 ==============
 
-* Refactored manager.NowcastManager and worker.NowcastWorker
-  into attr.s-decorated classes.
-* Add worker.NowcastWorker.get_web_data() function to robustly download
-  content from URLs via retries with exponential backoff.
-* Refactored workers.NextWorker into attr.s-decorated class with launch
-  method moved in from lib module.
-* Added arrow and attrs as dependencies (available from gomss-nowcast
-  channel on anaconda.org).
+* Refactored message data structure, lib.serialize_message(),
+  and lib.deserialize_message() functions into attr-s.decorated
+  nemo_nowcast.message.Message class.
+* Refactored nemo_nowcast.manager.NowcastManager and
+  nemo_nowcast.worker.NowcastWorker into attr.s-decorated classes.
+* Add nemo_nowcast.worker.NowcastWorker.get_web_data() function to
+  robustly download content from URLs via retries with exponential backoff.
+* Refactored nemo_nowcast.workers.NextWorker into attr.s-decorated class
+  with launch method moved in from lib module.
+* Added arrow and attrs packages as dependencies
+  (available from gomss-nowcast channel on anaconda.org).
 * Fix bugs that arise when scheduled workers config is missing or empty.
 
 

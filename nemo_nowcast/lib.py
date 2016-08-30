@@ -15,7 +15,6 @@
 """NEMO_Nowcast framework library functions.
 """
 import argparse
-from collections import namedtuple
 import os
 import re
 
@@ -29,7 +28,7 @@ def base_arg_parser(
     """Return a command-line argument parser w/ handling for always-used args.
 
     The returned parser provides help messages, and handles the
-    :option:`config_file` argument.
+    :kbd:`config_file` argument.
 
     :arg str module_name: Name of the module that the parser is for;
                           used to build the usage message.
@@ -93,49 +92,6 @@ def _replace_env(var):
         return os.environ[var.group(1)]
     except KeyError:
         raise KeyError('environment variable not set: {}'.format(var.group(1)))
-
-
-def deserialize_message(message):
-    """Transform received message from str to message data structure.
-
-    :arg str message: Message dict serialized using YAML.
-
-    :returns: Named-tuple with attributes:
-
-              * :py:attr:`source`: the name of the message source
-              * :py:attr:`type`: the message type
-              * :py:attr:`payload`: the message payload
-
-    :rtype: :py:func:`collections.namedtuple`
-    """
-    msg = yaml.safe_load(message)
-    message = namedtuple('Message', 'source, type, payload')
-    return message(
-        source=msg['source'],
-        type=msg['type'],
-        payload=msg['payload'],
-    )
-
-
-def serialize_message(source, msg_type, payload=None):
-    """Construct a message data structure and transofrm it into a string
-    suitable for sending.
-
-    :arg str source: Name of the worker or manager sending the message.
-
-    :arg str msg_type: Key of a message type that is defined for source
-                       in the message registry section of the configuration
-                       data structure.
-
-    :arg payload: Content of message;
-                  must be serializable by YAML such that it can be
-                  deserialized by :func:`yaml.safe_load`.
-    :type payload: Python object
-
-    :returns: Message data structure serialized using YAML.
-    """
-    message = {'source': source, 'type': msg_type, 'payload': payload}
-    return yaml.dump(message)
 
 
 def arrow_date(string, tz='Canada/Pacific'):

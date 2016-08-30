@@ -14,7 +14,6 @@
 
 """Unit tests for nemo_nowcast.manager module.
 """
-from collections import namedtuple
 import signal
 from unittest.mock import (
     patch,
@@ -23,14 +22,11 @@ from unittest.mock import (
 )
 
 import pytest
-import yaml
 import zmq
 
 from nemo_nowcast import manager
+from nemo_nowcast.message import Message
 from nemo_nowcast.worker import NextWorker
-
-# Message data structure
-message = namedtuple('Message', 'source, type, payload')
 
 
 @patch('nemo_nowcast.manager.NowcastManager')
@@ -332,10 +328,8 @@ class TestMessageHandler:
         mgr._handle_unregistered_worker_msg = Mock(
             name='_handle_unregistered_worker_msg')
         mgr._log_received_msg = Mock(name='_log_received_msg')
-        msg = message(source='worker', type='foo', payload=None)
-        msg_dict = {
-            'source': msg.source, 'type': msg.type, 'payload': msg.payload}
-        reply, next_workers = mgr._message_handler(yaml.dump(msg_dict))
+        msg = Message(source='worker', type='foo', payload=None)
+        reply, next_workers = mgr._message_handler(msg.serialize())
         mgr._handle_unregistered_worker_msg.assert_called_once_with(msg)
         assert reply == mgr._handle_unregistered_worker_msg()
         assert next_workers == []
@@ -347,10 +341,8 @@ class TestMessageHandler:
         mgr._handle_unregistered_msg_type = Mock(
             name='_handle_unregistered_msg_type')
         mgr._log_received_msg = Mock(name='_log_received_msg')
-        msg = message(source='test_worker', type='foo', payload=None)
-        msg_dict = {
-            'source': msg.source, 'type': msg.type, 'payload': msg.payload}
-        reply, next_workers = mgr._message_handler(yaml.dump(msg_dict))
+        msg = Message(source='test_worker', type='foo', payload=None)
+        reply, next_workers = mgr._message_handler(msg.serialize())
         mgr._handle_unregistered_msg_type.assert_called_once_with(msg)
         assert reply == mgr._handle_unregistered_msg_type()
         assert next_workers == []
@@ -366,11 +358,9 @@ class TestMessageHandler:
         mgr._clear_checklist = Mock(
             name='_clear_checklist', return_value='checklist cleared')
         mgr._log_received_msg = Mock(name='_log_received_msg')
-        msg = message(
+        msg = Message(
             source='test_worker', type='clear checklist', payload=None)
-        msg_dict = {
-            'source': msg.source, 'type': msg.type, 'payload': msg.payload}
-        reply, next_workers = mgr._message_handler(yaml.dump(msg_dict))
+        reply, next_workers = mgr._message_handler(msg.serialize())
         assert mgr._log_received_msg.called
         mgr._clear_checklist.assert_called_once_with()
         assert reply == 'checklist cleared'
@@ -383,10 +373,8 @@ class TestMessageHandler:
             name='_handle_continue_msg',
             return_value=('ack', 'next_worker'))
         mgr._log_received_msg = Mock(name='_log_received_msg')
-        msg = message(source='test_worker', type='success', payload=None)
-        msg_dict = {
-            'source': msg.source, 'type': msg.type, 'payload': msg.payload}
-        reply, next_workers = mgr._message_handler(yaml.dump(msg_dict))
+        msg = Message(source='test_worker', type='success', payload=None)
+        reply, next_workers = mgr._message_handler(msg.serialize())
         assert mgr._log_received_msg.called
         mgr._handle_continue_msg.assert_called_once_with(msg)
         assert reply == 'ack'
@@ -399,13 +387,11 @@ class TestHandleUnregisteredWorkerMsg:
     def test_handle_unregistered_worker_msg(self):
         mgr = manager.NowcastManager()
         mgr.logger = Mock(name='logger')
-        msg = message(source='worker', type='foo', payload=None)
+        msg = Message(source='worker', type='foo', payload=None)
         reply = mgr._handle_unregistered_worker_msg(msg)
         assert mgr.logger.error.call_count == 1
-        expected = {
-            'source': 'manager', 'type': 'unregistered worker',
-            'payload': None}
-        assert yaml.safe_load(reply) == expected
+        assert Message.deserialize(reply) == Message(
+            source='manager', type='unregistered worker')
 
 
 class TestHandleUnregisteredMsgType:
@@ -414,13 +400,11 @@ class TestHandleUnregisteredMsgType:
     def test_handle_unregistered_msg_type(self):
         mgr = manager.NowcastManager()
         mgr.logger = Mock(name='logger')
-        msg = message(source='worker', type='foo', payload=None)
+        msg = Message(source='worker', type='foo')
         reply = mgr._handle_unregistered_msg_type(msg)
         assert mgr.logger.error.call_count == 1
-        expected = {
-            'source': 'manager', 'type': 'unregistered message type',
-            'payload': None}
-        assert yaml.safe_load(reply) == expected
+        assert Message.deserialize(reply) == Message(
+            source='manager', type='unregistered message type')
 
 
 class TestLogReceivedMessage:
@@ -431,7 +415,7 @@ class TestLogReceivedMessage:
         mgr.logger = Mock(name='logger')
         mgr._msg_registry = {
             'workers': {'test_worker': {'success': 'worker succeeded'}}}
-        msg = message(source='test_worker', type='success', payload=None)
+        msg = Message(source='test_worker', type='success')
         mgr._log_received_msg(msg)
         mgr.logger.debug.assert_called_once_with(
             'received message from test_worker: (success) worker succeeded',
@@ -448,7 +432,7 @@ class TestHandleContinueMsg:
         mgr._update_checklist = Mock(name='_update_checklist')
         mgr._next_workers_module = Mock(
             name='nowcast.next_workers', test_worker=Mock())
-        msg = message(source='test_worker', type='success', payload=None)
+        msg = Message(source='test_worker', type='success')
         mgr._handle_continue_msg(msg)
         assert not mgr._update_checklist.called
 
@@ -458,7 +442,7 @@ class TestHandleContinueMsg:
         mgr._update_checklist = Mock(name='_update_checklist')
         mgr._next_workers_module = Mock(
             name='nowcast.next_workers', test_worker=Mock())
-        msg = message(source='test_worker', type='success', payload=payload)
+        msg = Message(source='test_worker', type='success', payload=payload)
         mgr._handle_continue_msg(msg)
         mgr._update_checklist.assert_called_once_with(msg)
 
@@ -467,7 +451,7 @@ class TestHandleContinueMsg:
         mgr._update_checklist = Mock(name='_update_checklist')
         mgr._next_workers_module = Mock(
             name='nowcast.next_workers', test_worker=Mock())
-        msg = message(source='test_worker', type='success', payload=None)
+        msg = Message(source='test_worker', type='success')
         mgr._handle_continue_msg(msg)
         m_importlib.reload.assert_called_once_with(mgr._next_workers_module)
 
@@ -477,13 +461,10 @@ class TestHandleContinueMsg:
         mgr._msg_registry = {'next workers module': 'nowcast.next_workers'}
         mgr._update_checklist = Mock(name='_update_checklist')
         mgr._next_workers_module = Mock(name='nowcast.next_workers', spec=[])
-        msg = message(source='test_worker', type='success', payload=None)
+        msg = Message(source='test_worker', type='success')
         reply, next_workers = mgr._handle_continue_msg(msg)
-        expected = {
-            'source': 'manager',
-            'type': 'no after_worker function',
-            'payload': None}
-        assert yaml.safe_load(reply) == expected
+        assert Message.deserialize(reply) == Message(
+            source='manager', type='no after_worker function')
         assert mgr.logger.critical.call_count == 1
 
     def test_reply(self, m_importlib):
@@ -491,17 +472,17 @@ class TestHandleContinueMsg:
         mgr._update_checklist = Mock(name='_update_checklist')
         mgr._next_workers_module = Mock(
             name='nowcast.next_workers', test_worker=Mock())
-        msg = message(source='test_worker', type='success', payload=None)
+        msg = Message(source='test_worker', type='success')
         reply, next_workers = mgr._handle_continue_msg(msg)
-        expected = {'source': 'manager', 'type': 'ack', 'payload': None}
-        assert yaml.safe_load(reply) == expected
+        assert Message.deserialize(reply) == Message(
+            source='manager', type='ack')
 
     def test_next_workers(self, m_importlib):
         mgr = manager.NowcastManager()
         mgr._update_checklist = Mock(name='_update_checklist')
         mgr._next_workers_module = Mock(
             name='nowcast.next_workers', test_worker=Mock())
-        msg = message(source='test_worker', type='success', payload=None)
+        msg = Message(source='test_worker', type='success', payload=None)
         reply, next_workers = mgr._handle_continue_msg(msg)
         assert next_workers == mgr._next_workers_module.after_test_worker()
 
@@ -512,7 +493,7 @@ class TestUpdateChecklist:
     def test_worker_checklist_keyerror(self):
         mgr = manager.NowcastManager()
         mgr._msg_registry = {'workers': {'test_worker': {}}}
-        msg = message(
+        msg = Message(
             source='test_worker', type='success', payload={'foo': 'bar'})
         with pytest.raises(KeyError):
             mgr._update_checklist(msg)
@@ -524,8 +505,7 @@ class TestUpdateChecklist:
         mgr._write_checklist_to_disk = Mock(name='_write_checklist_to_disk')
         mgr._msg_registry = {
             'workers': {'test_worker': {'checklist key': 'foo'}}}
-        msg = message(
-            source='test_worker', type='success', payload='baz')
+        msg = Message(source='test_worker', type='success', payload='baz')
         mgr._update_checklist(msg)
         assert mgr.checklist['foo'] == 'baz'
 
@@ -536,8 +516,7 @@ class TestUpdateChecklist:
         mgr._write_checklist_to_disk = Mock(name='_write_checklist_to_disk')
         mgr._msg_registry = {
             'workers': {'test_worker': {'checklist key': 'fop'}}}
-        msg = message(
-            source='test_worker', type='success', payload='baz')
+        msg = Message(source='test_worker', type='success', payload='baz')
         mgr._update_checklist(msg)
         assert mgr.checklist['fop'] == 'baz'
 
@@ -548,8 +527,7 @@ class TestUpdateChecklist:
         mgr._write_checklist_to_disk = Mock(name='_write_checklist_to_disk')
         mgr._msg_registry = {
             'workers': {'test_worker': {'checklist key': 'foo'}}}
-        msg = message(
-            source='test_worker', type='success', payload='baz')
+        msg = Message(source='test_worker', type='success', payload='baz')
         mgr._update_checklist(msg)
         mgr.logger.info.assert_called_once_with(
             'checklist updated with [foo] items from test_worker worker',
@@ -562,8 +540,7 @@ class TestUpdateChecklist:
         mgr._write_checklist_to_disk = Mock(name='_write_checklist_to_disk')
         mgr._msg_registry = {
             'workers': {'test_worker': {'checklist key': 'foo'}}}
-        msg = message(
-            source='test_worker', type='success', payload='baz')
+        msg = Message(source='test_worker', type='success', payload='baz')
         mgr._update_checklist(msg)
         mgr._write_checklist_to_disk.assert_called_once_with()
 
@@ -601,7 +578,6 @@ class TestClearChecklist:
         mgr.logger = Mock(name='logger')
         mgr._write_checklist_to_disk = Mock(name='_write_checklist_to_disk')
         reply = mgr._clear_checklist()
-        expected = {
-            'source': 'manager', 'type': 'checklist cleared', 'payload': None}
-        assert yaml.safe_load(reply) == expected
+        assert Message.deserialize(reply) == Message(
+            source='manager', type='checklist cleared')
 

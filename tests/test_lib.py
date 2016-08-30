@@ -24,7 +24,6 @@ from unittest.mock import (
 
 import arrow
 import pytest
-import yaml
 
 from nemo_nowcast import lib
 
@@ -156,35 +155,6 @@ class TestReplaceEnv:
         var = Mock(name='re_var', group=Mock(return_value='foo'))
         with pytest.raises(KeyError):
             value = lib._replace_env(var)
-
-
-class TestDeserializeMessage:
-    """Unit tests for lib.deserialize_message function.
-    """
-    @pytest.mark.parametrize('source, msg_type, payload', [
-        ('manager', 'ack', None),
-        ('download_weather', 'success 00', {'00 forecast': True}),
-    ])
-    def test_deserialize_message(self, source, msg_type, payload):
-        message = yaml.dump(
-            {'source': source, 'type': msg_type, 'payload': payload})
-        msg = lib.deserialize_message(message)
-        assert msg.source == source
-        assert msg.type == msg_type
-        assert msg.payload == payload
-
-
-class TestSerializeMessage:
-    """Unit tests for lib.serialize_message function.
-    """
-    @pytest.mark.parametrize('source, msg_type, payload', [
-        ('manager', 'unregistered worker', None),
-        ('download_weather', 'success 00', {'00 forecast': True}),
-    ])
-    def test_serialize_message(self, source, msg_type, payload):
-        msg = lib.serialize_message(source, msg_type, payload)
-        expected = {'source': source, 'type': msg_type, 'payload': payload}
-        assert yaml.safe_load(msg) == expected
 
 
 class TestArrowDate:
