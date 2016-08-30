@@ -23,13 +23,13 @@ Message Data Structure
 ======================
 
 Inside the code of a worker and the nowcast manager,
-a nowcast message is a Python :py:func:`~collections.namedtuple`:
+a nowcast message is a Python object :py:class:`nemo_nowcast.message.Message`:
 
 .. code-block:: python
 
-    >>> message = namedtuple('Message', 'source, type, payload')
+    >>> from nemo_nowcast.message import Message
 
-    >>> msg = message(
+    >>> msg = Message(
             source='download_weather',
             type='success 12',
             payload={'12 forecast': True},
@@ -114,7 +114,7 @@ An "all is good" acknowledgment message from the manager in response to a messag
 
 .. code-block:: python
 
-    message(
+    Message(
         source='manager',
         type='ack',
         payload=None,
@@ -127,12 +127,21 @@ Message Serialization and Deserialization
 Before messages can be passed among a worker,
 the :ref:`MessageBroker`,
 and the :ref:`SystemManager` they must be transformed into strings for transmission across the network.
-That is done by transforming the message tuple into a `YAML document`_,
-a process that is known as "serialization".
-The message recipient transforms the YAML document back into a message :py:func:`~collections.namedtuple`
-("deserialization").
+That is a process that is known as "serialization".
+It is done by calling the :py:meth:`~nemo_nowcast.message.Message.serialize` method to transform the message object into a `YAML document`_:
 
 .. _YAML document: http://pyyaml.org/wiki/PyYAMLDocumentation#YAMLsyntax
+
+.. code-block:: python
+
+    Message(source='manager', type='ack').serialize()
+
+The message recipient "deserializes" the YAML document to transform it back into a message :py:class:`~nemo_nowcast.message.Message`.
+That is done by calling the :py:meth:`~nemo_nowcast.message.Message.deserialize` method with the YAML document as its argument:
+
+.. code-block:: python
+
+    message = Message.deserialize(yaml_string)
 
 Deserialization is done using the :py:func:`yaml.safe_load()` function.
 That function limits the types of Python objects that can be in a message to

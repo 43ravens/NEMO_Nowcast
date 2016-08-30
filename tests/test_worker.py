@@ -15,7 +15,6 @@
 """Unit tests for nemo_nowcast.worker module.
 """
 import argparse
-from collections import namedtuple
 import signal
 from unittest.mock import (
     call,
@@ -26,6 +25,7 @@ from unittest.mock import (
 import pytest
 import zmq
 
+from nemo_nowcast.message import Message
 from nemo_nowcast.worker import (
     NextWorker,
     NowcastWorker,
@@ -520,9 +520,7 @@ class TestTellManager:
         assert worker.logger.debug.call_count == 1
         assert response_payload is None
 
-    @patch('nemo_nowcast.lib.deserialize_message')
-    @patch('nemo_nowcast.lib.serialize_message')
-    def test_tell_manager(self, m_lsm, m_ldm):
+    def test_tell_manager(self):
         worker = NowcastWorker('test_worker', 'description')
         worker._parsed_args = Mock(debug=False)
         worker._socket = Mock(name='_socket')
@@ -534,17 +532,17 @@ class TestTellManager:
                     'test_worker': {
                         'success': 'successful test'}
         }}}
-        message = namedtuple('Message', 'source, type, payload')
-        m_ldm.return_value = message(source='manager', type='ack', payload=None)
-        response_payload = worker.tell_manager('success', 'payload')
-        worker._socket.send_string.assert_called_once_with(m_lsm())
+        mgr_msg = Message(source='manager', type='ack')
+        worker._socket.recv_string.return_value = mgr_msg.serialize()
+        response = worker.tell_manager('success', 'payload')
+        worker._socket.send_string.assert_called_once_with(
+            Message(source='test_worker', type='success', payload='payload')
+            .serialize())
         worker._socket.recv_string.assert_called_once_with()
         assert worker.logger.debug.call_count == 2
-        assert response_payload == m_ldm()
+        assert response == mgr_msg
 
-    @patch('nemo_nowcast.lib.deserialize_message')
-    @patch('nemo_nowcast.lib.serialize_message')
-    def test_unregistered_manager_message_type(self, m_lsm, m_ldm):
+    def test_unregistered_manager_message_type(self):
         worker = NowcastWorker('test_worker', 'description')
         worker._parsed_args = Mock(debug=False)
         worker._socket = Mock(name='_socket')
@@ -557,7 +555,7 @@ class TestTellManager:
                     'test_worker': {
                         'success': 'successful test'}
         }}}
-        message = namedtuple('Message', 'source, type, payload')
-        m_ldm.return_value = message(source='manager', type='foo', payload=None)
+        mgr_msg = Message(source='manager', type='foo')
+        worker._socket.recv_string.return_value = mgr_msg.serialize()
         with pytest.raises(WorkerError):
-            response_payload = worker.tell_manager('success', 'payload')
+            worker.tell_manager('success', 'payload')

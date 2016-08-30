@@ -27,6 +27,7 @@ import yaml
 import zmq
 
 from nemo_nowcast import lib
+from nemo_nowcast.message import Message
 
 
 def main():
@@ -235,7 +236,7 @@ class NowcastManager:
     def _message_handler(self, message):
         """Handle message from worker.
         """
-        msg = lib.deserialize_message(message)
+        msg = Message.deserialize(message)
         if msg.source not in self._msg_registry['workers']:
             reply = self._handle_unregistered_worker_msg(msg)
             return reply, []
@@ -256,7 +257,7 @@ class NowcastManager:
         self.logger.error(
             'message received from unregistered worker: {.source}'.format(msg),
             extra={'worker_msg': msg})
-        reply = lib.serialize_message(self.name, 'unregistered worker')
+        reply = Message(self.name, 'unregistered worker').serialize()
         return reply
 
     def _handle_unregistered_msg_type(self, msg):
@@ -267,7 +268,7 @@ class NowcastManager:
             'unregistered message type received from '
             '{0.source} worker: {0.type}'.format(msg),
             extra={'worker_msg': msg})
-        reply = lib.serialize_message(self.name, 'unregistered message type')
+        reply = Message(self.name, 'unregistered message type').serialize()
         return reply
 
     def _log_received_msg(self, msg):
@@ -298,10 +299,10 @@ class NowcastManager:
                     worker=msg.source,
                     next_workers=self._msg_registry['next workers module']),
                 exc_info=True)
-            reply = lib.serialize_message(self.name, 'no after_worker function')
+            reply = Message(self.name, 'no after_worker function').serialize()
             return reply, []
         next_workers = after_func(msg)
-        reply = lib.serialize_message(self.name, 'ack')
+        reply = Message(self.name, 'ack').serialize()
         return reply, next_workers
 
     def _update_checklist(self, msg):
@@ -359,7 +360,7 @@ class NowcastManager:
         self.checklist.clear()
         self._write_checklist_to_disk()
         self.logger.info('checklist cleared')
-        reply = lib.serialize_message(self.name, 'checklist cleared')
+        reply = Message(self.name, 'checklist cleared').serialize()
         return reply
 
 

@@ -27,7 +27,8 @@ import attr
 import requests
 import zmq
 
-import nemo_nowcast.lib
+from nemo_nowcast import lib
+from nemo_nowcast.message import Message
 
 
 class WorkerError(Exception):
@@ -164,7 +165,7 @@ class NowcastWorker:
         Use the :py:meth:`~NEMO_Nowcast.NowcastWorker.add_argument` method
         to add worker-specific arguments to the interface.
         """
-        self.arg_parser = nemo_nowcast.lib.base_arg_parser(
+        self.arg_parser = lib.base_arg_parser(
             self.name, description=self.description, package=self.package)
         self.arg_parser.add_argument(
             '--debug', action='store_true',
@@ -246,7 +247,7 @@ class NowcastWorker:
         self.worker_func = worker_func
         self.success, self.failure = success, failure
         self._parsed_args = self.arg_parser.parse_args()
-        self.config = nemo_nowcast.lib.load_config(
+        self.config = lib.load_config(
             self._parsed_args.config_file)
         self.logger = logging.getLogger(self.name)
         logging.config.dictConfig(self.config['logging'])
@@ -321,8 +322,7 @@ class NowcastWorker:
         """Exchange messages with the nowcast manager process.
 
         Message is composed of worker's name, msg_type, and payload.
-        Acknowledgement message from manager process is logged,
-        and payload of that message is returned.
+        Acknowledgement message from manager process is logged and returned.
 
         :arg str msg_type: Key of the message type to send;
                            must be defined for worker name in the configuration
@@ -332,8 +332,7 @@ class NowcastWorker:
                       e.g. dict containing worker's checklist of
                       accomplishments.
 
-        :returns: Payload included in acknowledgement message from manager
-                  process.
+        :returns: Acknowledgement message from manager process.
         """
         try:
             worker_msgs = self.config['message registry']['workers'][self.name]
@@ -358,15 +357,14 @@ class NowcastWorker:
                 .format(msg_type=msg_type, msg_words=msg_words))
             return
         # Send message to nowcast manager
-        message = nemo_nowcast.lib.serialize_message(
-            self.name, msg_type, payload)
+        message = Message(self.name, msg_type, payload).serialize()
         self._socket.send_string(message)
         self.logger.debug(
             'sent message: ({msg_type}) {msg_words}'
             .format(msg_type=msg_type, msg_words=worker_msgs[msg_type]))
         # Wait for and process response
         msg = self._socket.recv_string()
-        message = nemo_nowcast.lib.deserialize_message(msg)
+        message = Message.deserialize(msg)
         mgr_msgs = self.config['message registry']['manager']
         try:
             msg_words = mgr_msgs[message.type]

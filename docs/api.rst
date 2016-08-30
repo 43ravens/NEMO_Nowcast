@@ -19,6 +19,14 @@
 :kbd:`NEMO_Nowcast` Package API
 *******************************
 
+.. _NEMO_NowcastMessage:
+
+Message
+=======
+
+.. automodule:: nemo_nowcast.message
+    :members:
+
 
 .. _NEMO_NowcastMessageBroker:
 
