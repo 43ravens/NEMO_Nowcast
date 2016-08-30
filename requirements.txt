@@ -20,6 +20,6 @@ requests==2.11.1
 schedule==0.3.2
 six==1.10.0
 snowballstemmer==1.2.1
-Sphinx==1.4.1
+Sphinx==1.4.6
 sphinx-rtd-theme==0.1.9
 tornado==4.3
