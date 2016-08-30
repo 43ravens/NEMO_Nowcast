@@ -387,7 +387,7 @@ def get_web_data(
     wait_exponential_multiplier=2,
     wait_exponential_max=60 * 60,
 ):
-    """Download content from file_url and storeit in filepath.
+    """Download content from file_url and store it in filepath.
 
     If the first download attempt fails, retry at exponentially increasing
     intervals until wait_exponential_max is exceeded.
@@ -453,7 +453,11 @@ def get_web_data(
         try:
             response = session.get(file_url, stream=True)
             response.raise_for_status()
-            return _handle_response_content(response, filepath)
+            with filepath.open('wb') as f:
+                for block in response.iter_content():
+                    if not block:
+                        break
+                    f.write(block)
         except (
             requests.exceptions.ConnectionError,
             requests.exceptions.HTTPError,
@@ -478,14 +482,3 @@ def get_web_data(
             'giving up; download from {url} failed {fail_count} times'
             .format(url=file_url, fail_count=retries+1))
         raise WorkerError
-
-
-def _handle_response_content(response, filepath):
-    """Store response content stream at filepath.
-    """
-    with filepath.open('wb') as f:
-        for block in response.iter_content():
-            if not block:
-                break
-            f.write(block)
-    return response.headers
