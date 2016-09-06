@@ -24,7 +24,7 @@ end their work.
 
 Function names **must** be of the form :py:func:`after_worker_name`.
 """
-from nemo_nowcast.worker import NextWorker
+from nemo_nowcast import NextWorker
 
 
 def after_sleep(msg):

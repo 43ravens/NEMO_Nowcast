@@ -25,8 +25,8 @@ from unittest.mock import (
 import pytest
 import zmq
 
-from nemo_nowcast.message import Message
-from nemo_nowcast.worker import (
+from nemo_nowcast import (
+    Message,
     NextWorker,
     NowcastWorker,
     WorkerError,

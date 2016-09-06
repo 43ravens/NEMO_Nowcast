@@ -21,7 +21,7 @@ sleep example worker finishes successfully.
 """
 import logging
 
-from nemo_nowcast.worker import NowcastWorker
+from nemo_nowcast import NowcastWorker
 
 
 NAME = 'awaken'

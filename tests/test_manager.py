@@ -24,9 +24,11 @@ from unittest.mock import (
 import pytest
 import zmq
 
-from nemo_nowcast import manager
-from nemo_nowcast.message import Message
-from nemo_nowcast.worker import NextWorker
+from nemo_nowcast import (
+    manager,
+    Message,
+    NextWorker,
+)
 
 
 @patch('nemo_nowcast.manager.NowcastManager')

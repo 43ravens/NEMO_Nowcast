@@ -17,7 +17,7 @@
 import pytest
 import yaml
 
-from nemo_nowcast.message import Message
+from nemo_nowcast import Message
 
 
 class TestMessage:

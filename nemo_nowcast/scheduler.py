@@ -22,8 +22,10 @@ import time
 
 import schedule
 
-from nemo_nowcast import lib
-from nemo_nowcast.worker import NextWorker
+from nemo_nowcast import (
+    lib,
+    NextWorker,
+)
 
 
 NAME = 'scheduler'

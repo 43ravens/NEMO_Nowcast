@@ -26,7 +26,7 @@ as necessary for system maintenance.
 """
 import logging
 
-from nemo_nowcast.worker import NowcastWorker
+from nemo_nowcast import NowcastWorker
 
 
 NAME = 'rotate_logs'

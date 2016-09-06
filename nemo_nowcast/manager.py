@@ -26,8 +26,10 @@ import attr
 import yaml
 import zmq
 
-from nemo_nowcast import lib
-from nemo_nowcast.message import Message
+from nemo_nowcast import (
+    lib,
+    Message,
+)
 
 
 def main():
