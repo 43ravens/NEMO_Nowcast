@@ -20,7 +20,7 @@ for a specified number of seconds.
 import logging
 import time
 
-from nemo_nowcast.worker import NowcastWorker
+from nemo_nowcast import NowcastWorker
 
 
 NAME = 'sleep'

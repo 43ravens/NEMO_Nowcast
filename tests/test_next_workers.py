@@ -16,9 +16,11 @@
 """
 import pytest
 
-from nemo_nowcast import next_workers
-from nemo_nowcast.message import Message
-from nemo_nowcast.worker import NextWorker
+from nemo_nowcast import (
+    Message,
+    NextWorker,
+    next_workers,
+)
 
 
 class TestAfterSleep:
