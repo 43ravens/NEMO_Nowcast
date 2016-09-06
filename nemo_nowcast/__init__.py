@@ -18,6 +18,7 @@
 
 from nemo_nowcast.message import Message
 from nemo_nowcast.worker import (
+    get_web_data,
     NextWorker,
     NowcastWorker,
     WorkerError,
