@@ -14,16 +14,11 @@
 
 """Unit tests for nemo_nowcast.next_workers module.
 """
-from collections import namedtuple
 import pytest
 
 from nemo_nowcast import next_workers
+from nemo_nowcast.message import Message
 from nemo_nowcast.worker import NextWorker
-
-
-# Message data structure
-
-message = namedtuple('Message', 'source, type, payload')
 
 
 class TestAfterSleep:
@@ -34,11 +29,11 @@ class TestAfterSleep:
         'failure',
     ])
     def test_no_next_worker_msg_types(self, msg_type):
-        workers = next_workers.after_sleep(message('sleep', msg_type, None))
+        workers = next_workers.after_sleep(Message('sleep', msg_type, None))
         assert workers == []
 
     def test_success_launch_awaken_worker(self):
-        workers = next_workers.after_sleep(message('sleep', 'success', None))
+        workers = next_workers.after_sleep(Message('sleep', 'success', None))
         assert workers == [NextWorker('nemo_nowcast.workers.awaken')]
 
 
@@ -51,5 +46,5 @@ class TestAfterAwaken:
         'success',
     ])
     def test_no_next_worker_msg_types(self, msg_type):
-        workers = next_workers.after_awaken(message('awaken', msg_type, None))
+        workers = next_workers.after_awaken(Message('awaken', msg_type, None))
         assert workers == []
