@@ -172,9 +172,9 @@ class NowcastWorker:
         self.arg_parser.add_argument(
             '--debug', action='store_true',
             help='''
-            send logging output to the console instead of the log file,
+            Send logging output to the console instead of the log file,
             and suppress messages to the nowcast manager process.
-            Nowast system messages that would normally be sent to the manager
+            Nowcast system messages that would normally be sent to the manager
             are logged to the console,
             suppressing interactions with the manager such as launching other
             workers.
