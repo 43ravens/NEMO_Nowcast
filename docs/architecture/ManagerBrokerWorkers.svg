@@ -26,8 +26,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.0736382"
-     inkscape:cx="212.21495"
-     inkscape:cy="160.08143"
+     inkscape:cx="200.29017"
+     inkscape:cy="193.13603"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -49,7 +49,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -321,22 +321,25 @@
              x="581.41412">worker</tspan></tspan></text>
     </g>
     <path
-       style="display:inline;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.11141906px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 537.2975,272.34212 -20.66037,-12.93615 10.66507,0.70209 0.94023,-10.18369 z"
-       id="path6654"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccc" />
-    <path
        sodipodi:nodetypes="ccccc"
        inkscape:connector-curvature="0"
        id="path6656"
        d="m 462.38826,178.55282 19.85856,14.13622 -10.60484,-1.33205 -1.54128,10.11019 z"
        style="display:inline;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.11141906px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
-    <path
-       inkscape:connector-curvature="0"
-       id="path6658"
-       d="m 462.2014,178.66601 c 68.07502,85.88496 68.07502,85.88496 68.07502,85.88496"
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <g
+       id="g4912">
+      <path
+         sodipodi:nodetypes="ccccc"
+         inkscape:connector-curvature="0"
+         id="path6654"
+         d="m 537.2975,272.34212 -20.66037,-12.93615 10.66507,0.70209 0.94023,-10.18369 z"
+         style="display:inline;fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.11141906px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 462.2014,178.66601 c 68.07502,85.88496 68.07502,85.88496 68.07502,85.88496"
+         id="path6658"
+         inkscape:connector-curvature="0" />
+    </g>
     <g
        transform="translate(112.61777,116.12453)"
        id="g6660">
