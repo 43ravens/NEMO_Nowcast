@@ -31,11 +31,11 @@ class TestAfterSleep:
         'failure',
     ])
     def test_no_next_worker_msg_types(self, msg_type):
-        workers = next_workers.after_sleep(Message('sleep', msg_type, None))
+        workers = next_workers.after_sleep(Message('sleep', msg_type))
         assert workers == []
 
-    def test_success_launch_awaken_worker(self):
-        workers = next_workers.after_sleep(Message('sleep', 'success', None))
+    def test_success_awaken_worker_next(self):
+        workers = next_workers.after_sleep(Message('sleep', 'success'))
         assert workers == [NextWorker('nemo_nowcast.workers.awaken')]
 
 
@@ -48,5 +48,5 @@ class TestAfterAwaken:
         'success',
     ])
     def test_no_next_worker_msg_types(self, msg_type):
-        workers = next_workers.after_awaken(Message('awaken', msg_type, None))
+        workers = next_workers.after_awaken(Message('awaken', msg_type))
         assert workers == []
