@@ -142,7 +142,7 @@ Example :kbd:`scheduled workers` configuration section:
         # (quotes are required to ensure that time is interpreted as a string)
         at: '05:15'
         # Optional command-line options for the worker
-        # (quoted is necessary to force interpretation as a string)
+        # (quotes are necessary to force interpretation as a string)
         cmd line opts: '12'
 
       # Optional number of seconds that scheduler sleeps between checks for worker
