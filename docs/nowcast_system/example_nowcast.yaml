@@ -4,6 +4,7 @@
 checklist file: $(NOWCAST.ENV.NOWCAST_LOGS)/nowcast_checklist.yaml
 
 # Python interpreter in environment with all dependencies installed
+# Used to launch workers
 python: $(NOWCAST.ENV.NOWCAST_ENV)/bin/python
 
 # Logging system configuration

@@ -19,6 +19,7 @@ import signal
 from unittest.mock import (
     call,
     Mock,
+    mock_open,
     patch,
 )
 
@@ -26,6 +27,7 @@ import pytest
 import zmq
 
 from nemo_nowcast import (
+    Config,
     Message,
     NextWorker,
     NowcastWorker,
@@ -60,10 +62,9 @@ class TestNextWorkerLaunch:
     """Unit tests for NextWorker.lauch method.
     """
     def test_localhost(self, m_subprocess):
-        config = {
-            'python': 'nowcast-env/bin/python3',
-            'config_file': 'nowcast.yaml',
-        }
+        config = Config()
+        config.file = 'nowcast.yaml'
+        config._dict = {'python': 'nowcast-env/bin/python3'}
         next_worker = NextWorker('nowcast.workers.test_worker', ['--debug'])
         next_worker.launch(config, 'test_runner')
         cmd = m_subprocess.Popen.call_args_list[0]
@@ -73,12 +74,13 @@ class TestNextWorkerLaunch:
         assert cmd == expected
 
     def test_remote_host(self, m_subprocess):
-        config = {
+        config = Config()
+        config._dict = {
             'run': {
                 'remotehost': {
                     'python': 'nowcast-env/bin/python3',
-                    'config_file': 'nowcast.yaml',
-        }}}
+                    'config file': 'nowcast.yaml',
+            }}}
         next_worker = NextWorker(
             'nowcast.workers.test_worker', ['--debug'], 'remotehost')
         next_worker.launch(config, 'test_runner')
@@ -90,10 +92,9 @@ class TestNextWorkerLaunch:
         assert cmd == expected
 
     def test_no_cmdline_args(self, m_subprocess):
-        config = {
-            'python': 'nowcast-env/bin/python3',
-            'config_file': 'nowcast.yaml',
-        }
+        config = Config()
+        config.file = 'nowcast.yaml'
+        config._dict = {'python': 'nowcast-env/bin/python3'}
         next_worker = NextWorker('nowcast.workers.test_worker')
         next_worker.launch(config, 'test_runner')
         cmd = m_subprocess.Popen.call_args_list[0]
@@ -124,7 +125,7 @@ class TestNowcastWorkerConstructor:
 
     def test_config(self):
         worker = NowcastWorker('worker_name', 'description')
-        assert worker.config == {}
+        assert worker.config == Config()
 
     def test_logger_name(self):
         worker = NowcastWorker('worker_name', 'description')
@@ -189,12 +190,19 @@ class TestAddArgument:
         )
 
 
-@patch('nemo_nowcast.lib.load_config')
 @patch('nemo_nowcast.worker.logging')
 class TestNowcastWorkerRun:
     """Unit tests for NowcastWorker.run method.
     """
-    def test_worker_func(self, m_logging, m_load_config):
+    def test_worker_func(self, m_logging):
+        test_config = '''
+            checklist file: nowcast_checklist.yaml
+            python: python
+            logging:
+              handlers: []
+            message registry:
+              next workers module: nowcast.next_workers
+        '''
         worker = NowcastWorker('worker_name', 'description')
         worker.init_cli()
         m_worker_func = Mock(name='worker_func')
@@ -204,10 +212,21 @@ class TestNowcastWorkerRun:
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
-        worker.run(m_worker_func, m_success, m_failure)
+        p_config_open = patch(
+            'nemo_nowcast.config.open', mock_open(read_data=test_config))
+        with p_config_open:
+            worker.run(m_worker_func, m_success, m_failure)
         assert worker.worker_func == m_worker_func
 
-    def test_success_func(self, m_logging, m_load_config):
+    def test_success_func(self, m_logging):
+        test_config = '''
+            checklist file: nowcast_checklist.yaml
+            python: python
+            logging:
+              handlers: []
+            message registry:
+              next workers module: nowcast.next_workers
+        '''
         worker = NowcastWorker('worker_name', 'description')
         worker.init_cli()
         m_worker_func = Mock(name='worker_func')
@@ -217,10 +236,21 @@ class TestNowcastWorkerRun:
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
-        worker.run(m_worker_func, m_success, m_failure)
+        p_config_open = patch(
+            'nemo_nowcast.config.open', mock_open(read_data=test_config))
+        with p_config_open:
+            worker.run(m_worker_func, m_success, m_failure)
         assert worker.success == m_success
 
-    def test_failure_func(self, m_logging, m_load_config):
+    def test_failure_func(self, m_logging):
+        test_config = '''
+            checklist file: nowcast_checklist.yaml
+            python: python
+            logging:
+              handlers: []
+            message registry:
+              next workers module: nowcast.next_workers
+        '''
         worker = NowcastWorker('worker_name', 'description')
         worker.init_cli()
         m_worker_func = Mock(name='worker_func')
@@ -230,10 +260,21 @@ class TestNowcastWorkerRun:
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
-        worker.run(m_worker_func, m_success, m_failure)
-        assert worker.failure== m_failure
+        p_config_open = patch(
+            'nemo_nowcast.config.open', mock_open(read_data=test_config))
+        with p_config_open:
+            worker.run(m_worker_func, m_success, m_failure)
+        assert worker.failure == m_failure
 
-    def test_parse_args(self, m_logging, m_load_config):
+    def test_parse_args(self, m_logging):
+        test_config = '''
+            checklist file: nowcast_checklist.yaml
+            python: python
+            logging:
+              handlers: []
+            message registry:
+              next workers module: nowcast.next_workers
+        '''
         worker = NowcastWorker('worker_name', 'description')
         worker.init_cli()
         m_worker_func = Mock(name='worker_func')
@@ -243,11 +284,20 @@ class TestNowcastWorkerRun:
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
-        worker.run(m_worker_func, m_success, m_failure)
+        p_config_open = patch(
+            'nemo_nowcast.config.open', mock_open(read_data=test_config))
+        with p_config_open:
+            worker.run(m_worker_func, m_success, m_failure)
         worker.arg_parser.parse_args.assert_called_once_with()
 
-    def test_config(self, m_logging, m_load_config):
+    def test_config_load(self, m_logging):
         worker = NowcastWorker('worker_name', 'description')
+        worker.config._dict = {
+            'logging': {},
+            'message registry': {
+                'next workers module': 'nowcast.next_workers',
+                'workers': {}}}
+        worker.config.load = Mock()
         worker.init_cli()
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
@@ -257,9 +307,18 @@ class TestNowcastWorkerRun:
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
         worker.run(m_worker_func, m_success, m_failure)
-        assert worker.config == m_load_config()
+        worker.config.load.assert_called_once_with(
+            worker._parsed_args.config_file)
 
-    def test_logging_config(self, m_logging, m_load_config):
+    def test_logging_config(self, m_logging):
+        test_config = '''
+            checklist file: nowcast_checklist.yaml
+            python: python
+            logging:
+              handlers: []
+            message registry:
+              next workers module: nowcast.next_workers
+        '''
         worker = NowcastWorker('worker_name', 'description')
         worker.init_cli()
         m_worker_func = Mock(name='worker_func')
@@ -269,11 +328,22 @@ class TestNowcastWorkerRun:
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
-        worker.run(m_worker_func, m_success, m_failure)
+        p_config_open = patch(
+            'nemo_nowcast.config.open', mock_open(read_data=test_config))
+        with p_config_open:
+            worker.run(m_worker_func, m_success, m_failure)
         m_logging.config.dictConfig.assert_called_once_with(
             worker.config['logging'])
 
-    def test_debug_mode_console_logging(self, m_logging, m_load_config):
+    def test_debug_mode_console_logging(self, m_logging):
+        test_config = '''
+            checklist file: nowcast_checklist.yaml
+            python: python
+            logging:
+              handlers: []
+            message registry:
+              next workers module: nowcast.next_workers
+        '''
         worker = NowcastWorker('worker_name', 'description')
         worker.init_cli()
         m_worker_func = Mock(name='worker_func')
@@ -286,10 +356,21 @@ class TestNowcastWorkerRun:
         m_console_handler = Mock(name='m_console_handler')
         m_console_handler.name = 'console'
         m_logging.getLogger().handlers = [m_console_handler]
-        worker.run(m_worker_func, m_success, m_failure)
+        p_config_open = patch(
+            'nemo_nowcast.config.open', mock_open(read_data=test_config))
+        with p_config_open:
+            worker.run(m_worker_func, m_success, m_failure)
         m_console_handler.setLevel.assert_called_once_with(m_logging.DEBUG)
 
-    def test_logging_info(self, m_logging, m_load_config):
+    def test_logging_info(self, m_logging):
+        test_config = '''
+            checklist file: nowcast_checklist.yaml
+            python: python
+            logging:
+              handlers: []
+            message registry:
+              next workers module: nowcast.next_workers
+        '''
         worker = NowcastWorker('worker_name', 'description')
         worker.init_cli()
         m_worker_func = Mock(name='worker_func')
@@ -299,10 +380,21 @@ class TestNowcastWorkerRun:
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
-        worker.run(m_worker_func, m_success, m_failure)
+        p_config_open = patch(
+            'nemo_nowcast.config.open', mock_open(read_data=test_config))
+        with p_config_open:
+            worker.run(m_worker_func, m_success, m_failure)
         assert worker.logger.info.call_count == 2
 
-    def test_init_zmq_interface(self, m_logging, m_load_config):
+    def test_init_zmq_interface(self, m_logging):
+        test_config = '''
+            checklist file: nowcast_checklist.yaml
+            python: python
+            logging:
+              handlers: []
+            message registry:
+              next workers module: nowcast.next_workers
+        '''
         worker = NowcastWorker('worker_name', 'description')
         worker.init_cli()
         m_worker_func = Mock(name='worker_func')
@@ -312,10 +404,21 @@ class TestNowcastWorkerRun:
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
-        worker.run(m_worker_func, m_success, m_failure)
+        p_config_open = patch(
+            'nemo_nowcast.config.open', mock_open(read_data=test_config))
+        with p_config_open:
+            worker.run(m_worker_func, m_success, m_failure)
         worker._init_zmq_interface.assert_called_once_with()
 
-    def test_install_signal_handlers(self, m_logging, m_load_config):
+    def test_install_signal_handlers(self, m_logging):
+        test_config = '''
+            checklist file: nowcast_checklist.yaml
+            python: python
+            logging:
+              handlers: []
+            message registry:
+              next workers module: nowcast.next_workers
+        '''
         worker = NowcastWorker('worker_name', 'description')
         worker.init_cli()
         m_worker_func = Mock(name='worker_func')
@@ -325,10 +428,21 @@ class TestNowcastWorkerRun:
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
-        worker.run(m_worker_func, m_success, m_failure)
+        p_config_open = patch(
+            'nemo_nowcast.config.open', mock_open(read_data=test_config))
+        with p_config_open:
+            worker.run(m_worker_func, m_success, m_failure)
         worker._install_signal_handlers.assert_called_once_with()
 
-    def test_do_work(self, m_logging, m_load_config):
+    def test_do_work(self, m_logging):
+        test_config = '''
+            checklist file: nowcast_checklist.yaml
+            python: python
+            logging:
+              handlers: []
+            message registry:
+              next workers module: nowcast.next_workers
+        '''
         worker = NowcastWorker('worker_name', 'description')
         worker.init_cli()
         m_worker_func = Mock(name='worker_func')
@@ -338,7 +452,10 @@ class TestNowcastWorkerRun:
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
-        worker.run(m_worker_func, m_success, m_failure)
+        p_config_open = patch(
+            'nemo_nowcast.config.open', mock_open(read_data=test_config))
+        with p_config_open:
+            worker.run(m_worker_func, m_success, m_failure)
         assert worker._do_work.call_count == 1
 
 
@@ -484,33 +601,35 @@ class TestTellManager:
         worker = NowcastWorker('test_worker', 'description')
         worker._parsed_args = Mock(debug=True)
         worker.logger = Mock(name='logger')
-        worker.config = {
-            'config_file': 'nowcast.yaml',
-            'message registry': {
-                'workers': {
-        }}}
+        config = Config()
+        config.file = 'nowcast.yaml'
+        worker.config._dict = {
+            'message registry': {'workers': {}}}
         with pytest.raises(WorkerError):
-            payload = worker.tell_manager('success', 'payload')
+            worker.tell_manager('success', 'payload')
 
     def test_unregistered_worker_message_type(self):
         worker = NowcastWorker('test_worker', 'description')
         worker._parsed_args = Mock(debug=True)
         worker.logger = Mock(name='logger')
-        worker.config = {
-            'config_file': 'nowcast.yaml',
+        config = Config()
+        config.file = 'nowcast.yaml'
+        worker.config._dict = {
             'message registry': {
                 'workers': {
                     'test_worker': {
                         'success': 'successful test'}
         }}}
         with pytest.raises(WorkerError):
-            payload = worker.tell_manager('failure')
+            worker.tell_manager('failure')
 
     def test_debug_mode(self):
         worker = NowcastWorker('test_worker', 'description')
         worker._parsed_args = Mock(debug=True)
         worker.logger = Mock(name='logger')
-        worker.config = {
+        config = Config()
+        config.file = 'nowcast.yaml'
+        worker.config._dict = {
             'message registry': {
                 'workers': {
                     'test_worker': {
@@ -525,7 +644,9 @@ class TestTellManager:
         worker._parsed_args = Mock(debug=False)
         worker._socket = Mock(name='_socket')
         worker.logger = Mock(name='logger')
-        worker.config = {
+        config = Config()
+        config.file = 'nowcast.yaml'
+        worker.config._dict = {
             'message registry': {
                 'manager': {'ack': 'message acknowledged'},
                 'workers': {
@@ -547,8 +668,9 @@ class TestTellManager:
         worker._parsed_args = Mock(debug=False)
         worker._socket = Mock(name='_socket')
         worker.logger = Mock(name='logger')
-        worker.config = {
-            'config_file': 'nowcast.yaml',
+        config = Config()
+        config.file = 'nowcast.yaml'
+        worker.config._dict = {
             'message registry': {
                 'manager': {'ack': 'message acknowledged'},
                 'workers': {

@@ -23,6 +23,7 @@ import time
 import schedule
 
 from nemo_nowcast import (
+    Config,
     lib,
     NextWorker,
 )
@@ -57,10 +58,11 @@ def main():
     parser = lib.base_arg_parser(
         NAME, package='nemo_nowcast', description=__doc__)
     parsed_args = parser.parse_args()
-    config = lib.load_config(parsed_args.config_file)
+    config = Config()
+    config.load(parsed_args.config_file)
     logging.config.dictConfig(config['logging'])
     logger.info('running in process {}'.format(os.getpid()))
-    logger.info('read config from {.config_file}'.format(parsed_args))
+    logger.info('read config from {.file}'.format(config))
     _install_signal_handlers()
     run(config)
 
