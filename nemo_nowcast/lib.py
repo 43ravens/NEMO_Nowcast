@@ -15,11 +15,8 @@
 """NEMO_Nowcast framework library functions.
 """
 import argparse
-import os
-import re
 
 import arrow
-import yaml
 
 
 def base_arg_parser(
@@ -56,42 +53,6 @@ def base_arg_parser(
         help='Path/name of YAML configuration file for NEMO nowcast.'
     )
     return parser
-
-
-def load_config(config_file):
-    """Load the YAML config_file and return its contents as a dict.
-
-    The value of config_file is added to the config dict with the key
-    :kbd:`config_file`.
-
-    :arg str config_file: Path/name of YAML configuration file for
-                          the NEMO nowcast system.
-
-    :returns: config dict
-    """
-    with open(config_file, 'rt') as f:
-        config = yaml.safe_load(f)
-    config['config_file'] = config_file
-    envvar_pattern = re.compile(r'\$\(NOWCAST\.ENV\.(\w*)\)\w*')
-    envvar_sub_keys = ('checklist file', 'python')
-    for key in envvar_sub_keys:
-        config[key] = envvar_pattern.sub(_replace_env, config[key])
-    handlers = config['logging']['handlers']
-    for handler in handlers:
-        try:
-            handlers[handler]['filename'] = envvar_pattern.sub(
-                _replace_env, handlers[handler]['filename'])
-        except KeyError:
-            # Not a file handler
-            pass
-    return config
-
-
-def _replace_env(var):
-    try:
-        return os.environ[var.group(1)]
-    except KeyError:
-        raise KeyError('environment variable not set: {}'.format(var.group(1)))
 
 
 def arrow_date(string, tz='Canada/Pacific'):

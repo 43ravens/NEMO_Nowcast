@@ -5,8 +5,13 @@ Change Log
 In development
 ==============
 
+* Refactored system config data structure and lib.load_config() into
+  attr.s-decorated nemo_nowcast.config.Config class that is available
+  in the nemo_nowcat namespace.
+* Added worker and message classes & worker.get_web_data() function
+  to nemo_nowcast namespace.
 * Refactored message data structure, lib.serialize_message(),
-  and lib.deserialize_message() functions into attr-s.decorated
+  and lib.deserialize_message() functions into attr.s-decorated
   nemo_nowcast.message.Message class.
 * Refactored nemo_nowcast.manager.NowcastManager and
   nemo_nowcast.worker.NowcastWorker into attr.s-decorated classes.

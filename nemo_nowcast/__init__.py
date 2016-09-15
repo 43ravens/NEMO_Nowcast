@@ -16,6 +16,7 @@
 """
 
 
+from nemo_nowcast.config import Config
 from nemo_nowcast.message import Message
 from nemo_nowcast.worker import (
     get_web_data,

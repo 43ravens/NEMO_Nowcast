@@ -28,6 +28,7 @@ import requests
 import zmq
 
 from nemo_nowcast import (
+    Config,
     lib,
     Message,
 )
@@ -74,10 +75,10 @@ class NextWorker:
         logger = logging.getLogger(logger_name)
         if self.host == 'localhost':
             cmd = [config['python'], '-m']
-            config_file = config['config_file']
+            config_file = config.file
         else:
             cmd = ['ssh', self.host, config['run'][self.host]['python'], '-m']
-            config_file = config['run'][self.host]['config_file']
+            config_file = config['run'][self.host]['config file']
         cmd.extend([self.module, config_file])
         if self.args:
             cmd.extend(self.args)
@@ -103,13 +104,13 @@ class NowcastWorker:
     #: Use dotted notation;
     #: e.g. :kbd:`nowcast.workers`.
     package = attr.ib(default='nowcast.workers')
-    #: :py:class:`dict` containing the nowcast system configuration
-    #: that is read from the configuration file in the
-    #: :py:meth:`~NEMO_Nowcast.NowcastWorker.setup` method.
-    config = attr.ib(default=attr.Factory(dict))
+    #: :py:class:`NEMO_Nowcast.config.Config` object that holds
+    #: the nowcast system configuration that is loaded from the configuration
+    #: file in the :py:meth:`~NEMO_Nowcast.NowcastWorker.run` method.
+    config = attr.ib(default=attr.Factory(Config))
     #: Logger for the worker.
     #: Configured from the :kbd:`logging` section of the configuration file
-    #: in the :py:meth:`~NEMO_Nowcast.NowcastWorker.setup` method.
+    #: in the :py:meth:`~NEMO_Nowcast.NowcastWorker.run` method.
     logger = attr.ib(default=None)
     #: :py:class:`argparse.ArgumentParser` instance configured in the
     #: :py:meth:`~NEMO_Nowcast.NowcastWorker.setup` method
@@ -250,8 +251,7 @@ class NowcastWorker:
         self.worker_func = worker_func
         self.success, self.failure = success, failure
         self._parsed_args = self.arg_parser.parse_args()
-        self.config = lib.load_config(
-            self._parsed_args.config_file)
+        self.config.load(self._parsed_args.config_file)
         self.logger = logging.getLogger(self.name)
         logging.config.dictConfig(self.config['logging'])
         if self._parsed_args.debug:
@@ -259,8 +259,7 @@ class NowcastWorker:
                 if handler.name == 'console':
                     handler.setLevel(logging.DEBUG)
         self.logger.info('running in process {}'.format(os.getpid()))
-        self.logger.info('read config from {.config_file}'.format(
-            self._parsed_args))
+        self.logger.info('read config from {.file}'.format(self.config))
         self._install_signal_handlers()
         self._init_zmq_interface()
         self._do_work()
@@ -342,16 +341,14 @@ class NowcastWorker:
         except (KeyError, TypeError):
             raise WorkerError(
                 'worker not found in {config_file} message registry: {name}'
-                .format(config_file=self.config['config_file'], name=self.name))
+                .format(config_file=self.config.file, name=self.name))
         try:
             msg_words = worker_msgs[msg_type]
         except (KeyError, TypeError):
             raise WorkerError(
                 'message type not found for {.name} worker in {config_file} '
                 'message registry: {msg_type}'
-                .format(
-                    self, config_file=self.config['config_file'],
-                    msg_type=msg_type))
+                .format(self, config_file=self.config.file, msg_type=msg_type))
         if self._parsed_args.debug:
             self.logger.debug(
                 '**debug mode** '
@@ -376,8 +373,7 @@ class NowcastWorker:
                 'message type not found for manager in {config_file} '
                 'message registry: {msg_type}'
                 .format(
-                    self, config_file=self.config['config_file'],
-                    msg_type=message.type))
+                    self, config_file=self.config.file, msg_type=message.type))
         self.logger.debug(
             'received message from {msg.source}: ({msg.type}) {msg_words}'
             .format(msg=message, msg_words=msg_words))

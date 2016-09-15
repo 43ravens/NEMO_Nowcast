@@ -19,6 +19,15 @@
 :kbd:`NEMO_Nowcast` Package API
 *******************************
 
+.. _NEMO_NowcastConfig:
+
+System Configuration
+====================
+
+.. automodule:: nemo_nowcast.config
+    :members:
+
+
 .. _NEMO_NowcastMessage:
 
 Message
@@ -48,8 +57,8 @@ Manager
 
 .. _NEMO_NowcastWorkerClasses:
 
-Classes and Exception for Building Workers
-==========================================
+Classes, Exceptions and Functions for Building Workers
+======================================================
 
 .. automodule:: nemo_nowcast.worker
     :members:
@@ -86,8 +95,6 @@ Utility Functions
 
 .. automodule:: nemo_nowcast.lib
     :members:
-
-.. autofunction:: nemo_nowcast.worker.get_web_data
 
 
 .. _ExampleWorkers:

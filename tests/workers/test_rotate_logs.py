@@ -18,6 +18,7 @@ import logging.handlers
 from types import SimpleNamespace
 from unittest.mock import patch
 
+from nemo_nowcast import Config
 from nemo_nowcast.workers import rotate_logs
 
 
@@ -81,26 +82,28 @@ class TestRotateLogs:
     """
     def test_no_handlers(self, m_getLogger, m_logger):
         m_getLogger().handlers = []
-        parsed_args, config = SimpleNamespace(), {}
+        parsed_args, config = SimpleNamespace(), Config()
         checklist = rotate_logs.rotate_logs(parsed_args, config)
         assert checklist == []
 
-    def test_dont_roll_timed_handler(self, m_getLogger, m_logger):
+    def test_dont_roll_timed_handler(self, m_getLogger, m_logger, tmpdir):
+        tmpfile = tmpdir.ensure('foo')
         m_getLogger().handlers = [
-            logging.handlers.TimedRotatingFileHandler('/tmp/foo')]
-        parsed_args, config = SimpleNamespace(), {}
+            logging.handlers.TimedRotatingFileHandler(tmpfile.strpath)]
+        parsed_args, config = SimpleNamespace(), Config()
         checklist = rotate_logs.rotate_logs(parsed_args, config)
         assert checklist == []
 
     def test_dont_roll_stream_handler(self, m_getLogger, m_logger):
         m_getLogger().handlers = [logging.StreamHandler()]
-        parsed_args, config = SimpleNamespace(), {}
+        parsed_args, config = SimpleNamespace(), Config()
         checklist = rotate_logs.rotate_logs(parsed_args, config)
         assert checklist == []
 
-    def test_roll_rotating_handler(self, m_getLogger, m_logger):
+    def test_roll_rotating_handler(self, m_getLogger, m_logger, tmpdir):
+        tmpfile = tmpdir.ensure('foo')
         m_getLogger().handlers = [
-            logging.handlers.RotatingFileHandler('/tmp/foo')]
-        parsed_args, config = SimpleNamespace(), {}
+            logging.handlers.RotatingFileHandler(tmpfile.strpath)]
+        parsed_args, config = SimpleNamespace(), Config()
         checklist = rotate_logs.rotate_logs(parsed_args, config)
-        assert checklist == ['/tmp/foo']
+        assert checklist == [tmpfile.strpath]

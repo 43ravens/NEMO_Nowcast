@@ -26,7 +26,7 @@ from nemo_nowcast import scheduler
 
 
 @patch('nemo_nowcast.scheduler.logging')
-@patch('nemo_nowcast.scheduler.lib.load_config')
+@patch('nemo_nowcast.scheduler.Config')
 @patch('nemo_nowcast.scheduler.lib.base_arg_parser')
 @patch('nemo_nowcast.scheduler._install_signal_handlers')
 @patch('nemo_nowcast.scheduler.run')
@@ -34,7 +34,7 @@ class TestMain:
     """Unit tests for scheduler.main function.
     """
     def test_commandline_parser(
-        self, m_run, m_ish, m_arg_parser, m_load_config, m_logging,
+        self, m_run, m_ish, m_arg_parser, m_config, m_logging,
     ):
         scheduler.main()
         args, kwargs = m_arg_parser.call_args_list[0]
@@ -44,26 +44,28 @@ class TestMain:
         m_arg_parser().parse_args.assert_called_once_with()
 
     def test_config(
-        self, m_run, m_ish, m_arg_parser, m_load_config, m_logging,
+        self, m_run, m_ish, m_arg_parser, m_config, m_logging,
     ):
         m_arg_parser().parse_args.return_value = Mock(
             config_file='nowcast.yaml')
         scheduler.main()
-        m_load_config.assert_called_once_with('nowcast.yaml')
+        m_config().load.assert_called_once_with('nowcast.yaml')
 
     @patch('nemo_nowcast.scheduler.logger')
     def test_logging(
-        self, m_logger, m_run, m_ish, m_arg_parser, m_load_config, m_logging,
+        self, m_logger, m_run, m_ish, m_arg_parser, m_config, m_logging,
     ):
         m_arg_parser().parse_args.return_value = Mock(
             config_file='nowcast.yaml')
-        m_load_config.return_value = {'logging': {}}
+        m_config.file = 'nowcast.yaml'
+        m_config().load.return_value = {'logging': {}}
         scheduler.main()
-        m_logging.config.dictConfig.assert_called_once_with({})
-        m_logger.call_count == 2
+        m_logging.config.dictConfig.assert_called_once_with(
+            m_config().__getitem__())
+        assert m_logger.info.call_count == 2
 
     def test_install_signal_handlers(
-        self, m_run, m_ish, m_arg_parser, m_load_config, m_logging,
+        self, m_run, m_ish, m_arg_parser, m_config, m_logging,
     ):
         m_arg_parser().parse_args.return_value = Mock(
             config_file='nowcast.yaml')
@@ -71,12 +73,12 @@ class TestMain:
         m_ish.assert_called_once_with()
 
     def test_run(
-        self, m_run, m_ish, m_arg_parser, m_load_config, m_logging,
+        self, m_run, m_ish, m_arg_parser, m_config, m_logging,
     ):
         m_arg_parser().parse_args.return_value = Mock(
             config_file='nowcast.yaml')
         scheduler.main()
-        m_run.assert_called_once_with(m_load_config())
+        m_run.assert_called_once_with(m_config())
 
 
 class TestPrepSchedule:
@@ -127,7 +129,7 @@ class TestInstallSignalHandlers:
     """Unit tests for scheduler._install_signal_handlers function.
     """
     def test_signal_handlers(self, i, sig):
-         with patch('nemo_nowcast.scheduler.signal.signal') as m_signal:
+        with patch('nemo_nowcast.scheduler.signal.signal') as m_signal:
             scheduler._install_signal_handlers()
-         args, kwargs = m_signal.call_args_list[i]
-         assert args[0] == sig
+        args, kwargs = m_signal.call_args_list[i]
+        assert args[0] == sig

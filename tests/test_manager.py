@@ -25,6 +25,7 @@ import pytest
 import zmq
 
 from nemo_nowcast import (
+    Config,
     manager,
     Message,
     NextWorker,
@@ -57,7 +58,7 @@ class TestNowcastManagerConstructor:
 
     def test_config(self):
         mgr = manager.NowcastManager()
-        assert mgr.config == {}
+        assert mgr.config == Config()
 
     def test_logger(self):
         mgr = manager.NowcastManager()
@@ -89,86 +90,116 @@ class TestNowcastManagerConstructor:
 
 
 @patch('nemo_nowcast.manager.logging')
-@patch('nemo_nowcast.manager.lib.load_config')
 class TestNowcastManagerSetup:
     """Unit tests for NowcastManager.setup method.
     """
-
     @patch('nemo_nowcast.manager.importlib')
-    def test_parsed_args(self, m_load_config, m_logging, m_importlib):
+    def test_parsed_args(self, m_importlib, m_logging):
+        test_config = '''
+            checklist file: nowcast_checklist.yaml
+            python: python
+            logging:
+              handlers: []
+            message registry:
+              next workers module: nowcast.next_workers
+        '''
         mgr = manager.NowcastManager()
         mgr._cli = Mock(name='_cli')
-        mgr.setup()
+        with patch('nemo_nowcast.config.open', mock_open(read_data=test_config)):
+            mgr.setup()
         assert mgr._parsed_args == mgr._cli()
 
     @patch('nemo_nowcast.manager.importlib')
-    def test_config(self, m_importlib, m_load_config, m_logging):
+    def test_config_load(self, m_importlib, m_logging):
         mgr = manager.NowcastManager()
-        mgr._cli = Mock(name='_cli')
-        mgr.setup()
-        m_load_config.assert_called_once_with(mgr._parsed_args.config_file)
-        assert mgr.config == m_load_config()
-
-    @patch('nemo_nowcast.manager.importlib')
-    def test_msg_registry(self, m_importlib, m_load_config, m_logging):
-        mgr = manager.NowcastManager()
-        mgr._cli = Mock(name='_cli')
-        m_load_config.return_value = {
+        mgr.config._dict = {
             'logging': {},
             'message registry': {
                 'next workers module': 'nowcast.next_workers',
                 'workers': {}}}
+        mgr.config.load = Mock()
+        mgr._cli = Mock(name='_cli')
         mgr.setup()
-        m_load_config.assert_called_once_with(mgr._parsed_args.config_file)
+        mgr.config.load.assert_called_once_with(mgr._parsed_args.config_file)
+
+    @patch('nemo_nowcast.manager.importlib')
+    def test_msg_registry(self, m_importlib, m_logging):
+        mgr = manager.NowcastManager()
+        mgr.config._dict = {
+            'logging': {},
+            'message registry': {
+                'next workers module': 'nowcast.next_workers',
+                'workers': {}}}
+        mgr.config.load = Mock()
+        mgr._cli = Mock(name='_cli')
+        mgr.setup()
         assert mgr._msg_registry == {
             'next workers module': 'nowcast.next_workers',
             'workers': {}}
 
     @patch('nemo_nowcast.manager.importlib')
-    def test_logger_name(self, m_importlib, m_load_config, m_logging):
+    def test_logger_name(self, m_importlib, m_logging):
         mgr = manager.NowcastManager()
+        mgr.config._dict = {
+            'logging': {},
+            'message registry': {
+                'next workers module': 'nowcast.next_workers',
+                'workers': {}}}
+        mgr.config.load = Mock()
         mgr._cli = Mock(name='_cli')
         mgr.setup()
         m_logging.getLogger.assert_called_once_with('manager')
 
     @patch('nemo_nowcast.manager.importlib')
-    def test_logging_config(self, m_importlib, m_load_config, m_logging):
+    def test_logging_config(self, m_importlib, m_logging):
         mgr = manager.NowcastManager()
+        mgr.config._dict = {
+            'logging': {},
+            'message registry': {
+                'next workers module': 'nowcast.next_workers',
+                'workers': {}}}
+        mgr.config.load = Mock()
         mgr._cli = Mock(name='_cli')
         mgr.setup()
         m_logging.config.dictConfig.assert_called_once_with(
             mgr.config['logging'])
 
     @patch('nemo_nowcast.manager.importlib')
-    def test_import_next_workers_module(
-        self, m_importlib, m_load_config, m_logging,
-    ):
+    def test_import_next_workers_module(self, m_importlib, m_logging):
         mgr = manager.NowcastManager()
-        mgr._cli = Mock(name='_cli')
-        m_load_config.return_value = {
+        mgr.config._dict = {
             'logging': {},
             'message registry': {
                 'next workers module': 'nowcast.next_workers',
                 'workers': {}}}
+        mgr.config.load = Mock()
+        mgr._cli = Mock(name='_cli')
         mgr.setup()
         m_importlib.import_module.assert_called_once_with(
             'nowcast.next_workers')
         assert mgr._next_workers_module == m_importlib.import_module()
 
-    def test_next_workers_module_import_error(self, m_load_config, m_logging):
+    def test_next_workers_module_import_error(self, m_logging):
         mgr = manager.NowcastManager()
-        mgr._cli = Mock(name='_cli')
-        m_load_config.return_value = {
+        mgr.config._dict = {
             'logging': {},
             'message registry': {
                 'next workers module': 'nowcast.next_workers',
                 'workers': {}}}
+        mgr.config.load = Mock()
+        mgr._cli = Mock(name='_cli')
         with pytest.raises(ImportError):
             mgr.setup()
 
     @patch('nemo_nowcast.manager.importlib')
-    def test_logging_info(self, m_importlib, m_load_config, m_logging):
+    def test_logging_info(self, m_importlib, m_logging):
         mgr = manager.NowcastManager()
+        mgr.config._dict = {
+            'logging': {},
+            'message registry': {
+                'next workers module': 'nowcast.next_workers',
+                'workers': {}}}
+        mgr.config.load = Mock()
         mgr._cli = Mock(name='_cli')
         mgr.setup()
         assert mgr.logger.info.call_count == 3
@@ -582,4 +613,3 @@ class TestClearChecklist:
         reply = mgr._clear_checklist()
         assert Message.deserialize(reply) == Message(
             source='manager', type='checklist cleared')
-

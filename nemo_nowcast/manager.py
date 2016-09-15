@@ -27,6 +27,7 @@ import yaml
 import zmq
 
 from nemo_nowcast import (
+    Config,
     lib,
     Message,
 )
@@ -51,10 +52,10 @@ class NowcastManager:
     #: The name of the manager instance.
     #: Used in the nowcast messaging system and for logging.
     name = attr.ib(default='manager')
-    #: :py:class:`dict` containing the nowcast system configuration
-    #: that is read from the configuration file in the
-    #: :py:meth:`~NEMO_Nowcast.NowcastManager.setup` method.
-    config = attr.ib(default=attr.Factory(dict))
+    #: :py:class:`NEMO_Nowcast.config.Config` object that holds
+    #: the nowcast system configuration that is loaded from the configuration
+    #: file in the :py:meth:`~NEMO_Nowcast.NowcastManager.setup` method.
+    config = attr.ib(default=attr.Factory(Config))
     #: Logger for the manager.
     #: Configured from the :kbd:`logging` section of the configuration file
     #: in the :py:meth:`~NEMO_Nowcast.NowcastManager.setup` method .
@@ -102,13 +103,12 @@ class NowcastManager:
         re-start the manager.
         """
         self._parsed_args = self._cli()
-        self.config = lib.load_config(self._parsed_args.config_file)
+        self.config.load(self._parsed_args.config_file)
         self._msg_registry = self.config['message registry']
         self.logger = logging.getLogger(self.name)
         logging.config.dictConfig(self.config['logging'])
         self.logger.info('running in process {}'.format(os.getpid()))
-        self.logger.info('read config from {.config_file}'.format(
-            self._parsed_args))
+        self.logger.info('read config from {.file}'.format(self.config))
         try:
             self._next_workers_module = importlib.import_module(
                 self._msg_registry['next workers module'])
