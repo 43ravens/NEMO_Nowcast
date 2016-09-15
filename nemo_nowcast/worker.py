@@ -383,6 +383,7 @@ class NowcastWorker:
 def get_web_data(
     file_url, filepath, logger_name,
     session=None,
+    chunk_size=100*1024,
     wait_exponential_multiplier=2,
     wait_exponential_max=60 * 60,
 ):
@@ -424,6 +425,13 @@ def get_web_data(
 
     :type session: :py:class:`requests.Session`
 
+    :param chunk_size: Maximum number of bytes to read into memory at a time
+                       and write to disk as the download proceeds.
+                       The default value gives performance comparable to
+                       :command:`curl` when downloading weather forecast files
+                       from the Environment Canada collaboration FTP server.
+                       Tuning maybe required for downloads from other sources.
+
     :param wait_exponential_multiplier: Multiplicative factor that increases
                                         the time interval between retries.
                                         Also the number of seconds to wait
@@ -453,7 +461,7 @@ def get_web_data(
             response = session.get(file_url, stream=True)
             response.raise_for_status()
             with filepath.open('wb') as f:
-                for block in response.iter_content():
+                for block in response.iter_content(chunk_size=chunk_size):
                     if not block:
                         break
                     f.write(block)
