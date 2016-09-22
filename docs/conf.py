@@ -35,7 +35,7 @@ extensions = [
 
 # Intersphinx configuration
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/', None),
+    'python': ('https://docs.python.org/3', None),
 }
 
 # Add any paths that contain templates here, relative to this directory.
