@@ -38,8 +38,8 @@ def main():
         NAME, description=__doc__, package='nemo_nowcast.workers')
     worker.init_cli()
     arg_defaults = {'sleep_time': 5}
-    worker.arg_parser.set_defaults(**arg_defaults)
-    worker.arg_parser.add_argument(
+    worker.cli.parser.set_defaults(**arg_defaults)
+    worker.cli.parser.add_argument(
         '--sleep-time', type=int,
         help=(
             'number of seconds to sleep for; defaults to {[sleep_time]}'

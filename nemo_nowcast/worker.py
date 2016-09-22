@@ -28,8 +28,8 @@ import requests
 import zmq
 
 from nemo_nowcast import (
+    CommandLineInterface,
     Config,
-    lib,
     Message,
 )
 
@@ -112,14 +112,14 @@ class NowcastWorker:
     #: Configured from the :kbd:`logging` section of the configuration file
     #: in the :py:meth:`~NEMO_Nowcast.NowcastWorker.run` method.
     logger = attr.ib(default=None)
-    #: :py:class:`argparse.ArgumentParser` instance configured in the
-    #: :py:meth:`~NEMO_Nowcast.NowcastWorker.setup` method
+    #: :py:class:`nemo_nowcast.cli.CommandLineInterface` object configured
+    #: in the :py:meth:`~nemo_nowcast.NowcastWorker.setup` method
     #: to provide the default worker command-line interface that requires
     #: a nowcast config file name,
     #: and provides :kbd:`--debug`,
     #: :kbd:`--help`,
     #: and :kbd:`-h` options.
-    arg_parser = attr.ib(default=None)
+    cli = attr.ib(default=None)
     #: Function to be called to do the worker's job.
     #: Called with the worker's parsed command-line arguments
     #: :py:class:`argparse.Namespace` instance,
@@ -168,9 +168,10 @@ class NowcastWorker:
         Use the :py:meth:`~NEMO_Nowcast.NowcastWorker.add_argument` method
         to add worker-specific arguments to the interface.
         """
-        self.arg_parser = lib.base_arg_parser(
+        self.cli = CommandLineInterface(
             self.name, description=self.description, package=self.package)
-        self.arg_parser.add_argument(
+        self.cli.build_parser()
+        self.cli.parser.add_argument(
             '--debug', action='store_true',
             help='''
             Send logging output to the console instead of the log file,
@@ -191,13 +192,13 @@ class NowcastWorker:
         :py:meth:`argparse.ArgumentParser.add_argument` that accepts
         that method's arguments.
         """
-        self.arg_parser = argparse.ArgumentParser(
-            prog=self.arg_parser.prog,
-            description=self.arg_parser.description,
-            parents=[self.arg_parser],
+        self.cli.parser = argparse.ArgumentParser(
+            prog=self.cli.parser.prog,
+            description=self.cli.parser.description,
+            parents=[self.cli.parser],
             add_help=False,
         )
-        self.arg_parser.add_argument(*args, **kwargs)
+        self.cli.parser.add_argument(*args, **kwargs)
 
     def run(self, worker_func, success, failure):
         """Prepare the worker to do its work, then do it.
@@ -250,7 +251,7 @@ class NowcastWorker:
         """
         self.worker_func = worker_func
         self.success, self.failure = success, failure
-        self._parsed_args = self.arg_parser.parse_args()
+        self._parsed_args = self.cli.parser.parse_args()
         self.config.load(self._parsed_args.config_file)
         self.logger = logging.getLogger(self.name)
         logging.config.dictConfig(self.config['logging'])

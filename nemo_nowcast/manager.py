@@ -27,8 +27,8 @@ import yaml
 import zmq
 
 from nemo_nowcast import (
+    CommandLineInterface,
     Config,
-    lib,
     Message,
 )
 
@@ -125,13 +125,13 @@ class NowcastManager:
         """Configure command-line argument parser and return parsed arguments
         object.
         """
-        base_parser = lib.base_arg_parser(
-            self.name, package='nemo_nowcast',
-            description=__doc__, add_help=False)
+        cli = CommandLineInterface(
+            self.name, package='nemo_nowcast', description=__doc__)
+        cli.build_parser(add_help=False)
         parser = argparse.ArgumentParser(
-            prog=base_parser.prog,
-            description=base_parser.description,
-            parents=[base_parser])
+            prog=cli.parser.prog,
+            description=cli.parser.description,
+            parents=[cli.parser])
         parser.add_argument(
             '--ignore-checklist', action='store_true',
             help='''

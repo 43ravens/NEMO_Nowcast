@@ -131,9 +131,9 @@ class TestNowcastWorkerConstructor:
         worker = NowcastWorker('worker_name', 'description')
         assert worker.logger is None
 
-    def test_arg_parser(self):
+    def test_cli(self):
         worker = NowcastWorker('worker_name', 'description')
-        assert worker.arg_parser is None
+        assert worker.cli is None
 
     def test_worker_func(self):
         worker = NowcastWorker('worker_name', 'description')
@@ -167,7 +167,7 @@ class TestInitCli:
         worker = NowcastWorker('worker_name', 'description')
         worker.init_cli()
         assert isinstance(
-            worker.arg_parser._get_option_tuples('--debug')[0][0],
+            worker.cli.parser._get_option_tuples('--debug')[0][0],
             argparse._StoreTrueAction)
 
 
@@ -208,7 +208,7 @@ class TestNowcastWorkerRun:
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
-        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker.cli.parser.parse_args = Mock(name='parse_args')
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
@@ -232,7 +232,7 @@ class TestNowcastWorkerRun:
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
-        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker.cli.parser.parse_args = Mock(name='parse_args')
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
@@ -256,7 +256,7 @@ class TestNowcastWorkerRun:
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
-        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker.cli.parser.parse_args = Mock(name='parse_args')
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
@@ -280,7 +280,7 @@ class TestNowcastWorkerRun:
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
-        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker.cli.parser.parse_args = Mock(name='parse_args')
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
@@ -288,7 +288,7 @@ class TestNowcastWorkerRun:
             'nemo_nowcast.config.open', mock_open(read_data=test_config))
         with p_config_open:
             worker.run(m_worker_func, m_success, m_failure)
-        worker.arg_parser.parse_args.assert_called_once_with()
+        worker.cli.parser.parse_args.assert_called_once_with()
 
     def test_config_load(self, m_logging):
         worker = NowcastWorker('worker_name', 'description')
@@ -302,7 +302,7 @@ class TestNowcastWorkerRun:
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
-        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker.cli.parser.parse_args = Mock(name='parse_args')
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
@@ -324,7 +324,7 @@ class TestNowcastWorkerRun:
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
-        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker.cli.parser.parse_args = Mock(name='parse_args')
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
@@ -349,7 +349,7 @@ class TestNowcastWorkerRun:
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
-        worker.arg_parser.parse_args = Mock(name='parse_args', debug=True)
+        worker.cli.parser.parse_args = Mock(name='parse_args', debug=True)
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
@@ -376,7 +376,7 @@ class TestNowcastWorkerRun:
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
-        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker.cli.parser.parse_args = Mock(name='parse_args')
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
@@ -400,7 +400,7 @@ class TestNowcastWorkerRun:
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
-        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker.cli.parser.parse_args = Mock(name='parse_args')
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
@@ -424,7 +424,7 @@ class TestNowcastWorkerRun:
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
-        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker.cli.parser.parse_args = Mock(name='parse_args')
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
@@ -448,7 +448,7 @@ class TestNowcastWorkerRun:
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
-        worker.arg_parser.parse_args = Mock(name='parse_args')
+        worker.cli.parser.parse_args = Mock(name='parse_args')
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')

@@ -29,33 +29,32 @@ from nemo_nowcast import message_broker
 
 @patch('nemo_nowcast.message_broker.logging')
 @patch('nemo_nowcast.message_broker.Config')
-@patch('nemo_nowcast.message_broker.lib.base_arg_parser')
+@patch('nemo_nowcast.message_broker.CommandLineInterface')
 @patch('nemo_nowcast.message_broker.run')
 class TestMain:
     """Unit tests for message_broker.main function.
     """
-    def test_commandline_parser(self, m_run, m_arg_parser, m_config, m_logging,
-    ):
+    def test_commandline_interface(self, m_run, m_cli, m_config, m_logging):
         message_broker.main()
-        args, kwargs = m_arg_parser.call_args_list[0]
+        args, kwargs = m_cli.call_args_list[0]
         assert args[0] == 'message_broker'
         assert 'package' in kwargs
         assert 'description' in kwargs
-        m_arg_parser().parse_args.assert_called_once_with()
+        m_cli.build_parser.asser_called_once_with()
 
-    def test_config(
-        self, m_run, m_arg_parser, m_config, m_logging,
-    ):
-        m_arg_parser().parse_args.return_value = Mock(
+    def test_cli_parser(self, m_run, m_cli, m_config, m_logging):
+        message_broker.main()
+        m_cli().parser.parse_args.assert_called_once_with()
+
+    def test_config(self, m_run, m_cli, m_config, m_logging):
+        m_cli().parser.parse_args.return_value = Mock(
             config_file='nowcast.yaml')
         message_broker.main()
         m_config().load.assert_called_once_with('nowcast.yaml')
 
     @patch('nemo_nowcast.message_broker.logger')
-    def test_logging(
-        self, m_logger, m_run, m_arg_parser, m_config, m_logging,
-    ):
-        m_arg_parser().parse_args.return_value = Mock(
+    def test_logging(self, m_logger, m_run, m_cli, m_config, m_logging):
+        m_cli.parser.parse_args.return_value = Mock(
             config_file='nowcast.yaml')
         m_config().load.return_value = {'logging': {}}
         message_broker.main()
@@ -63,10 +62,8 @@ class TestMain:
             m_config().__getitem__())
         assert m_logger.info.call_count == 2
 
-    def test_run(
-        self, m_run, m_arg_parser, m_config, m_logging,
-    ):
-        m_arg_parser().parse_args.return_value = Mock(
+    def test_run(self, m_run, m_cli, m_config, m_logging):
+        m_cli.parser.parse_args.return_value = Mock(
             config_file='nowcast.yaml')
         message_broker.main()
         m_run.assert_called_once_with(m_config())

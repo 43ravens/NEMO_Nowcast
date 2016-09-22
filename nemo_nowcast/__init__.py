@@ -16,6 +16,7 @@
 """
 
 
+from nemo_nowcast.cli import CommandLineInterface
 from nemo_nowcast.config import Config
 from nemo_nowcast.message import Message
 from nemo_nowcast.worker import (

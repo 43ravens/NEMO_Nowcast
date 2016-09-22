@@ -64,6 +64,15 @@ Classes, Exceptions and Functions for Building Workers
     :members:
 
 
+.. _NEMO_NowcastCommandLineInterface:
+
+Command-line Interface
+======================
+
+.. automodule:: nemo_nowcast.cli
+    :members:
+
+
 .. _NEMO_NowcastWorkerLaunchScheduler:
 
 Worker Launch Scheduler
@@ -85,15 +94,6 @@ Please see :ref:`BuiltinWorkers` for descriptions of these workers and their int
     :members:
 
 .. automodule:: nemo_nowcast.workers.clear_checklist
-    :members:
-
-
-.. _NEMO_NowcastUtilityFunctions:
-
-Utility Functions
-=================
-
-.. automodule:: nemo_nowcast.lib
     :members:
 
 
