@@ -23,8 +23,8 @@ import time
 import schedule
 
 from nemo_nowcast import (
+    CommandLineInterface,
     Config,
-    lib,
     NextWorker,
 )
 
@@ -55,9 +55,10 @@ def main():
     See :command:`python -m nowcast.scheduler -help`
     for details of the command-line interface.
     """
-    parser = lib.base_arg_parser(
+    cli = CommandLineInterface(
         NAME, package='nemo_nowcast', description=__doc__)
-    parsed_args = parser.parse_args()
+    cli.build_parser()
+    parsed_args = cli.parser.parse_args()
     config = Config()
     config.load(parsed_args.config_file)
     logging.config.dictConfig(config['logging'])

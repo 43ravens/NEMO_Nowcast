@@ -40,9 +40,9 @@ class TestMain:
     def test_add_sleep_time_arg(self, m_worker):
         sleep.main()
         worker = m_worker()
-        args, kwargs = worker.arg_parser.set_defaults.call_args_list[0]
+        args, kwargs = worker.cli.parser.set_defaults.call_args_list[0]
         assert kwargs['sleep_time'] == 5
-        args, kwargs = worker.arg_parser.add_argument.call_args_list[0]
+        args, kwargs = worker.cli.parser.add_argument.call_args_list[0]
         assert args == ('--sleep-time',)
         assert kwargs['type'] == int
         assert 'help' in kwargs
