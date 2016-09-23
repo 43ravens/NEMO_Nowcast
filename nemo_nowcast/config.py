@@ -29,12 +29,12 @@ class Config:
     """Construct a :py:class:`nemo_nowcast.config.Config` instance.
     """
     #: Path/name of YAML configuration file for the NEMO nowcast system.
-    #: Assigned when :py:meth:`~NEMO_Nowcast.config.Config.load` method
+    #: Assigned when :py:meth:`~nemo_nowcast.config.Config.load` method
     #: is called.
     file = attr.ib(init=False, default='')
     #: :py:class:`dict` containing the nowcast system configuration
     #: that is read from the configuration file by the
-    #: :py:meth:`~NEMO_Nowcast.config.Config.load` method.
+    #: :py:meth:`~nemo_nowcast.config.Config.load` method.
     _dict = attr.ib(init=False, default=attr.Factory(dict))
 
     def __getitem__(self, item):
