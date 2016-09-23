@@ -37,7 +37,7 @@ def main():
     """
     Setup and run the nowcast system manager.
 
-    See :command:`python -m nemo_nowcast.manager -help`
+    See :command:`python -m nemo_nowcast.manager --help`
     for details of the command-line interface.
     """
     mgr = NowcastManager()
@@ -52,20 +52,20 @@ class NowcastManager:
     #: The name of the manager instance.
     #: Used in the nowcast messaging system and for logging.
     name = attr.ib(default='manager')
-    #: :py:class:`NEMO_Nowcast.config.Config` object that holds
+    #: :py:class:`nemo_nowcast.config.Config` object that holds
     #: the nowcast system configuration that is loaded from the configuration
-    #: file in the :py:meth:`~NEMO_Nowcast.NowcastManager.setup` method.
+    #: file in the :py:meth:`~nemo_nowcast.manager.NowcastManager.setup` method.
     config = attr.ib(default=attr.Factory(Config))
     #: Logger for the manager.
     #: Configured from the :kbd:`logging` section of the configuration file
-    #: in the :py:meth:`~NEMO_Nowcast.NowcastManager.setup` method .
+    #: in the :py:meth:`~nemo_nowcast.manager.NowcastManager.setup` method .
     logger = attr.ib(default=None)
     #: Nowcast system checklist: :py:class:`dict` containing the present
     #: state of the nowcast system.
     checklist = attr.ib(default=attr.Factory(dict))
     #: :py:class:`argparse.Namespace` instance containing the arguments
     #: and option flags and values parsed from the command-line when the
-    #: :py:meth:`~NEMO_Nowcast.NowcastManager.setup method is called.
+    #: :py:meth:`~nemo_nowcast.manager.NowcastManager.setup` method is called.
     _parsed_args = attr.ib(default=None)
     #: The :kbd:`message registry` section of
     #: :py:attr:`~nemo_nowcast.manager.config`.
@@ -74,7 +74,7 @@ class NowcastManager:
     #: lists of workers to launch after previous workers end their work.
     #: Set from the :kbd:`message registry` section of
     #: :py:attr:`~nemo_nowcast.manager.config` in the
-    #: py:meth:`~NEMO_Nowcast.NowcastManager.setup` method.
+    #: py:meth:`~nemo_nowcast.manager.NowcastManager.setup` method.
     _next_workers_module = attr.ib(default=None)
     #: :py:class:`zmq.Context` instance that provides the basis for the
     #: nowcast messaging system.
@@ -83,7 +83,7 @@ class NowcastManager:
     #: message broker to enable nowcast system messages to be exchanged
     #: with worker processes.
     #: Created when the
-    #: py:meth:`~NEMO_Nowcast.NowcastManager.run` method is called.
+    #: py:meth:`~nemo_nowcast.manager.NowcastManager.run` method is called.
     _socket = attr.ib(default=None)
 
     def setup(self):

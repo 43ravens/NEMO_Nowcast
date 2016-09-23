@@ -104,16 +104,16 @@ class NowcastWorker:
     #: Use dotted notation;
     #: e.g. :kbd:`nowcast.workers`.
     package = attr.ib(default='nowcast.workers')
-    #: :py:class:`NEMO_Nowcast.config.Config` object that holds
+    #: :py:class:`nemo_nowcast.config.Config` object that holds
     #: the nowcast system configuration that is loaded from the configuration
-    #: file in the :py:meth:`~NEMO_Nowcast.NowcastWorker.run` method.
+    #: file in the :py:meth:`~nemo_nowcast.worker.NowcastWorker.run` method.
     config = attr.ib(default=attr.Factory(Config))
     #: Logger for the worker.
     #: Configured from the :kbd:`logging` section of the configuration file
-    #: in the :py:meth:`~NEMO_Nowcast.NowcastWorker.run` method.
+    #: in the :py:meth:`~nemo_nowcast.worker.NowcastWorker.run` method.
     logger = attr.ib(default=None)
     #: :py:class:`nemo_nowcast.cli.CommandLineInterface` object configured
-    #: in the :py:meth:`~nemo_nowcast.NowcastWorker.setup` method
+    #: in the :py:meth:`~nemo_nowcast.worker.NowcastWorker.run` method
     #: to provide the default worker command-line interface that requires
     #: a nowcast config file name,
     #: and provides :kbd:`--debug`,
@@ -124,9 +124,10 @@ class NowcastWorker:
     #: Called with the worker's parsed command-line arguments
     #: :py:class:`argparse.Namespace` instance,
     #: the worker's configuration dict,
-    #: and the :py:meth:`~NEMO_Nowcast.NowcastWorker.tell_manager` method.
+    #: and the :py:meth:`~nemo_nowcast.worker.NowcastWorker.tell_manager`
+    #: method.
     #: Passed as an argument to the
-    #: :py:meth:`~NEMO_Nowcast.NowcastWorker.run` method.
+    #: :py:meth:`~nemo_nowcast.worker.NowcastWorker.run` method.
     worker_func = attr.ib(default=None)
     #: Function to be called when the worker finishes successfully.
     #: Called with the worker's parsed command-line arguments
@@ -134,7 +135,7 @@ class NowcastWorker:
     #: Must return a string whose value is a success message type defined
     #: for the worker in the nowcast configuration file.
     #: Passed as an argument to the
-    #: :py:meth:`~NEMO_Nowcast.NowcastWorker.run` method.
+    #: :py:meth:`~nemo_nowcast.worker.NowcastWorker.run` method.
     success = attr.ib(default=None)
     #: Function to be called when the worker fails. Called with the
     #: worker's parsed command-line arguments
@@ -142,11 +143,11 @@ class NowcastWorker:
     #: Must return a string whose value is a failure message type defined
     #: for the worker in the nowcast configuration file.
     #: Passed as an argument to the
-    #: :py:meth:`~NEMO_Nowcast.NowcastWorker.run` method.
+    #: :py:meth:`~nemo_nowcast.worker.NowcastWorker.run` method.
     failure = attr.ib(default=None)
     #: :py:class:`argparse.Namespace` instance containing the arguments
     #: and option flags and values parsed from the command-line when the
-    #: :py:meth:`~NEMO_Nowcast.NowcastWorker.setup method is called.
+    #: :py:meth:`~nemo_nowcast.worker.NowcastWorker.setup method is called.
     _parsed_args = attr.ib(default=None)
     #: :py:class:`zmq.Context` instance that provides the basis for the
     #: nowcast messaging system.
@@ -155,7 +156,7 @@ class NowcastWorker:
     #: message broker to enable nowcast system messages to be exchanged
     #: with manager process.
     #: Created when the
-    #: py:meth:`~NEMO_Nowcast.NowcastWorker.run` method is called.
+    #: py:meth:`~nemo_nowcast.worker.NowcastWorker.run` method is called.
     _socket = attr.ib(default=None)
 
     def init_cli(self):
@@ -165,7 +166,7 @@ class NowcastWorker:
         file name, and provides :kbd:`--debug`, :kbd:`--help`,
         and :kbd:`-h` options.
 
-        Use the :py:meth:`~NEMO_Nowcast.NowcastWorker.add_argument` method
+        Use the :py:meth:`~nemo_nowcast.worker.NowcastWorker.add_argument` method
         to add worker-specific arguments to the interface.
         """
         self.cli = CommandLineInterface(
