@@ -2,8 +2,8 @@
 Change Log
 **********
 
-In development
-==============
+v1.1
+====
 
 * Eliminated lib module by refactoring command-line argument parseing
   functions into attr.s-decorated nemo_nowcast.cli.CommandLineInterface
