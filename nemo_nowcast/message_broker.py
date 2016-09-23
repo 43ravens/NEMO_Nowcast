@@ -54,7 +54,7 @@ def main():
 
     After the set-up is complete, launch the broker message queuing process.
 
-    See :command:`python -m nemo_nowcast.message_broker -help`
+    See :command:`python -m nemo_nowcast.message_broker --help`
     for details of the command-line interface.
     """
     cli = CommandLineInterface(
