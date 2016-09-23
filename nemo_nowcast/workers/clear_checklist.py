@@ -38,7 +38,7 @@ def main():
 
     For command-line usage see:
 
-    :command:`python -m nemo_nowcast.workers.clear_checklist`
+    :command:`python -m nemo_nowcast.workers.clear_checklist --help`
     """
     worker = NowcastWorker(
         NAME, description=__doc__, package='nemo_nowcast.workers')

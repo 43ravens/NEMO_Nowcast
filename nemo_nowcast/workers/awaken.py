@@ -33,7 +33,7 @@ def main():
 
     For command-line usage see:
 
-    :command:`python -m nemo_nowcast.workers.awaken`
+    :command:`python -m nemo_nowcast.workers.awaken --help`
     """
     worker = NowcastWorker(
         NAME, description=__doc__, package='nemo_nowcast.workers')

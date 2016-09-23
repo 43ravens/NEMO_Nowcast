@@ -52,7 +52,7 @@ def main():
 
     After the set-up is complete, start the scheduler worker launching loop.
 
-    See :command:`python -m nowcast.scheduler -help`
+    See :command:`python -m nowcast.scheduler --help`
     for details of the command-line interface.
     """
     cli = CommandLineInterface(
