@@ -11,7 +11,7 @@ In development
 v1.1
 ====
 
-* Eliminated lib module by refactoring command-line argument parseing
+* Eliminated lib module by refactoring command-line argument parsing
   functions into attr.s-decorated nemo_nowcast.cli.CommandLineInterface
   class that is available in the nemo_nowcat namespace.
 * Refactored system config data structure and lib.load_config() into
