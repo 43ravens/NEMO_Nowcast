@@ -458,6 +458,7 @@ def get_web_data(
     logger = logging.getLogger(logger_name)
     if session is None:
         session = requests.Session()
+
     def _get_data():
         try:
             response = session.get(file_url, stream=True)
@@ -474,6 +475,7 @@ def get_web_data(
         ) as e:
             logger.debug('received {msg} from {url}'.format(msg=e, url=file_url))
             raise e
+
     try:
         _get_data()
         return
@@ -488,7 +490,11 @@ def get_web_data(
             try:
                 _get_data()
                 return
-            except:
+            except (
+                requests.exceptions.ConnectionError,
+                requests.exceptions.HTTPError,
+                socket.error,
+            ):
                 wait_seconds *= wait_exponential_multiplier
                 retries += 1
         logger.error(
