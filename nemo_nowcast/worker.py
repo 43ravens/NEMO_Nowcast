@@ -480,7 +480,9 @@ def get_web_data(
         wait_seconds = wait_exponential_multiplier
         retries = 0
         while wait_seconds < wait_exponential_max:
-            logger.debug('waiting {} seconds until retry'.format(wait_seconds))
+            logger.debug(
+                'waiting {s} seconds until retry {n}'
+                .format(s=wait_seconds, n=retries+1))
             time.sleep(wait_seconds)
             try:
                 _get_data()
