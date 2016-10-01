@@ -476,6 +476,7 @@ def get_web_data(
             raise e
     try:
         _get_data()
+        return
     except:
         wait_seconds = wait_exponential_multiplier
         retries = 0
@@ -486,6 +487,7 @@ def get_web_data(
             time.sleep(wait_seconds)
             try:
                 _get_data()
+                return
             except:
                 wait_seconds *= wait_exponential_multiplier
                 retries += 1
