@@ -171,25 +171,6 @@ class TestInitCli:
             argparse._StoreTrueAction)
 
 
-class TestAddArgument:
-    """Unit test for NowcastWorker.add_argument method.
-    """
-    def test_add_argument(self):
-        """add_argument() wraps argparse.ArgumentParser.add_argument()
-        """
-        worker = NowcastWorker('worker_name', 'description')
-        worker.init_cli()
-        with patch('nemo_nowcast.worker.argparse.ArgumentParser') as m_parser:
-            worker.add_argument(
-                '--yesterday', action='store_true',
-                help="Download forecast files for previous day's date."
-            )
-        m_parser().add_argument.assert_called_once_with(
-            '--yesterday', action='store_true',
-            help="Download forecast files for previous day's date."
-        )
-
-
 @patch('nemo_nowcast.worker.logging')
 class TestNowcastWorkerRun:
     """Unit tests for NowcastWorker.run method.

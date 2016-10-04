@@ -5,8 +5,15 @@ Change Log
 In development
 ==============
 
-* Add this change log to the docs.
-* Fix bug in worker.get_web_data() function that caused an infinite loop to
+* Moved nemo_nowcast.NowcastWorker.add_argument() method to
+  nemo_nowcast.CommandLineInterface class to make addition of arguments and
+  options to worker CLIs consistently operate on worker.cli.
+  See `issue #4`_
+
+  .. _issue #4: https://bitbucket.org/43ravens/nemo_nowcast/issues/4
+
+* Added this change log to the docs.
+* Fixed bug in worker.get_web_data() function that caused an infinite loop to
   start after a waited-for file was finally downloaded.
 
 v1.1
@@ -14,7 +21,7 @@ v1.1
 
 * Eliminated lib module by refactoring command-line argument parsing
   functions into attr.s-decorated nemo_nowcast.cli.CommandLineInterface
-  class that is available in the nemo_nowcat namespace.
+  class that is available in the nemo_nowcast namespace.
 * Refactored system config data structure and lib.load_config() into
   attr.s-decorated nemo_nowcast.config.Config class that is available
   in the nemo_nowcat namespace.
