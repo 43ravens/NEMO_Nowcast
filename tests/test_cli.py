@@ -16,6 +16,7 @@
 """
 import argparse
 from datetime import datetime
+from unittest.mock import patch
 
 import arrow
 import pytest
@@ -75,6 +76,25 @@ class TestBuildParser:
         cli = CommandLineInterface('test')
         cli.build_parser()
         assert cli.parser._positionals._actions[1].dest == 'config_file'
+
+
+@patch('nemo_nowcast.cli.argparse.ArgumentParser')
+class TestAddArgument:
+    """Unit test for nemo_nowcast.cli.CommandLineInterface.add_argument method.
+    """
+    def test_add_argument(self, m_parser):
+        """add_argument() wraps argparse.ArgumentParser.add_argument()
+        """
+        cli = CommandLineInterface('test')
+        cli.parser = m_parser
+        cli.add_argument(
+            '--yesterday', action='store_true',
+            help="Download forecast files for previous day's date."
+        )
+        m_parser.add_argument.assert_called_once_with(
+            '--yesterday', action='store_true',
+            help="Download forecast files for previous day's date."
+        )
 
 
 class TestAddDateOption:

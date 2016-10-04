@@ -61,13 +61,26 @@ class CommandLineInterface:
             help='Path/name of YAML configuration file for NEMO nowcast.'
         )
 
+    def add_argument(self, *args, **kwargs):
+        """Add an argument to the CLI parser.
+
+        This is a thin wrapper around
+        :py:meth:`argparse.ArgumentParser.add_argument` that accepts
+        that method's arguments.
+        """
+        self.parser.add_argument(*args, **kwargs)
+
     def add_date_option(self, name, default, help):
         """Add a date option to the CLI parser.
 
         The stored date is an :py:class:`arrow.Arrow` object.
 
         This is a thin wrapper around
-        :py:meth:`argparse.ArgumentParser.add_argument`.
+        :py:meth:`argparse.ArgumentParser.add_argument` that sets the
+        type of the option to
+        :py:meth:`nemo_nowcast.cli.CommandLineInterface._arrow_date`,
+        and append information about the option's format and default value
+        to the *help* message.
 
         :arg str name: Option name/flag; e.g. :kbd:`--forecast-date`.
 

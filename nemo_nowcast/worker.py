@@ -186,21 +186,6 @@ class NowcastWorker:
             ''',
         )
 
-    def add_argument(self, *args, **kwargs):
-        """Add an argument to the worker's command-line interface.
-
-        This is a thin wrapper around
-        :py:meth:`argparse.ArgumentParser.add_argument` that accepts
-        that method's arguments.
-        """
-        self.cli.parser = argparse.ArgumentParser(
-            prog=self.cli.parser.prog,
-            description=self.cli.parser.description,
-            parents=[self.cli.parser],
-            add_help=False,
-        )
-        self.cli.parser.add_argument(*args, **kwargs)
-
     def run(self, worker_func, success, failure):
         """Prepare the worker to do its work, then do it.
 
