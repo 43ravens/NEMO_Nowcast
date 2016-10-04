@@ -28,6 +28,7 @@ Contents
    nowcast_system/index
    api
    development
+   CHANGES
 
 
 Indices and Tables

@@ -5,6 +5,7 @@ Change Log
 In development
 ==============
 
+* Add this change log to the docs.
 * Fix bug in worker.get_web_data() function that caused an infinite loop to
   start after a waited-for file was finally downloaded.
 
