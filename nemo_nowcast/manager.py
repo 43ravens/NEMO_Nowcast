@@ -303,7 +303,7 @@ class NowcastManager:
                 exc_info=True)
             reply = Message(self.name, 'no after_worker function').serialize()
             return reply, []
-        next_workers = after_func(msg)
+        next_workers = after_func(msg, self.config)
         reply = Message(self.name, 'ack').serialize()
         return reply, next_workers
 

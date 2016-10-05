@@ -5,6 +5,13 @@ Change Log
 In development
 ==============
 
+* Pass system config dict into ``next_workers.after_*()`` calls so that
+  ``after_*()`` functions can access it to define what workers to launch next
+  and/or their order.
+  See `issue #5`_
+
+  .. _issue #5: https://bitbucket.org/43ravens/nemo_nowcast/issues/5
+
 * Moved nemo_nowcast.NowcastWorker.add_argument() method to
   nemo_nowcast.CommandLineInterface class to make addition of arguments and
   options to worker CLIs consistently operate on worker.cli.
