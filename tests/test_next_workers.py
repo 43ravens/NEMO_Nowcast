@@ -17,6 +17,7 @@
 import pytest
 
 from nemo_nowcast import (
+    Config,
     Message,
     NextWorker,
     next_workers,
@@ -31,11 +32,13 @@ class TestAfterSleep:
         'failure',
     ])
     def test_no_next_worker_msg_types(self, msg_type):
-        workers = next_workers.after_sleep(Message('sleep', msg_type))
+        workers = next_workers.after_sleep(
+            Message('sleep', msg_type), Config())
         assert workers == []
 
     def test_success_awaken_worker_next(self):
-        workers = next_workers.after_sleep(Message('sleep', 'success'))
+        workers = next_workers.after_sleep(
+            Message('sleep', 'success'), Config())
         assert workers == [NextWorker('nemo_nowcast.workers.awaken')]
 
 
@@ -48,5 +51,6 @@ class TestAfterAwaken:
         'success',
     ])
     def test_no_next_worker_msg_types(self, msg_type):
-        workers = next_workers.after_awaken(Message('awaken', msg_type))
+        workers = next_workers.after_awaken(
+            Message('awaken', msg_type), Config())
         assert workers == []

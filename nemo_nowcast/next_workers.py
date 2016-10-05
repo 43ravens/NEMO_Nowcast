@@ -27,7 +27,7 @@ Function names **must** be of the form :py:func:`after_worker_name`.
 from nemo_nowcast import NextWorker
 
 
-def after_sleep(msg):
+def after_sleep(msg, config):
     """Calculate the list of workers to launch after the sleep example worker
     ends.
 
@@ -46,7 +46,7 @@ def after_sleep(msg):
     return next_workers[msg.type]
 
 
-def after_awaken(msg):
+def after_awaken(msg, config):
     """Calculate the list of workers to launch after the awaken example worker
     ends.
 
