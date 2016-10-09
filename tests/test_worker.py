@@ -316,7 +316,39 @@ class TestNowcastWorkerRun:
         m_logging.config.dictConfig.assert_called_once_with(
             worker.config['logging'])
 
-    def test_debug_mode_console_logging(self, m_logging):
+    def test_debug_mode_console_logging_only(self, m_logging):
+        test_config = '''
+            checklist file: nowcast_checklist.yaml
+            python: python
+            logging:
+              handlers:
+                console:
+                  level: 1000
+            message registry:
+              next workers module: nowcast.next_workers
+        '''
+        worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
+        m_worker_func = Mock(name='worker_func')
+        m_success = Mock(name='success')
+        m_failure = Mock(name='failure')
+        worker.cli.parser.parse_args = Mock(name='parse_args', debug=True)
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._do_work = Mock(name='_do_work')
+        m_console_handler = Mock(name='m_console_handler')
+        m_console_handler.name = 'console'
+        m_file_handler = Mock(name='m_file_handler')
+        m_file_handler.name = 'debug_text'
+        m_logging.getLogger().handlers = [m_console_handler, m_file_handler]
+        p_config_open = patch(
+            'nemo_nowcast.config.open', mock_open(read_data=test_config))
+        with p_config_open:
+            worker.run(m_worker_func, m_success, m_failure)
+        m_console_handler.setLevel.assert_called_once_with(m_logging.DEBUG)
+        m_file_handler.setLevel.assert_called_once_with(1000)
+
+    def test_debug_mode_no_console_handler(self, m_logging):
         test_config = '''
             checklist file: nowcast_checklist.yaml
             python: python
@@ -334,14 +366,14 @@ class TestNowcastWorkerRun:
         worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
         worker._do_work = Mock(name='_do_work')
-        m_console_handler = Mock(name='m_console_handler')
-        m_console_handler.name = 'console'
-        m_logging.getLogger().handlers = [m_console_handler]
+        m_file_handler = Mock(name='m_file_handler')
+        m_file_handler.name = 'debug_text'
+        m_logging.getLogger().handlers = [m_file_handler]
         p_config_open = patch(
             'nemo_nowcast.config.open', mock_open(read_data=test_config))
         with p_config_open:
             worker.run(m_worker_func, m_success, m_failure)
-        m_console_handler.setLevel.assert_called_once_with(m_logging.DEBUG)
+        m_file_handler.setLevel.assert_called_once_with(100)
 
     def test_logging_info(self, m_logging):
         test_config = '''

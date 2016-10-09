@@ -5,6 +5,12 @@ Change Log
 In development
 ==============
 
+* Fix a bug whereby workers write logging messages to all file handlers
+  when ``--debug`` option is used instead of logging only to console.
+  See `issue #2`_
+
+  .. _issue #2: https://bitbucket.org/43ravens/nemo_nowcast/issues/2
+
 * Pass system config dict into ``next_workers.after_*()`` calls so that
   ``after_*()`` functions can access it to define what workers to launch next
   and/or their order.
