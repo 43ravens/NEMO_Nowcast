@@ -245,6 +245,15 @@ class NowcastWorker:
             for handler in logging.getLogger().handlers:
                 if handler.name == 'console':
                     handler.setLevel(logging.DEBUG)
+                else:
+                    try:
+                        # Assuming that the console logging level in the config
+                        # is set to a value >logging.DEBUG
+                        console_level = self.config['logging'] \
+                            ['handlers']['console']['level']
+                    except:
+                        console_level = 100
+                    handler.setLevel(console_level)
         self.logger.info('running in process {}'.format(os.getpid()))
         self.logger.info('read config from {.file}'.format(self.config))
         self._install_signal_handlers()
