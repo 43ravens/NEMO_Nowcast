@@ -377,11 +377,11 @@ class NowcastWorker:
 
 
 def get_web_data(
-    file_url, filepath, logger_name,
-    session=None,
-    chunk_size=100*1024,
-    wait_exponential_multiplier=2,
-    wait_exponential_max=60 * 60,
+        file_url, logger_name,
+        filepath=None, session=None,
+        chunk_size=100 * 1024,
+        wait_exponential_multiplier=2,
+        wait_exponential_max=60 * 60,
 ):
     """Download content from file_url and store it in filepath.
 
@@ -397,11 +397,12 @@ def get_web_data(
 
     :param str file_url: URL to download content from.
 
-    :param filepath: File path/name at which to store the downloaded content.
-    :type filepath: :py:class:`pathlib.Path`
-
     :param str logger_name: Name of the :py:class:`logging.Logger` to emit
                             messages on.
+
+    :param filepath: File path/name at which to store the downloaded content.
+                     If :py:class:`None` (the default) the content is returned.
+    :type filepath: :py:class:`pathlib.Path`
 
     :param session: Session object to use for TCP connection pooling
                     to improve performance for multiple requests to the same
@@ -417,7 +418,7 @@ def get_web_data(
                         with requests.Session() as session:
                             for thing in iterable:
                                 nemo_nowcast.worker.get_web_data(
-                                    file_url, filepath, logger_name, session)
+                                    file_url, logger_name, filepath, session)
 
     :type session: :py:class:`requests.Session`
 
@@ -444,8 +445,8 @@ def get_web_data(
                                  seconds.
     :type wait_exponential_max: int or float
 
-    :return: :py:class:`requests.Response` headers
-    :rtype: dict
+    :return: :py:class:`requests.Response.content`
+    :rtype: bytes
 
     :raises: :py:exc:`nemo_nowcast.workers.WorkerError`
     """
@@ -457,6 +458,8 @@ def get_web_data(
         try:
             response = session.get(file_url, stream=True)
             response.raise_for_status()
+            if filepath is None:
+                return response.content
             with filepath.open('wb') as f:
                 for block in response.iter_content(chunk_size=chunk_size):
                     if not block:
@@ -471,8 +474,7 @@ def get_web_data(
             raise e
 
     try:
-        _get_data()
-        return
+        return _get_data()
     except:
         wait_seconds = wait_exponential_multiplier
         retries = 0
@@ -482,8 +484,7 @@ def get_web_data(
                 .format(s=wait_seconds, n=retries+1))
             time.sleep(wait_seconds)
             try:
-                _get_data()
-                return
+                return _get_data()
             except (
                 requests.exceptions.ConnectionError,
                 requests.exceptions.HTTPError,

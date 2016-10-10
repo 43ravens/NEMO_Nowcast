@@ -5,6 +5,9 @@ Change Log
 In development
 ==============
 
+* Enable worker.get_web_data() to return content, as an alternative to storing
+  it at a file path.
+
 * Fix a bug whereby workers write logging messages to all file handlers
   when ``--debug`` option is used instead of logging only to console.
   See `issue #2`_
