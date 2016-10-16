@@ -5,6 +5,11 @@ Change Log
 In development
 ==============
 
+* Make remote host worker launch process include sourcing a bash script that
+  sets the nowcast system environment variables as a prefix to the worker
+  launch command.
+  The location of the script is defined in the config file.
+
 * Enable worker.get_web_data() to return content, as an alternative to storing
   it at a file path.
 
