@@ -77,8 +77,13 @@ class NextWorker:
             cmd = [config['python'], '-m']
             config_file = config.file
         else:
-            cmd = ['ssh', self.host, config['run'][self.host]['python'], '-m']
-            config_file = config['run'][self.host]['config file']
+            enabled_host_config = config['run']['enabled hosts'][self.host]
+            cmd = [
+                'ssh', self.host,
+                'source', enabled_host_config['envvars'], ';',
+                config['python'], '-m',
+            ]
+            config_file = enabled_host_config['config file']
         cmd.extend([self.module, config_file])
         if self.args:
             cmd.extend(self.args)

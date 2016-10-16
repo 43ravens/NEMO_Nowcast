@@ -64,31 +64,34 @@ class TestNextWorkerLaunch:
     def test_localhost(self, m_subprocess):
         config = Config()
         config.file = 'nowcast.yaml'
-        config._dict = {'python': 'nowcast-env/bin/python3'}
+        config._dict = {'python': '$(NOWCAST.ENV.NOWCAST_ENV)/bin/python'}
         next_worker = NextWorker('nowcast.workers.test_worker', ['--debug'])
         next_worker.launch(config, 'test_runner')
         cmd = m_subprocess.Popen.call_args_list[0]
-        expected = call(
-            ['nowcast-env/bin/python3', '-m', 'nowcast.workers.test_worker',
-             'nowcast.yaml', '--debug'])
+        expected = call([
+            '$(NOWCAST.ENV.NOWCAST_ENV)/bin/python', '-m',
+            'nowcast.workers.test_worker',
+            'nowcast.yaml', '--debug'])
         assert cmd == expected
 
     def test_remote_host(self, m_subprocess):
         config = Config()
         config._dict = {
+            'python': '$(NOWCAST.ENV.NOWCAST_ENV)/bin/python',
             'run': {
-                'remotehost': {
-                    'python': 'nowcast-env/bin/python3',
-                    'config file': 'nowcast.yaml',
-            }}}
+                'enabled hosts': {
+                    'remotehost': {
+                        'envvars': 'envvars.sh',
+                        'config file': 'nowcast.yaml',
+        }}}}
         next_worker = NextWorker(
             'nowcast.workers.test_worker', ['--debug'], 'remotehost')
         next_worker.launch(config, 'test_runner')
         cmd = m_subprocess.Popen.call_args_list[0]
-        expected = call(
-            ['ssh', 'remotehost',
-             'nowcast-env/bin/python3', '-m', 'nowcast.workers.test_worker',
-             'nowcast.yaml', '--debug'])
+        expected = call([
+            'ssh', 'remotehost', 'source', 'envvars.sh', ';',
+            '$(NOWCAST.ENV.NOWCAST_ENV)/bin/python', '-m',
+            'nowcast.workers.test_worker', 'nowcast.yaml', '--debug'])
         assert cmd == expected
 
     def test_no_cmdline_args(self, m_subprocess):
