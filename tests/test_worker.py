@@ -64,12 +64,12 @@ class TestNextWorkerLaunch:
     def test_localhost(self, m_subprocess):
         config = Config()
         config.file = 'nowcast.yaml'
-        config._dict = {'python': '$(NOWCAST.ENV.NOWCAST_ENV)/bin/python'}
+        config._dict = {'python': 'nowcast-env/bin/python3'}
         next_worker = NextWorker('nowcast.workers.test_worker', ['--debug'])
         next_worker.launch(config, 'test_runner')
         cmd = m_subprocess.Popen.call_args_list[0]
         expected = call([
-            '$(NOWCAST.ENV.NOWCAST_ENV)/bin/python', '-m',
+            'nowcast-env/bin/python3', '-m',
             'nowcast.workers.test_worker',
             'nowcast.yaml', '--debug'])
         assert cmd == expected
@@ -77,20 +77,20 @@ class TestNextWorkerLaunch:
     def test_remote_host(self, m_subprocess):
         config = Config()
         config._dict = {
-            'python': '$(NOWCAST.ENV.NOWCAST_ENV)/bin/python',
             'run': {
                 'enabled hosts': {
                     'remotehost': {
                         'envvars': 'envvars.sh',
                         'config file': 'nowcast.yaml',
-        }}}}
+                        'python': 'nowcast-env/bin/python3',
+                    }}}}
         next_worker = NextWorker(
             'nowcast.workers.test_worker', ['--debug'], 'remotehost')
         next_worker.launch(config, 'test_runner')
         cmd = m_subprocess.Popen.call_args_list[0]
         expected = call([
             'ssh', 'remotehost', 'source', 'envvars.sh', ';',
-            '$(NOWCAST.ENV.NOWCAST_ENV)/bin/python', '-m',
+            'nowcast-env/bin/python3', '-m',
             'nowcast.workers.test_worker', 'nowcast.yaml', '--debug'])
         assert cmd == expected
 
