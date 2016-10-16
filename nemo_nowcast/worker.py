@@ -81,7 +81,7 @@ class NextWorker:
             cmd = [
                 'ssh', self.host,
                 'source', enabled_host_config['envvars'], ';',
-                config['python'], '-m',
+                enabled_host_config['python'], '-m',
             ]
             config_file = enabled_host_config['config file']
         cmd.extend([self.module, config_file])
