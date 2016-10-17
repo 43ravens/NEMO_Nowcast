@@ -84,14 +84,12 @@ def run(config):
 def _prep_schedule(config):
     """Create the schedule to launch workers and set how often it is checked.
     """
+    sleep_seconds = 60
     try:
-        sleep_seconds = config['scheduled workers'].pop('schedule sleep')
-    except (AttributeError, KeyError):
-        # Default to checking schedule every 60 seconds if config not provided
-        sleep_seconds = 60
-    try:
-        for worker, params in config['scheduled workers'].items():
-            _create_scheduled_job(worker, params, config)
+        for sched_item in config['scheduled workers']:
+            worker_module = list(sched_item.keys())[0]
+            _create_scheduled_job(
+                worker_module, sched_item[worker_module], config)
     except (AttributeError, KeyError):
         # Do nothing if scheduled workers config section is missing or empty
         pass

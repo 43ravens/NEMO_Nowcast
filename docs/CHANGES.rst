@@ -5,6 +5,19 @@ Change Log
 In development
 ==============
 
+* Change the ``scheduled worker`` configuration file section to be a list
+  of dicts.
+  This enables the same worker module to be scheduled for execution at several
+  different times.
+  For example,
+  a ``download_weather`` worker can now be scheduled to run 4 times a day to
+  get the products of each of the Environment Canada HRDPS model runs.
+
+  **NOTE:** As a consequence of this change the ability to configure the
+  time period between system clock checks that the scheduler uses has been
+  removed.
+  It is now hard-coded to 60 seconds.
+
 * Make remote host worker launch process include sourcing a bash script that
   sets the nowcast system environment variables as a prefix to the worker
   launch command.

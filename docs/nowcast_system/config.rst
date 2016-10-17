@@ -115,11 +115,10 @@ Message Registry
 Scheduled Workers
 =================
 
-The :kbd:`scheduled workers` section is an optional configuration section that is used to specify the worker that the :ref:`Scheduler` should launch,
+The :kbd:`scheduled workers` section is an optional configuration section that is used to specify a list of workers that the :ref:`Scheduler` should launch,
 when to launch them,
-and what command-line options (if any) to use for the launch.
-The period between system clock checks that the scheduler should use can also be specified;
-it defaults to 60 seconds if not specified.
+and what command-line options (if any) to use for the launches.
+The period between system clock checks that the scheduler uses is hard-coded to 60 seconds.
 
 .. note::
     Scheduled launching of workers is intended for use only in special cases in which a worker's launch time depends on factors outside of the nowcast system
@@ -134,20 +133,16 @@ Example :kbd:`scheduled workers` configuration section:
 
     # Workers scheduled to run at specific times
     scheduled workers:
-      # Worker module
-      nowcast.workers.download_weather:
-        # Time period for worker launch repetition
-        every: day
-        # Time at which to launch the worker
-        # (quotes are required to ensure that time is interpreted as a string)
-        at: '05:15'
-        # Optional command-line options for the worker
-        # (quotes are necessary to force interpretation as a string)
-        cmd line opts: '12'
-
-      # Optional number of seconds that scheduler sleeps between checks for worker
-      # launch times; defaults to 60 if excluded
-      schedule sleep: 120
+        # Worker module name (fully qualified, dotted notation)
+      - nowcast.workers.download_weather:
+          # Time period for worker launch repetition
+          every: day
+          # Time at which to launch the worker
+          # (quotes are required to ensure that time is interpreted as a string)
+          at: '05:15'
+          # Optional command-line options for the worker
+          # (quotes are necessary to force interpretation as a string)
+          cmd line opts: '12'
 
 
 .. _ExampleNowcastConfigFile:
