@@ -78,20 +78,6 @@ class TestMain:
         m_run.assert_called_once_with(m_config())
 
 
-class TestPrepSchedule:
-    """Unit tests for scheduler._prep_schedule function.
-    """
-    @pytest.mark.parametrize('config, expected', [
-        ({'scheduled workers': {'schedule sleep': 10}}, 10),
-        ({'scheduled workers': {}}, 60),
-        ({'scheduled workers': None}, 60),
-        ({}, 60),
-    ])
-    def test_sleep_seconds_from_config(self, config, expected):
-        sleep_seconds = scheduler._prep_schedule(config)
-        assert sleep_seconds == expected
-
-
 class TestCreateScheduledJob:
     """Unit tests for scheduler._create_scheduled_job function.
     """
