@@ -35,7 +35,7 @@ class Config:
     #: :py:class:`dict` containing the nowcast system configuration
     #: that is read from the configuration file by the
     #: :py:meth:`~nemo_nowcast.config.Config.load` method.
-    _dict = attr.ib(init=False, default=attr.Factory(dict))
+    _dict = attr.ib(init=False, repr=False, default=attr.Factory(dict))
 
     def __getitem__(self, item):
         return self._dict[item]

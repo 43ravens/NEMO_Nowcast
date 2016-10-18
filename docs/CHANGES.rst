@@ -2,8 +2,16 @@
 Change Log
 **********
 
-In development
-==============
+Next Release
+============
+
+These changes have been implemented and are in the
+https://bitbucket.org/43ravens/nemo_nowcast code repository.
+
+* The configuration dict data structure has been removed from the
+  ``Config.__repr__()`` output because, in practice, the data structure
+  is many lines long and its inclusion renders the ``__repr__()`` method
+  output almost unreadable.
 
 * Change the ``scheduled worker`` configuration file section to be a list
   of dicts.
