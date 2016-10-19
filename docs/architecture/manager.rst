@@ -93,6 +93,8 @@ The handling of :kbd:`success`, :kbd:`failure` and :kbd:`crash` messages is:
   A missing :py:func:`after_worker_name` function is a system configuration error that the nowcast system administrator must resolve.
   Please review :ref:`BuildingANowcastSystem` if you encounter this problem.
 
+The manager also handles a small collection of :ref:`SpecialMessageTypes`.
+
 Sometimes in the design of a worker is is useful for the worker to be able to ask the manager to provide it with an item from the system state checklist.
 Those items are payloads sent to the manager by workers that completed their jobs earlier.
 To accomplish that a :kbd:`need` message must be registered for the worker.

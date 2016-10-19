@@ -249,6 +249,12 @@ class NowcastManager:
         if msg.type == 'clear checklist':
             reply = self._clear_checklist()
             return reply, []
+        if msg.type == 'need':
+            reply = self._handle_need_msg(msg)
+            return reply, []
+        if msg.type.startswith('log'):
+            reply = self._handle_log_msg(msg)
+            return reply, []
         reply, next_workers = self._handle_continue_msg(msg)
         return reply, next_workers
 
@@ -282,6 +288,21 @@ class NowcastManager:
                 msg,
                 msg_words=self._msg_registry['workers'][msg.source][msg.type]),
             extra={'worker_msg': msg})
+
+    def _handle_need_msg(self, msg):
+        """Handle request for checklist section message from worker.
+        """
+        reply = Message(
+            self.name, 'ack', payload=self.checklist[msg.payload]).serialize()
+        return reply
+
+    def _handle_log_msg(self, msg):
+        """Handle logging message from worker.
+        """
+        level = getattr(logging, msg.type.split('.')[1].upper())
+        self.logger.log(level, msg.payload)
+        reply = Message(self.name, 'ack').serialize()
+        return reply
 
     def _handle_continue_msg(self, msg):
         """Handle success, failure, or crash message from worker by generating
@@ -342,10 +363,10 @@ class NowcastManager:
     def _clear_checklist(self):
         """Write the checklist to a log file, then clear it.
 
-        This method is intended to be called in response to a "clear checklist"
-        message from the :py:mod:`nemo_nowcast.workers.clear_checklist` worker.
+        This method is called in response to a "clear checklist" message from
+        the :py:mod:`nemo_nowcast.workers.clear_checklist` worker.
         That worker is typically run once per nowcast cycle (e.g. daily) at the
-        end of peocessing, just before rotating the log files via the
+        end of processing, just before rotating the log files via the
         :py:mod:`nemo_nowcast.workers.rotate_logs` worker.
         """
         for handler in logging.getLogger().handlers:

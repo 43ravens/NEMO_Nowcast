@@ -8,6 +8,9 @@ Next Release
 These changes have been implemented and are in the
 https://bitbucket.org/43ravens/nemo_nowcast code repository.
 
+* Add the ability to handle ``need`` and ``log`` message types to the
+  manager.
+
 * The configuration dict data structure has been removed from the
   ``Config.__repr__()`` output because, in practice, the data structure
   is many lines long and its inclusion renders the ``__repr__()`` method

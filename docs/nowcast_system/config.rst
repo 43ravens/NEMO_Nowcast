@@ -109,6 +109,40 @@ Message Registry
           failure: awaken worker failed to awake
           crash: awaken worker crashed
 
+Most messages are handled by the :ref:`SystemManager` by passing them to the :py:func:`after_worker_name` function in the :py:mod:`next_workers` module given by the :kbd:`next workers module` key.
+For example,
+when the manager receives a message with the type :kbd:`success` from the :py:mod:`~nemo_nowcast.workers.sleep` worker it calls the :py:func:`nowcast.next_workers.after_sleep` function with the message.
+
+
+.. _SpecialMessageTypes:
+
+Special Message Types
+---------------------
+
+There are several special message types that are handled differently by the manager:
+
+* The  :kbd:`clear checklist` message that is sent by the :py:mod:`nemo_nowcast.workers.clear_checklist` worker causes the system state checklist to be written to a log file,
+  then clears it.
+  The :py:mod:`~nemo_nowcast.workers.clear_checklist` worker is typically run once per nowcast cycle (e.g. daily) at the end of processing,
+  just before rotating the log files via the
+  :py:mod:`nemo_nowcast.workers.rotate_logs` worker.
+  The log file that the checklist is written to is given by the :kbd:`handlers.checklist.filename` key in the :ref:`LoggingConfig` section of the config file.
+  The checklist is written as a pretty-printed representation of a Python dictionary.
+
+* A :kbd:`need` message is expected to have a system state checklist key as its payload.
+  The manager handles :kbd:`need` messages by returning an :kbd:`ack` message with the requested section of the checklist as its payload.
+
+* A :kbd:`log.<level>` message is handles by the manager by emitting the message payload as a :kbd:`<level>` log message.
+  So,
+  a :kbd:`log.info` message from the :py:mod:`~nemo_nowcast.workers.sleep` worker with the payload :kbd:`I'm asleep!` would add a message like::
+
+    2016-10-19 11:16:15,099 INFO [sleep] I'm asleep!
+
+  to the log files.
+  :kbd:`<level>` must be a logging level name defined in the Python `logging`_ module.
+
+  .. _logging: https://docs.python.org/3/library/logging.html#levels
+
 
 .. _ScheduledWorkersConfig:
 
