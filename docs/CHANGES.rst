@@ -2,11 +2,8 @@
 Change Log
 **********
 
-Next Release
-============
-
-These changes have been implemented and are in the
-https://bitbucket.org/43ravens/nemo_nowcast code repository.
+v1.2
+====
 
 * Add the ability to handle ``need`` and ``log`` message types to the
   manager.
