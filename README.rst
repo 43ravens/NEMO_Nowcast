@@ -25,7 +25,7 @@ That system:
 
 to produce a `daily nowcast and 2 forecasts`_ of the state of the Salish Sea on the west coast of British Columbia.
 
-.. _Salish Sea NEMO Nowcast system: http://salishsea-meopar-tools.readthedocs.io/en/latest/SalishSeaNowcast/
+.. _Salish Sea NEMO Nowcast system: https://salishsea-nowcast.readthedocs.io/en/latest/
 .. _daily nowcast and 2 forecasts: https://salishsea.eos.ubc.ca/nemo/results/index.html
 
 Documentation for the framework is in the ``docs/`` directory and is rendered at http://nemo-nowcast.readthedocs.io/en/latest/.
