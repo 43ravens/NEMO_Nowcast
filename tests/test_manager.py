@@ -399,6 +399,35 @@ class TestMessageHandler:
         assert reply == 'checklist cleared'
         assert next_workers == []
 
+    def test_need_msg(self):
+        mgr = manager.NowcastManager()
+        mgr._msg_registry = {'workers': {'test_worker': {'need': 'Need info'}}}
+        mgr._handle_need_msg = Mock(
+            name='_handle_need_msg',
+            return_value=('ack msg w/ requested info in payload'))
+        mgr._log_received_msg = Mock(name='_log_received_msg')
+        msg = Message(source='test_worker', type='need', payload='info')
+        reply, next_workers = mgr._message_handler(msg.serialize())
+        assert mgr._log_received_msg.called
+        mgr._handle_need_msg.assert_called_once_with(msg)
+        assert reply == 'ack msg w/ requested info in payload'
+        assert next_workers == []
+
+    def test_log_msg(self):
+        mgr = manager.NowcastManager()
+        mgr._msg_registry = {
+            'workers': {'test_worker': {'log.debug': 'debug level log msg'}}}
+        mgr._handle_log_msg = Mock(
+            name='_handle_log_msg',
+            return_value=('ack'))
+        mgr._log_received_msg = Mock(name='_log_received_msg')
+        msg = Message(source='test_worker', type='log.debug', payload=None)
+        reply, next_workers = mgr._message_handler(msg.serialize())
+        assert mgr._log_received_msg.called
+        mgr._handle_log_msg.assert_called_once_with(msg)
+        assert reply == 'ack'
+        assert next_workers == []
+
     def test_continue_msg(self):
         mgr = manager.NowcastManager()
         mgr._msg_registry = {'workers': {'test_worker': {'success': 'success'}}}
@@ -443,7 +472,7 @@ class TestHandleUnregisteredMsgType:
 class TestLogReceivedMessage:
     """Unit test for NowcastManager._log_received_message method.
     """
-    def test_handle_unregistered_msg_type(self):
+    def test_log_received_msg(self):
         mgr = manager.NowcastManager()
         mgr.logger = Mock(name='logger')
         mgr._msg_registry = {
@@ -454,6 +483,29 @@ class TestLogReceivedMessage:
             'received message from test_worker: (success) worker succeeded',
             extra={'worker_msg': msg}
         )
+
+
+class TestHandleNeedMsg:
+    """Unit test for NowcastManager._handle_need_msg method.
+    """
+    mgr = manager.NowcastManager()
+    mgr.checklist={'info': 'requested info'}
+    msg = Message(source='test_worker', type='need', payload='info')
+    reply = mgr._handle_need_msg(msg)
+    expected = Message('manager', 'ack', payload='requested info').serialize()
+    assert reply == expected
+
+
+class TestHandleLogMsg:
+    """Unit test for NowcastManager._handle_log_msg method.
+    """
+    mgr = manager.NowcastManager()
+    mgr.logger = Mock(name='logger')
+    msg = Message(
+        source='test_worker', type='log.debug', payload='debug level log msg')
+    reply = mgr._handle_log_msg(msg)
+    mgr.logger.log.assert_called_once_with(10, 'debug level log msg')
+    assert reply == Message('manager', 'ack').serialize()
 
 
 @patch('nemo_nowcast.manager.importlib')
