@@ -2,6 +2,20 @@
 Change Log
 **********
 
+Next Release
+============
+
+These changes have been implemented and are in the
+https://bitbucket.org/43ravens/nemo_nowcast code repository.
+
+* Pass system state checklist dict into ``next_workers.after_*()`` calls so that
+  ``after_*()`` functions can access it to define what workers to launch next
+  and/or their order.
+  See `issue #7`_
+
+  .. _issue #7: https://bitbucket.org/43ravens/nemo_nowcast/issues/7
+
+
 v1.2
 ====
 

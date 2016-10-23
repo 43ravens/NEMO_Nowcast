@@ -57,12 +57,20 @@ To implement that in your nowcast system:
 
    .. code-block:: python
 
-       def after_rotate_logs(msg):
+       def after_rotate_logs(msg, config, checklist):
            """Calculate the list of workers to launch after the rotate_logs worker
            ends.
 
            :arg msg: Nowcast system message.
            :type msg: :py:class:`collections.namedtuple`
+
+           :arg config: :py:class:`dict`-like object that holds the nowcast system
+                        configuration that is loaded from the system configuration
+                        file.
+           :type config: :py:class:`nemo_nowcast.config.Config`
+
+           :arg dict checklist: System checklist: data structure containing the
+                                present state of the nowcast system.
 
            :returns: Worker(s) to launch next
            :rtype: list
@@ -117,12 +125,20 @@ To implement that in your nowcast system:
 
    .. code-block:: python
 
-       def after_clear_checklist(msg):
+       def after_clear_checklist(msg, config, checklist):
            """Calculate the list of workers to launch after the clear_checklist worker
            ends.
 
            :arg msg: Nowcast system message.
            :type msg: :py:class:`collections.namedtuple`
+
+           :arg config: :py:class:`dict`-like object that holds the nowcast system
+                        configuration that is loaded from the system configuration
+                        file.
+           :type config: :py:class:`nemo_nowcast.config.Config`
+
+           :arg dict checklist: System checklist: data structure containing the
+                                present state of the nowcast system.
 
            :returns: Worker(s) to launch next
            :rtype: list
