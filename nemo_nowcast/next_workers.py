@@ -27,12 +27,20 @@ Function names **must** be of the form :py:func:`after_worker_name`.
 from nemo_nowcast import NextWorker
 
 
-def after_sleep(msg, config):
+def after_sleep(msg, config, checklist):
     """Calculate the list of workers to launch after the sleep example worker
     ends.
 
     :arg msg: Nowcast system message.
     :type msg: :py:func:`collections.namedtuple`
+
+    :arg config: :py:class:`dict`-like object that holds the nowcast system
+                 configuration that is loaded from the system configuration
+                 file.
+    :type config: :py:class:`nemo_nowcast.config.Config`
+
+    :arg dict checklist: System checklist: data structure containing the
+                         present state of the nowcast system.
 
     :returns: Sequence of :py:class:`nemo_nowcast.worker.NextWorker` instances
               for worker(s) to launch next.
@@ -46,12 +54,20 @@ def after_sleep(msg, config):
     return next_workers[msg.type]
 
 
-def after_awaken(msg, config):
+def after_awaken(msg, config, checklist):
     """Calculate the list of workers to launch after the awaken example worker
     ends.
 
     :arg msg: Nowcast system message.
     :type msg: :py:func:`collections.namedtuple`
+
+    :arg config: :py:class:`dict`-like object that holds the nowcast system
+                 configuration that is loaded from the system configuration
+                 file.
+    :type config: :py:class:`nemo_nowcast.config.Config`
+
+    :arg dict checklist: System checklist: data structure containing the
+                         present state of the nowcast system.
 
     :returns: Sequence of :py:class:`nemo_nowcast.worker.NextWorker` instances
               for worker(s) to launch next.
