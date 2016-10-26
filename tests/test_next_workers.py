@@ -24,6 +24,22 @@ from nemo_nowcast import (
 )
 
 
+@pytest.fixture(scope='function')
+def config():
+    """Nowcast system config dict data structure;
+    a mock for :py:attr:`nemo_nowcast.config.Config._dict`.
+    """
+    return {}
+
+
+@pytest.fixture(scope='function')
+def checklist():
+    """Nowcast system state checklist dict data structure;
+    a mock for :py:attr:`nemo_nowcast.manager.NowcastManager.checklist`.
+    """
+    return {}
+
+
 class TestAfterSleep:
     """Unit tests for the after_sleep function.
     """
@@ -31,16 +47,14 @@ class TestAfterSleep:
         'crash',
         'failure',
     ])
-    def test_no_next_worker_msg_types(self, msg_type):
-        checklist = {}
+    def test_no_next_worker_msg_types(self, msg_type, config, checklist):
         workers = next_workers.after_sleep(
-            Message('sleep', msg_type), Config(), checklist)
+            Message('sleep', msg_type), config, checklist)
         assert workers == []
 
-    def test_success_awaken_worker_next(self):
-        checklist = {}
+    def test_success_awaken_worker_next(self, config, checklist):
         workers = next_workers.after_sleep(
-            Message('sleep', 'success'), Config(), checklist)
+            Message('sleep', 'success'), config, checklist)
         assert workers == [NextWorker('nemo_nowcast.workers.awaken')]
 
 
@@ -52,8 +66,7 @@ class TestAfterAwaken:
         'failure',
         'success',
     ])
-    def test_no_next_worker_msg_types(self, msg_type):
-        checklist = {}
+    def test_no_next_worker_msg_types(self, msg_type, config, checklist):
         workers = next_workers.after_awaken(
-            Message('awaken', msg_type), Config(), checklist)
+            Message('awaken', msg_type), config, checklist)
         assert workers == []
