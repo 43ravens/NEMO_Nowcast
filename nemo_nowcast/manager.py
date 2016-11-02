@@ -105,6 +105,16 @@ class NowcastManager:
         self._parsed_args = self._cli()
         self.config.load(self._parsed_args.config_file)
         self._msg_registry = self.config['message registry']
+        # Replace logging RotatingFileHandlers with WatchedFileHandlers so
+        # that we notice when log files are rotated and switch to writing to
+        # the new ones
+        logging_handlers = self.config['logging']['handlers']
+        rotating_handler = 'logging.handlers.RotatingFileHandler'
+        watched_handler = 'logging.handlers.WatchedFileHandler'
+        for handler in logging_handlers:
+            if logging_handlers[handler]['class'] == rotating_handler:
+                logging_handlers[handler]['class'] = watched_handler
+                del logging_handlers[handler]['backupCount']
         self.logger = logging.getLogger(self.name)
         logging.config.dictConfig(self.config['logging'])
         self.logger.info('running in process {}'.format(os.getpid()))

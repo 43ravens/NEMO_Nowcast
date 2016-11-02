@@ -8,6 +8,13 @@ Next Release
 These changes have been implemented and are in the
 https://bitbucket.org/43ravens/nemo_nowcast code repository.
 
+* Replace logging ``RotatingFileHandler`` with ``WatchedFileHandler`` in logging
+  setup of ``manager``, ``message_broker``, and ``scheduler`` so that they
+  notice when log files are rotated and switch to writing to the new ones.
+  See `issue #8`_
+
+  .. _issue #8: https://bitbucket.org/43ravens/nemo_nowcast/issues/8
+
 * Pass system state checklist dict into ``next_workers.after_*()`` calls so that
   ``after_*()`` functions can access it to define what workers to launch next
   and/or their order.

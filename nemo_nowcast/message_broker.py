@@ -63,6 +63,15 @@ def main():
     parsed_args = cli.parser.parse_args()
     config = Config()
     config.load(parsed_args.config_file)
+    # Replace logging RotatingFileHandlers with WatchedFileHandlers so that we
+    # notice when log files are rotated and switch to writing to the new ones
+    logging_handlers = config['logging']['handlers']
+    rotating_handler = 'logging.handlers.RotatingFileHandler'
+    watched_handler = 'logging.handlers.WatchedFileHandler'
+    for handler in logging_handlers:
+        if logging_handlers[handler]['class'] == rotating_handler:
+            logging_handlers[handler]['class'] = watched_handler
+            del logging_handlers[handler]['backupCount']
     logging.config.dictConfig(config['logging'])
     logger.info('running in process {}'.format(os.getpid()))
     logger.info('read config from {.file}'.format(config))
