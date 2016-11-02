@@ -50,6 +50,19 @@ Logging Configuration
          - console
 
 
+.. _RotatingLogFilesAndLongRunningProcesses:
+
+Rotating Log Files and Long-running Processes
+---------------------------------------------
+
+All logging handlers that are configured to use :py:class:`logging.handlers.RotatingFileHandler` receive special processing during the logging setup in the long-running :py:mod:`~nemo_nowcast.manager`,
+:py:mod:`~nemo_nowcast.message_broker`,
+and :py:mod:`~nemo_nowcast.scheduler` processes.
+In those processes,
+the :py:class:`logging.handlers.RotatingFileHandler` is replaced by a :py:class:`logging.handlers.WatchedFileHandler`.
+That enables those processes to detect when the :py:mod:`nemo_nowcast.workers.rotate_logs` worker rotates the log files so that they start writing to the new log files.
+
+
 .. _ZeroMQServerAndPortsConfig:
 
 ZeroMQ Server and Ports

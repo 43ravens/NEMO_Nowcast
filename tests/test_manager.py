@@ -113,7 +113,7 @@ class TestNowcastManagerSetup:
     def test_config_load(self, m_importlib, m_logging):
         mgr = manager.NowcastManager()
         mgr.config._dict = {
-            'logging': {},
+            'logging': {'handlers': {}},
             'message registry': {
                 'next workers module': 'nowcast.next_workers',
                 'workers': {}}}
@@ -126,7 +126,7 @@ class TestNowcastManagerSetup:
     def test_msg_registry(self, m_importlib, m_logging):
         mgr = manager.NowcastManager()
         mgr.config._dict = {
-            'logging': {},
+            'logging': {'handlers': {}},
             'message registry': {
                 'next workers module': 'nowcast.next_workers',
                 'workers': {}}}
@@ -138,10 +138,31 @@ class TestNowcastManagerSetup:
             'workers': {}}
 
     @patch('nemo_nowcast.manager.importlib')
+    def test_change_rotating_logger_handler_to_watched(
+        self, m_importlib, m_logging,
+    ):
+        mgr = manager.NowcastManager()
+        mgr.config._dict = {
+            'logging': {'handlers': {
+                'info_text': {
+                    'class': 'logging.handlers.RotatingFileHandler',
+                    'backupCount': 7,
+            }}},
+            'message registry': {
+                'next workers module': 'nowcast.next_workers',
+                'workers': {}}}
+        mgr.config.load = Mock()
+        mgr._cli = Mock(name='_cli')
+        mgr.setup()
+        handler = mgr.config._dict['logging']['handlers']['info_text']
+        assert handler['class'] == 'logging.handlers.WatchedFileHandler'
+        assert 'backupCount' not in handler
+
+    @patch('nemo_nowcast.manager.importlib')
     def test_logger_name(self, m_importlib, m_logging):
         mgr = manager.NowcastManager()
         mgr.config._dict = {
-            'logging': {},
+            'logging': {'handlers': {}},
             'message registry': {
                 'next workers module': 'nowcast.next_workers',
                 'workers': {}}}
@@ -154,7 +175,7 @@ class TestNowcastManagerSetup:
     def test_logging_config(self, m_importlib, m_logging):
         mgr = manager.NowcastManager()
         mgr.config._dict = {
-            'logging': {},
+            'logging': {'handlers': {}},
             'message registry': {
                 'next workers module': 'nowcast.next_workers',
                 'workers': {}}}
@@ -168,7 +189,7 @@ class TestNowcastManagerSetup:
     def test_import_next_workers_module(self, m_importlib, m_logging):
         mgr = manager.NowcastManager()
         mgr.config._dict = {
-            'logging': {},
+            'logging': {'handlers': {}},
             'message registry': {
                 'next workers module': 'nowcast.next_workers',
                 'workers': {}}}
@@ -182,7 +203,7 @@ class TestNowcastManagerSetup:
     def test_next_workers_module_import_error(self, m_logging):
         mgr = manager.NowcastManager()
         mgr.config._dict = {
-            'logging': {},
+            'logging': {'handlers': {}},
             'message registry': {
                 'next workers module': 'nowcast.next_workers',
                 'workers': {}}}
@@ -195,7 +216,7 @@ class TestNowcastManagerSetup:
     def test_logging_info(self, m_importlib, m_logging):
         mgr = manager.NowcastManager()
         mgr.config._dict = {
-            'logging': {},
+            'logging': {'handlers': {}},
             'message registry': {
                 'next workers module': 'nowcast.next_workers',
                 'workers': {}}}

@@ -47,14 +47,30 @@ class TestMain:
         scheduler.main()
         m_cli().parser.parse_args.assert_called_once_with()
 
-    def test_config(self, m_run, m_ish, m_cli, m_config, m_logging):
+    def test_config_load(self, m_run, m_ish, m_cli, m_config, m_logging):
         m_cli().parser.parse_args.return_value = Mock(
             config_file='nowcast.yaml')
         scheduler.main()
         m_config().load.assert_called_once_with('nowcast.yaml')
 
+    def test_change_rotating_logger_handler_to_watched(
+        self, m_run, m_ish, m_cli, m_config, m_logging
+    ):
+        m_cli().parser.parse_args.return_value = Mock(
+            config_file='nowcast.yaml')
+        m_config().__getitem__().__getitem__.return_value = {
+            'info_text': {
+                'class': 'logging.handlers.RotatingFileHandler',
+                'backupCount': 7,
+        }}
+        scheduler.main()
+        handler = m_config().__getitem__().__getitem__()['info_text']
+        assert handler['class'] == 'logging.handlers.WatchedFileHandler'
+        assert 'backupCount' not in handler
+        m_config().load.assert_called_once_with('nowcast.yaml')
+
     @patch('nemo_nowcast.scheduler.logger')
-    def test_logging(self, m_logger, m_run, m_ish, m_cli, m_config, m_logging):
+    def test_logging_info(self, m_logger, m_run, m_ish, m_cli, m_config, m_logging):
         m_cli().parser.parse_args.return_value = Mock(
             config_file='nowcast.yaml')
         m_config.file = 'nowcast.yaml'
