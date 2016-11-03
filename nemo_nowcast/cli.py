@@ -85,7 +85,7 @@ class CommandLineInterface:
         :arg str name: Option name/flag; e.g. :kbd:`--forecast-date`.
 
         :arg default: Date to use when the option is not included on the
-                      command-line; e.g. :kbd:`arrow.get('2016-09-22')`.
+                      command-line; typically :kbd:`arrow.now().floor('day')`.
         :type default: :py:class:`arrow.Arrow`
 
         :arg str help: Help message. The words

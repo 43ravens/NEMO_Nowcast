@@ -171,8 +171,11 @@ class NowcastWorker:
         file name, and provides :kbd:`--debug`, :kbd:`--help`,
         and :kbd:`-h` options.
 
-        Use the :py:meth:`~nemo_nowcast.worker.NowcastWorker.add_argument` method
-        to add worker-specific arguments to the interface.
+        Use the :py:meth:`~nemo_nowcast.cli.CommandLineInterface.add_argument`
+        method to add worker-specific arguments and/or options to the interface.
+        The :py:meth:`~nemo_nowcast.cli.CommandLineInterface.add_date_option`
+        method is also available for the common task of adding a date option
+        (e.g. :kbd:`--run-date`) to the interface.
         """
         self.cli = CommandLineInterface(
             self.name, description=self.description, package=self.package)
