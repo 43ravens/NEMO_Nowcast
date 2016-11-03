@@ -36,6 +36,8 @@ extensions = [
 # Intersphinx configuration
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
+    'gomssnowcast': ('https://gomss-nowcast-system.readthedocs.io/en/latest', None),
+    'salishseanowcast': ('https://salishsea-nowcast.readthedocs.io/en/nemo_nowcast', None),
 }
 
 # Add any paths that contain templates here, relative to this directory.
