@@ -8,6 +8,16 @@ Next Release
 These changes have been implemented and are in the
 https://bitbucket.org/43ravens/nemo_nowcast code repository.
 
+* ``rotate_logs`` worker sets permissions on newly created log files to
+  ``rw-rw-r--``.
+
+* The ``fileutils`` module from the Python `boltons`_ package has been added
+  to the ``NEMO_Nowcast`` package as a vendored module.
+  Please see the ``README.rst`` file for information about the copyright and
+  license that apply to ``fileutils``.
+
+  .. _boltons: https://boltons.readthedocs.io/en/latest/
+
 * Replace logging ``RotatingFileHandler`` with ``WatchedFileHandler`` in logging
   setup of ``manager``, ``message_broker``, and ``scheduler`` so that they
   notice when log files are rotated and switch to writing to the new ones.
