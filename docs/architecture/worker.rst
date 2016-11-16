@@ -87,6 +87,6 @@ That is useful for testing,
 debugging,
 and sometimes for maintenance of the system or recovery from problems.
 
-The :ref:`CreatingNowcastWorkers` section provides a detailed description of how to create a worker module.
+The :ref:`CreatingNowcastWorkerModules` section provides a detailed description of how to create a worker module.
 
 The :ref:`ExampleWorkers` and the :ref:`BuiltinWorkers` provided for use in nowcast system deployments serve as examples of how to write your own worker modules.
