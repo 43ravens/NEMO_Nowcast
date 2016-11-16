@@ -25,8 +25,10 @@ It can also be launched from the command-line by the nowcast administrator
 as necessary for system maintenance.
 """
 import logging
+from pathlib import Path
 
 from nemo_nowcast import NowcastWorker
+from nemo_nowcast.fileutils import FilePerms
 
 
 NAME = 'rotate_logs'
@@ -71,6 +73,11 @@ def rotate_logs(parsed_args, config, *args):
                 # Probably a StreamHandler
                 continue
             logger.info('log file rotated: {.baseFilename}'.format(handler))
+            p = Path(handler.baseFilename)
+            p.chmod(FilePerms(user='rw', group='rw', other='r'))
+            logger.debug(
+                'new {.baseFilename} log file permissions set to rw-rw-r--'
+                .format(handler))
             checklist.append(handler.baseFilename)
     return checklist
 
