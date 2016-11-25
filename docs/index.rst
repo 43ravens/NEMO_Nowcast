@@ -31,10 +31,9 @@ Contents
    CHANGES
 
 
-Indices and Tables
-==================
+Indices
+=======
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search`
 
