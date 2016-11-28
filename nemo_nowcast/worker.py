@@ -65,8 +65,9 @@ class NextWorker:
         """Use a subprocess to launch worker on host with args as the
         worker's command-line arguments.
 
-        :arg dict config: Nowcast system configuration that was read from
-                          the configuration file.
+        :arg config: Nowcast system configuration that was read from the
+                     configuration file.
+        :type config: :py:class:`nemo_nowcast.config.Config`
 
         :arg str logger_name: Name of the logger to emit messages on.
 
