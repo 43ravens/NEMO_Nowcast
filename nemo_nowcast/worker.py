@@ -390,6 +390,7 @@ def get_web_data(
         filepath=None, session=None,
         chunk_size=100 * 1024,
         wait_exponential_multiplier=2,
+        wait_retry_max=256,
         wait_exponential_max=60 * 60,
 ):
     """Download content from file_url and store it in filepath.
@@ -444,6 +445,12 @@ def get_web_data(
                                         before the first retry.
     :type wait_exponential_multiplier: int or float
 
+    :param wait_retry_max: Maximum number of seconds to wait between retries.
+                           This caps the exponential growth of the wait time
+                           between retries, but retries continue with this
+                           period until wait_exponential_max is reached.
+    :type wait_retry_max: int or float
+
     :param wait_exponential_max: Maximum number of seconds for the final retry
                                  wait interval.
                                  The actual wait time is less than or equal to
@@ -488,10 +495,11 @@ def get_web_data(
         wait_seconds = wait_exponential_multiplier
         retries = 0
         while wait_seconds < wait_exponential_max:
+            sleep_seconds = min(wait_seconds, wait_retry_max)
             logger.debug(
                 'waiting {s} seconds until retry {n}'
-                .format(s=wait_seconds, n=retries+1))
-            time.sleep(wait_seconds)
+                .format(s=sleep_seconds, n=retries+1))
+            time.sleep(sleep_seconds)
             try:
                 return _get_data()
             except (
