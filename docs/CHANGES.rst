@@ -8,6 +8,11 @@ Next Release
 These changes have been implemented and are in the
 https://bitbucket.org/43ravens/nemo_nowcast code repository.
 
+* Added option to set max retry waiting time to ``worker.get_web_data()``.
+  See `issue #3`_
+
+  .. _issue #3: https://bitbucket.org/43ravens/nemo_nowcast/issues/3
+
 * ``rotate_logs`` worker sets permissions on newly created log files to
   ``rw-rw-r--``.
 
