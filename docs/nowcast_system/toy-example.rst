@@ -15,13 +15,51 @@
 
 .. _ToyExample:
 
-************************************
-A "Toy" Example of a  Nowcast System
-************************************
+***********************************
+A "Toy" Example of a Nowcast System
+***********************************
+
+In the spirit of "learn by doing",
+this section presents the practical details of building and operating a nowcast system by setting up a "toy" nowcast system with a few trival :ref:`ExampleWorkers`.
+The :ref:`subsequent sections <BuildingANowcastSystem>` provide more details reference documentation building and operating software automation systems based on this framework.
+
+
+Conda Environment
+=================
+
+We'll use a `Conda`_ environment to isolate Python package installation.
+`Miniconda3`_ provides the :command:`conda` package manager and environment management tools.
+Please follow the `Linux Miniconda Install`_ instructions to download and install Miniconda.
+
+.. _Conda: http://conda.pydata.org/docs/
+.. _Miniconda3: http://conda.pydata.org/docs/install/quick.html
+.. _Linux Miniconda Install: http://conda.pydata.org/docs/install/quick.html#linux-miniconda-install
+
+Once that is done,
+create a conda environment with the `NEMO_Nowcast`_ package and its dependencies installed in it with the command:
+
+.. _NEMO_Nowcast: https://anaconda.org/GoMSS-Nowcast/nemo_nowcast
+
+.. code-block:: bash
+
+    $ conda create -n toy-nowcast -c gomss-nowcast nemo_nowcast
+
+Activate the environment with:
+
+.. code-block:: bash
+
+    $ source activate toy-nowcast
+
+To deactivate the environment later,
+use:
+
+.. code-block:: bash
+
+    (toy-nowcast)$ source deactivate toy-nowcast
+
 
 **TODO**:
 
-* create a conda environment, installing all dependencies via default and gomss-nowcast channels
 * create a :file:`nowcast/` directory
 * create :file:`nowcast/nowcast.yaml` like :file:`example_nowcast.yaml`
 * create :file:`nowcast/circus.ini` like :file:`example_circus.ini`
