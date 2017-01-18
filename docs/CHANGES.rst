@@ -2,11 +2,8 @@
 Change Log
 **********
 
-Next Release
-============
-
-These changes have been implemented and are in the
-https://bitbucket.org/43ravens/nemo_nowcast code repository.
+v1.3
+====
 
 * Added option to set max retry waiting time to ``worker.get_web_data()``.
   See `issue #3`_
