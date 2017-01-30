@@ -21,8 +21,10 @@ A "Toy" Example of a Nowcast System
 
 In the spirit of "learn by doing",
 this section presents the practical details of building and operating a nowcast system by setting up a "toy" nowcast system with a few trival :ref:`ExampleWorkers`.
-The :ref:`subsequent sections <BuildingANowcastSystem>` provide more details reference documentation building and operating software automation systems based on this framework.
+The :ref:`subsequent sections <BuildingANowcastSystem>` provide more detailed reference documentation about building and operating software automation systems based on this framework.
 
+
+.. _CondaEnvironment:
 
 Conda Environment
 =================
@@ -58,9 +60,39 @@ use:
     (toy-nowcast)$ source deactivate toy-nowcast
 
 
+:file:`nowcast` Directory
+=========================
+
+Create a directory to hold the nowcast system files.
+It can be anywhere,
+but for simplicity we'll put it in your :envvar:`$HOME` directory:
+
+.. code-block:: bash
+
+    (toy-nowcast)$ mkdir $HOME/toy-nowcast
+
+
+Environment Variables
+=====================
+
+The :kbd:`NEMO_Nowcast` package uses environment variables for some fundamental elements of the configuration of a nowcast system.
+:envvar:`NOWCAST_ENV` must be set to the :ref:`CondaEnvironment` path.
+An easy way to do that is:
+
+.. code-block:: bash
+
+    (toy-nowcast)$ export NOWCAST_ENV=$CONDA_PREFIX
+
+:envvar:`NOWCAST_LOGS` must be set to a directory where the nowcast system log files will be stored.
+For simplicity we'll just use our :file:`$HOME/toy-nowcast/` directory:
+
+.. code-block:: bash
+
+    (toy-nowcast)$ export NOWCAST_LOGS=$HOME/toy-nowcast/
+
+
 **TODO**:
 
-* create a :file:`nowcast/` directory
 * create :file:`nowcast/nowcast.yaml` like :file:`example_nowcast.yaml`
 * create :file:`nowcast/circus.ini` like :file:`example_circus.ini`
 * create :file:`nowcast/next_workers.py`
