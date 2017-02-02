@@ -14,7 +14,6 @@
 
 """NEMO_Nowcast worker classes.
 """
-import argparse
 import logging
 import logging.config
 import os
