@@ -19,7 +19,7 @@
 Scheduler
 *********
 
-The :ref:`Scheduler` is a long-running process that periodically checks the system clock and launches workers when their scheduled time to run is reached.
+The :ref:`NEMO_NowcastWorkerLaunchScheduler` is a long-running process that periodically checks the system clock and launches workers when their scheduled time to run is reached.
 It is intended for use only in special cases in which a worker's launch time depends on factors outside of the nowcast system
 (such as the availability of atmospheric forcing model product files).
 
