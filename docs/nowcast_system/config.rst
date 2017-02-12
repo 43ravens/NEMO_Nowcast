@@ -180,11 +180,12 @@ The network ports that the logging sockets are bound to are defined in the :kbd:
         manager: 4346
         scheduler: 4347
         workers: [4350, 4351, 4352]
-        make_live_ocean_files: salish.eos.ubc.ca:5558
-        run_NEMO: [salish.eos.ubc.ca:4354, 210.15.47.113:4355]
+        # **host:port pairs in lists must be quoted to project : characters**
+        make_live_ocean_files: 'salish.eos.ubc.ca:5558'
+        run_NEMO: ['salish.eos.ubc.ca:4354', '210.15.47.113:4355']
         watch_NEMO:
-          - salish.eos.ubc.ca:4356
-          - 210.15.47.113:4357
+          - 'salish.eos.ubc.ca:4356'
+          - '210.15.47.113:4357'
 
 In this example the message broker,
 manager,
