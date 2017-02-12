@@ -251,7 +251,8 @@ class NowcastWorker:
         msg = self._configure_logging()
         self.logger.info('running in process {}'.format(os.getpid()))
         self.logger.info('read config from {.file}'.format(self.config))
-        self.logger.info(msg)
+        if not self._parsed_args.debug:
+            self.logger.info(msg)
         self._install_signal_handlers()
         self._init_zmq_interface()
         self._do_work()
@@ -302,12 +303,12 @@ class NowcastWorker:
             # Not sure why, but we need a brief pause before we start logging
             # messages
             time.sleep(0.25)
-            msg = 'publishing logging messages to {addr}'.format(addr=addr)
+            msg = 'publishing log messages to {addr}'.format(addr=addr)
         else:
             # Write log messages to local file system
             logging_config = self.config['logging']
             logging.config.dictConfig(logging_config)
-            msg = 'writing logging messages to local file system'
+            msg = 'writing log messages to local file system'
         if self._parsed_args.debug:
             for handler in self.logger.root.handlers:
                 if handler.name == 'console':
@@ -324,6 +325,7 @@ class NowcastWorker:
                     except (KeyError, TypeError):
                         console_level = 100
                     handler.setLevel(console_level)
+            msg = '**debug mode** writing log messages to console'
         return msg
 
     def _install_signal_handlers(self):

@@ -308,7 +308,10 @@ class TestRun:
         m_worker_func = Mock(name='worker_func')
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
-        worker.cli.parser.parse_args = Mock(name='parse_args')
+        worker.cli.parser.parse_args = Mock(
+            name='parse_args',
+            return_value=SimpleNamespace(
+                debug=False, config_file='nowcast.yaml'))
         worker._configure_logging = Mock(name='_configure_logging')
         worker.logger = m_logging()
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
@@ -319,6 +322,27 @@ class TestRun:
         with p_config_open:
             worker.run(m_worker_func, m_success, m_failure)
         assert worker.logger.info.call_count == 3
+
+    def test_logging_info_debug_mode(self, m_logging):
+        worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
+        m_worker_func = Mock(name='worker_func')
+        m_success = Mock(name='success')
+        m_failure = Mock(name='failure')
+        worker.cli.parser.parse_args = Mock(
+            name='parse_args',
+            return_value=SimpleNamespace(
+                debug=True, config_file='nowcast.yaml'))
+        worker._configure_logging = Mock(name='_configure_logging')
+        worker.logger = m_logging()
+        worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._do_work = Mock(name='_do_work')
+        p_config_open = patch(
+            'nemo_nowcast.config.open', mock_open(read_data=self.config))
+        with p_config_open:
+            worker.run(m_worker_func, m_success, m_failure)
+        assert worker.logger.info.call_count == 2
 
     def test_install_signal_handlers(self, m_logging):
         worker = NowcastWorker('worker_name', 'description')
@@ -395,13 +419,13 @@ class TestConfigureLogging:
 
     @pytest.mark.parametrize('config, worker_name, exp_msg', [
         (filesystem_logging_config, 'test_worker',
-            'writing logging messages to local file system'),
+            'writing log messages to local file system'),
         (zmq_logging_config_ports_list, 'test_worker',
-            'publishing logging messages to tcp://*:4345'),
+            'publishing log messages to tcp://*:4345'),
         (zmq_logging_config_specific_port,  'test_worker',
-            'publishing logging messages to tcp://*:4347'),
+            'publishing log messages to tcp://*:4347'),
         (zmq_logging_config_remote_worker,  'remote_worker',
-            'publishing logging messages to tcp://*:4347'),
+            'publishing log messages to tcp://*:4347'),
     ])
     def test_msg(self, m_logging_config, config, worker_name, exp_msg):
         worker = NowcastWorker(worker_name, 'description')
@@ -409,6 +433,25 @@ class TestConfigureLogging:
         worker._parsed_args = SimpleNamespace(debug=False)
         msg = worker._configure_logging()
         assert msg == exp_msg
+
+    @pytest.mark.parametrize('config, worker_name, exp_msg', [
+        (filesystem_logging_config, 'test_worker',
+            'writing log messages to local file system'),
+        (zmq_logging_config_ports_list, 'test_worker',
+            'publishing log messages to tcp://*:4345'),
+        (zmq_logging_config_specific_port,  'test_worker',
+            'publishing log messages to tcp://*:4347'),
+        (zmq_logging_config_remote_worker,  'remote_worker',
+            'publishing log messages to tcp://*:4347'),
+    ])
+    def test_msg_debug_mode(
+        self, m_logging_config, config, worker_name, exp_msg
+    ):
+        worker = NowcastWorker(worker_name, 'description')
+        worker.config._dict = config
+        worker._parsed_args = SimpleNamespace(debug=True)
+        msg = worker._configure_logging()
+        assert msg == '**debug mode** writing log messages to console'
 
     @pytest.mark.parametrize('config, worker_name', [
         (filesystem_logging_config, 'test_worker'),
