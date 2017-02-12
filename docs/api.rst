@@ -82,6 +82,15 @@ Worker Launch Scheduler
     :members: main
 
 
+.. _NEMO_NowcastLogAggregator:
+
+Log Aggregator
+==============
+
+.. automodule:: nemo_nowcast.log_aggregator
+    :members: main
+
+
 .. _NEMO_NowcastBuiltinWorkers:
 
 Built-in Workers

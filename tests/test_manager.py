@@ -138,40 +138,6 @@ class TestNowcastManagerSetup:
             'workers': {}}
 
     @patch('nemo_nowcast.manager.importlib')
-    def test_change_rotating_logger_handler_to_watched(
-        self, m_importlib, m_logging,
-    ):
-        mgr = manager.NowcastManager()
-        mgr.config._dict = {
-            'logging': {'handlers': {
-                'info_text': {
-                    'class': 'logging.handlers.RotatingFileHandler',
-                    'backupCount': 7,
-            }}},
-            'message registry': {
-                'next workers module': 'nowcast.next_workers',
-                'workers': {}}}
-        mgr.config.load = Mock()
-        mgr._cli = Mock(name='_cli')
-        mgr.setup()
-        handler = mgr.config._dict['logging']['handlers']['info_text']
-        assert handler['class'] == 'logging.handlers.WatchedFileHandler'
-        assert 'backupCount' not in handler
-
-    @patch('nemo_nowcast.manager.importlib')
-    def test_logger_name(self, m_importlib, m_logging):
-        mgr = manager.NowcastManager()
-        mgr.config._dict = {
-            'logging': {'handlers': {}},
-            'message registry': {
-                'next workers module': 'nowcast.next_workers',
-                'workers': {}}}
-        mgr.config.load = Mock()
-        mgr._cli = Mock(name='_cli')
-        mgr.setup()
-        m_logging.getLogger.assert_called_once_with('manager')
-
-    @patch('nemo_nowcast.manager.importlib')
     def test_logging_config(self, m_importlib, m_logging):
         mgr = manager.NowcastManager()
         mgr.config._dict = {
@@ -181,9 +147,10 @@ class TestNowcastManagerSetup:
                 'workers': {}}}
         mgr.config.load = Mock()
         mgr._cli = Mock(name='_cli')
+        mgr._configure_logging = Mock(name='_configure_logging')
+        mgr.logger = m_logging()
         mgr.setup()
-        m_logging.config.dictConfig.assert_called_once_with(
-            mgr.config['logging'])
+        mgr._configure_logging.assert_called_once_with()
 
     @patch('nemo_nowcast.manager.importlib')
     def test_import_next_workers_module(self, m_importlib, m_logging):
@@ -223,7 +190,7 @@ class TestNowcastManagerSetup:
         mgr.config.load = Mock()
         mgr._cli = Mock(name='_cli')
         mgr.setup()
-        assert mgr.logger.info.call_count == 3
+        assert mgr.logger.info.call_count == 4
 
 
 class TestCli:
@@ -245,6 +212,95 @@ class TestCli:
         assert parsed_args.ignore_checklist
 
 
+@patch('nemo_nowcast.manager.logging.config')
+class TestConfigureLogging:
+    """Unit tests for NowcastManager._configure_logging method.
+    """
+    filesystem_logging_config = {'logging': {'handlers': {'info_text': {
+        'class': 'logging.handlers.RotatingFileHandler',
+        'backupCount': 7,
+    }}}}
+    zmq_logging_config = {'logging': {
+        'publisher': {'handlers': {
+            'zmq_pub': {}}}},
+        'zmq': {
+            'host': 'localhost',
+            'ports': {'logging': {'manager': 4347}}}}
+
+    @pytest.mark.parametrize('config, exp_msg', [
+        (filesystem_logging_config,
+            'writing logging messages to local file system'),
+        (zmq_logging_config,
+            'publishing logging messages to tcp://*:4347'),
+    ])
+    def test_msg(self, m_logging_config, config, exp_msg):
+        mgr = manager.NowcastManager()
+        mgr.config._dict = config
+        msg = mgr._configure_logging()
+        assert msg == exp_msg
+
+    @pytest.mark.parametrize('config', [
+        filesystem_logging_config,
+        zmq_logging_config,
+    ])
+    def test_logger_name(self, m_logging_config, config):
+        mgr = manager.NowcastManager()
+        mgr.config._dict = config
+        mgr._configure_logging()
+        assert mgr.logger.name == 'manager'
+
+    @pytest.mark.parametrize('config', [
+        filesystem_logging_config,
+        zmq_logging_config,
+    ])
+    def test_logging_dictConfig(self, m_logging_config, config):
+        mgr = manager.NowcastManager()
+        mgr.config._dict = config
+        mgr._configure_logging()
+        if 'publisher' in config['logging']:
+            m_logging_config.dictConfig.assert_called_once_with(
+                config['logging']['publisher'])
+        else:
+            m_logging_config.dictConfig.assert_called_once_with(
+                config['logging'])
+
+    @patch('nemo_nowcast.manager.logging')
+    def test_zmq_handler_root_topic(self, m_logging, m_logging_config):
+        mgr = manager.NowcastManager()
+        mgr.config._dict = self.zmq_logging_config
+        mgr._configure_logging()
+        m_handler = Mock(name='m_zmq_handler', spec=zmq.log.handlers.PUBHandler)
+        mgr.logger.root = Mock(handlers=[m_handler])
+        mgr._configure_logging()
+        assert m_handler.root_topic == 'manager'
+
+    @patch('nemo_nowcast.manager.logging')
+    def test_zmq_handler_root_topic(self, m_logging, m_logging_config):
+        mgr = manager.NowcastManager()
+        mgr.config._dict = self.zmq_logging_config
+        mgr._configure_logging()
+        m_handler = Mock(name='m_zmq_handler', spec=zmq.log.handlers.PUBHandler)
+        mgr.logger.root = Mock(handlers=[m_handler])
+        mgr._configure_logging()
+        expected = {
+            m_logging.DEBUG: m_logging.Formatter("%(message)s\n"),
+            m_logging.INFO: m_logging.Formatter("%(message)s\n"),
+            m_logging.WARNING: m_logging.Formatter("%(message)s\n"),
+            m_logging.ERROR: m_logging.Formatter("%(message)s\n"),
+            m_logging.CRITICAL: m_logging.Formatter("%(message)s\n"),
+        }
+        assert m_handler.formatters == expected
+
+    def test_change_rotating_logger_handler_to_watched(self, m_logging_config):
+        mgr = manager.NowcastManager()
+        mgr.config._dict = self.filesystem_logging_config
+        mgr._configure_logging()
+        handler = (
+            self.filesystem_logging_config['logging']['handlers']['info_text'])
+        assert handler['class'] == 'logging.handlers.WatchedFileHandler'
+        assert 'backupCount' not in handler
+
+
 class TestNowcastManagerRun:
     """Unit tests for NowcastManager.run method.
     """
@@ -252,7 +308,9 @@ class TestNowcastManagerRun:
         mgr = manager.NowcastManager()
         mgr._parsed_args = Mock(config_file='foo.yaml', ignore_checklist=True)
         mgr.config = {
-            'zmq': {'server': 'example.com', 'ports': {'manager': 6666}}}
+            'zmq': {
+                'host': 'example.com',
+                'ports': {'manager': 6666}}}
         mgr.logger = Mock(name='logger')
         mgr._install_signal_handlers = Mock(name='_install_signal_handlers')
         mgr._process_messages = Mock(name='_process_messages')
@@ -265,7 +323,9 @@ class TestNowcastManagerRun:
         mgr = manager.NowcastManager()
         mgr._parsed_args = Mock(config_file='foo.yaml', ignore_checklist=True)
         mgr.config = {
-            'zmq': {'server': 'example.com', 'ports': {'manager': 6666}}}
+            'zmq': {
+                'host': 'example.com',
+                'ports': {'manager': 6666}}}
         mgr._context = Mock(name='zmq_context')
         mgr.logger = Mock(name='logger')
         mgr._install_signal_handlers = Mock(name='_install_signal_handlers')
@@ -277,7 +337,9 @@ class TestNowcastManagerRun:
         mgr = manager.NowcastManager()
         mgr._parsed_args = Mock(config_file='foo.yaml', ignore_checklist=False)
         mgr.config = {
-            'zmq': {'server': 'example.com', 'ports': {'manager': 6666}}}
+            'zmq': {
+                'host': 'example.com',
+                'ports': {'manager': 6666}}}
         mgr._context = Mock(name='zmq_context')
         mgr.logger = Mock(name='logger')
         mgr._install_signal_handlers = Mock(name='_install_signal_handlers')
@@ -290,7 +352,9 @@ class TestNowcastManagerRun:
         mgr = manager.NowcastManager()
         mgr._parsed_args = Mock(config_file='foo.yaml', ignore_checklist=True)
         mgr.config = {
-            'zmq': {'server': 'example.com', 'ports': {'manager': 6666}}}
+            'zmq': {
+                'host': 'example.com',
+                'ports': {'manager': 6666}}}
         mgr._context = Mock(name='zmq_context')
         mgr.logger = Mock(name='logger')
         mgr._install_signal_handlers = Mock(name='_install_signal_handlers')
@@ -434,21 +498,6 @@ class TestMessageHandler:
         assert reply == 'ack msg w/ requested info in payload'
         assert next_workers == []
 
-    def test_log_msg(self):
-        mgr = manager.NowcastManager()
-        mgr._msg_registry = {
-            'workers': {'test_worker': {'log.debug': 'debug level log msg'}}}
-        mgr._handle_log_msg = Mock(
-            name='_handle_log_msg',
-            return_value=('ack'))
-        mgr._log_received_msg = Mock(name='_log_received_msg')
-        msg = Message(source='test_worker', type='log.debug', payload=None)
-        reply, next_workers = mgr._message_handler(msg.serialize())
-        assert mgr._log_received_msg.called
-        mgr._handle_log_msg.assert_called_once_with(msg)
-        assert reply == 'ack'
-        assert next_workers == []
-
     def test_continue_msg(self):
         mgr = manager.NowcastManager()
         mgr._msg_registry = {'workers': {'test_worker': {'success': 'success'}}}
@@ -515,18 +564,6 @@ class TestHandleNeedMsg:
     reply = mgr._handle_need_msg(msg)
     expected = Message('manager', 'ack', payload='requested info').serialize()
     assert reply == expected
-
-
-class TestHandleLogMsg:
-    """Unit test for NowcastManager._handle_log_msg method.
-    """
-    mgr = manager.NowcastManager()
-    mgr.logger = Mock(name='logger')
-    msg = Message(
-        source='test_worker', type='log.debug', payload='debug level log msg')
-    reply = mgr._handle_log_msg(msg)
-    mgr.logger.log.assert_called_once_with(10, 'debug level log msg')
-    assert reply == Message('manager', 'ack').serialize()
 
 
 @patch('nemo_nowcast.manager.importlib')

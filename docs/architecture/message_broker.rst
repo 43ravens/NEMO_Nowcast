@@ -58,3 +58,9 @@ The recommended way to launch the message broker is to put it under the control 
 Please see :ref:`NowcastProcessMgmt` for details.
 
 .. _Circus: https://circus.readthedocs.io/en/latest/
+
+.. note::
+  Since manager/worker communication,
+  the Circus process manager,
+  and distributed logging all use ZeroMQ ports,
+  it is crucial to ensure that all port numbers used are unique.

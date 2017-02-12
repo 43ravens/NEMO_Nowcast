@@ -54,6 +54,8 @@ Most workers are launched by the manager process in response to system state eve
 The scheduler is also a long-running process.
 It periodically checks the system clock and launches workers when their scheduled time to run is reached.
 
+A long-running log aggregator process is also available for use in nowcast systems that have workers running on different platforms than the manager.
+
 The :py:obj:`NEMO_Nowcast` package provides Python modules that implement:
 
 * the message broker: :py:mod:`nemo_nowcast.message_broker`
@@ -64,6 +66,7 @@ The :py:obj:`NEMO_Nowcast` package provides Python modules that implement:
   manager,
   and message broker processes interact
 * the scheduler: :py:mod:`nemo_nowcast.scheduler`
+* the log aggregator: :py:mod:`nemo_nowcast.log_aggregator`
 
 The :ref:`ExampleWorkers` and the :ref:`BuiltinWorkers` provided for use in nowcast system deployments serve as examples of how to write your own worker modules.
 
@@ -77,3 +80,4 @@ The sections below provide detailed descriptions of the elements of the framewor
    manager
    worker
    scheduler
+   log_aggregator

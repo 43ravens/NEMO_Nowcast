@@ -63,6 +63,156 @@ the :py:class:`logging.handlers.RotatingFileHandler` is replaced by a :py:class:
 That enables those processes to detect when the :py:mod:`nemo_nowcast.workers.rotate_logs` worker rotates the log files so that they start writing to the new log files.
 
 
+.. _DistributedLogging:
+
+Distributed Logging
+-------------------
+
+Distributed logging is intended for use in nowcast systems that have workers running on different hosts than the manager.
+For example,
+all of the pre- and post-processing workers run on one machine but the NEMO runs are executed on a different computer server or cloud platform.
+In such a system,
+all of the elements
+(message broker,
+manager,
+workers,
+scheduler)
+publish their log messages to network sockets.
+The :ref:`NEMO_NowcastLogAggregator` process subscribes to those sockets and processes the log messages as they are received.
+
+Here is an example logging configuration for distributed logging:
+
+.. code-block:: yaml
+
+    # Distributed logging system configuration
+    logging:
+      aggregator:
+        version: 1
+        disable_existing_loggers: False
+        formatters:
+          simple:
+            format: '%(asctime)s %(levelname)s [%(logger_name)s] %(message)s'
+        handlers:
+          info_text:
+            class: logging.handlers.RotatingFileHandler
+            level: INFO
+            formatter: simple
+            filename: $(NOWCAST.ENV.NOWCAST_LOGS)/nowcast.log
+            backupCount: 7
+          debug_text:
+            class: logging.handlers.RotatingFileHandler
+            level: DEBUG
+            formatter: simple
+            filename: $(NOWCAST.ENV.NOWCAST_LOGS)/nowcast.debug.log
+            backupCount: 7
+        root:
+          level: DEBUG
+          handlers:
+           - info_text
+           - debug_text
+
+      publisher:
+        version: 1
+        disable_existing_loggers: False
+        formatters:
+          simple:
+            format: '%(asctime)s %(levelname)s [%(name)s] %(message)s'
+        handlers:
+          console:
+            class: logging.StreamHandler
+            # Level 100 disables console logging.
+            # Use worker --debug flag to enable console logging.
+            level: 100
+            formatter: simple
+            stream: ext://sys.stdout
+          zmq_pub:
+            class: zmq.log.handlers.PUBHandler
+            level: DEBUG
+            formatter: simple
+        root:
+          level: DEBUG
+          handlers:
+           - console
+           - zmq_pub
+
+The :kbd:`aggregator` section provides the logging configuration that is used by the :ref:`NEMO_NowcastLogAggregator`,
+typically to write log files on disk.
+The :kbd:`publisher` section provides the logging configuration that is used by all the of the other elements of the nowcast system.
+Those elements publish log messages on network ports defined in the :kbd:`zmq` section of the config file
+(see below).
+The log aggregator subscribes to all of those ports.
+The :kbd:`aggregator` and :kbd:`publisher` sections are structured so that they can be read as Python :py:class:`dict` objects that obey the `Configuration dictionary schema`_ defined in the Python :py:mod:`logging` module.
+
+.. _Configuration dictionary schema: https://docs.python.org/3/library/logging.config.html#logging-config-dictschema
+
+Important things to note in the :kbd:`aggregator` section:
+
+* The use of :kbd:`%(logger_name)s` in the format string.
+  This is done so that the name of the procees that published the log message will appear instead of :kbd:`log_aggregator` which is what happens if :kbd:`%(name)s` is used.
+
+* The use of :py:class:`logging.handlers.RotatingFileHandler` logging handlers with :kbd:`backupCount` values set so that the log files don't grow without limit.
+  Use the :ref:`RotateLogsWorker` to trigger rotation of the log files at an appropriate point in the daily automation cycle.
+
+* The use of :kbd:`$(NOWCAST.ENV.NOWCAST_LOGS)` in the log :kbd:`filename` paths.
+  Doing so allows the directory in which the log files are stored to be defined in the :envvar:`NOWCAST_LOGS` environment variable.
+  That avoids having to hard code the log files directory path in multiple palces in both the :ref:`NowcastConfigFile` and the :program:`circus` configuration file
+  (see :ref:`NowcastProcessMgmt`)
+  and risking the two getting out of sync.
+
+In the :kbd:`publisher` section,
+note that the logging handler used to publish log messages to the network sockets is :py:class:`zmq.log.handlers.PUBHandler`.
+
+The network ports that the logging sockets are bound to are defined in the :kbd:`zmq` section of the config file:
+
+.. code-block:: yaml
+
+  # Message system
+  zmq:
+    host: localhost
+    ports:
+      # traffic between manager and message broker
+      manager: 4343
+      # traffic between workers and message broker
+      workers: 4344
+      # pub/sub logging traffic for log aggregator
+      logging:
+        message_broker: 4345
+        manager: 4346
+        scheduler: 4347
+        workers: [4350, 4351, 4352]
+        make_live_ocean_files: salish.eos.ubc.ca:5558
+        run_NEMO: [salish.eos.ubc.ca:4354, 210.15.47.113:4355]
+        watch_NEMO:
+          - salish.eos.ubc.ca:4356
+          - 210.15.47.113:4357
+
+In this example the message broker,
+manager,
+scheduler,
+and most workers run on the local host,
+but the make_live_ocean_files worker runs on a remote host,
+:kbd:`salish.eos.ubc.ca`,
+and the run_NEMO and watch_NEMO workers run on 2 different remote hosts,
+:kbd:`salish.eos.ubc.ca`,
+and :kbd:`210.15.47.113`.
+Note that the instances of the run_NEMO and watch_NEMO workers *must* use unique ports even though they run on different hosts.
+
+The :kbd:`run_NEMO` and :kbd:`watch_NEMO` keys show 2 different YAML syntaxes for lists.
+
+Each process that publishes log messages must do so on a unique network port.
+The value associated with the :kbd:`workers` key is a list of ports for workers running on the local host to use.
+There should be enough ports in the list to ensure that all workers that run concurrently are able to find a port;
+a :py:exc:`nemo_nowcast.worker.WorkerError` exception will be raised if all of the ports in the list are found to be in use when a worker starts up.
+
+.. note::
+  It is necessary to ensure that the appropriate firewall rules are in place to allow traffic to pass between the machines on which remote workers are running and the machine that hosts the log aggregator via the logging port(s).
+
+  Since manager/worker communication,
+  the Circus process manager,
+  and distributed logging all use ZeroMQ ports,
+  it is crucial to ensure that all port numbers used are unique.
+
+
 .. _ZeroMQServerAndPortsConfig:
 
 ZeroMQ Server and Ports
@@ -144,17 +294,6 @@ There are several special message types that are handled differently by the mana
 
 * A :kbd:`need` message is expected to have a system state checklist key as its payload.
   The manager handles :kbd:`need` messages by returning an :kbd:`ack` message with the requested section of the checklist as its payload.
-
-* A :kbd:`log.<level>` message is handles by the manager by emitting the message payload as a :kbd:`<level>` log message.
-  So,
-  a :kbd:`log.info` message from the :py:mod:`~nemo_nowcast.workers.sleep` worker with the payload :kbd:`I'm asleep!` would add a message like::
-
-    2016-10-19 11:16:15,099 INFO [sleep] I'm asleep!
-
-  to the log files.
-  :kbd:`<level>` must be a logging level name defined in the Python `logging`_ module.
-
-  .. _logging: https://docs.python.org/3/library/logging.html#levels
 
 
 .. _ScheduledWorkersConfig:
