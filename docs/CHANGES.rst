@@ -2,6 +2,20 @@
 Change Log
 **********
 
+Next Release
+============
+
+These changes have been implemented and are in the
+https://bitbucket.org/43ravens/nemo_nowcast code repository.
+
+* Added option to use ZeroMQ PUB/SUB sockets for distributed logging.
+  See https://nemo-nowcast.readthedocs.io/en/latest/architecture/log_aggregator.html
+  With this change the ``log`` message type is eliminated since it was a less
+  flexible form of distributed logging.
+  Nowcast systems with workers that use the ``log`` message type must be
+  changed to use distributed logging.
+
+
 v1.3
 ====
 

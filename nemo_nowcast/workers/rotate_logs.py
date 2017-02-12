@@ -25,6 +25,7 @@ It can also be launched from the command-line by the nowcast administrator
 as necessary for system maintenance.
 """
 import logging
+import logging.config
 from pathlib import Path
 
 from nemo_nowcast import NowcastWorker
@@ -49,35 +50,44 @@ def main():
 
 
 def success(parsed_args):
-    logger.info('log files rotated')
+    # logger_name is required because file system handlers get loaded in
+    # rotate_logs()
+    logger.info('log files rotated', extra={'logger_name': NAME})
     msg_type = 'success'
     return msg_type
 
 
 def failure(parsed_args):
-    logger.critical('failed to rotate log files')
+    # logger_name is required because file system handlers get loaded in
+    # rotate_logs()
+    logger.critical('failed to rotate log files', extra={'logger_name': NAME})
     msg_type = 'failure'
     return msg_type
 
 
 def rotate_logs(parsed_args, config, *args):
-    logger.info('rotating log files')
+    # logger_name is required because file system handlers get loaded below
+    logger.info('rotating log files', extra={'logger_name': NAME})
     checklist = []
-    root_logger = logging.getLogger()
-    for handler in root_logger.handlers:
+    if 'aggregator' in config['logging']:
+        logging.config.dictConfig(config['logging']['aggregator'])
+    for handler in logger.root.handlers:
         if not hasattr(handler, 'when'):
             try:
+                handler.flush()
                 handler.doRollover()
             except AttributeError:
                 # Handler without a doRollover() method;
                 # Probably a StreamHandler
                 continue
-            logger.info('log file rotated: {.baseFilename}'.format(handler))
+            logger.info(
+                'log file rotated: {.baseFilename}'.format(handler),
+                extra={'logger_name': NAME})
             p = Path(handler.baseFilename)
             p.chmod(FilePerms(user='rw', group='rw', other='r'))
             logger.debug(
                 'new {.baseFilename} log file permissions set to rw-rw-r--'
-                .format(handler))
+                .format(handler), extra={'logger_name': NAME})
             checklist.append(handler.baseFilename)
     return checklist
 

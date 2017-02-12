@@ -23,8 +23,10 @@ import pprint
 import signal
 
 import attr
+import time
 import yaml
 import zmq
+import zmq.log.handlers
 
 from nemo_nowcast import (
     CommandLineInterface,
@@ -105,20 +107,10 @@ class NowcastManager:
         self._parsed_args = self._cli()
         self.config.load(self._parsed_args.config_file)
         self._msg_registry = self.config['message registry']
-        # Replace logging RotatingFileHandlers with WatchedFileHandlers so
-        # that we notice when log files are rotated and switch to writing to
-        # the new ones
-        logging_handlers = self.config['logging']['handlers']
-        rotating_handler = 'logging.handlers.RotatingFileHandler'
-        watched_handler = 'logging.handlers.WatchedFileHandler'
-        for handler in logging_handlers:
-            if logging_handlers[handler]['class'] == rotating_handler:
-                logging_handlers[handler]['class'] = watched_handler
-                del logging_handlers[handler]['backupCount']
-        self.logger = logging.getLogger(self.name)
-        logging.config.dictConfig(self.config['logging'])
+        msg = self._configure_logging()
         self.logger.info('running in process {}'.format(os.getpid()))
         self.logger.info('read config from {.file}'.format(self.config))
+        self.logger.info(msg)
         try:
             self._next_workers_module = importlib.import_module(
                 self._msg_registry['next workers module'])
@@ -151,6 +143,51 @@ class NowcastManager:
         )
         return parser.parse_args(args)
 
+    def _configure_logging(self):
+        """Configure the manager's logging system interface.
+        """
+        self.logger = logging.getLogger(self.name)
+        if 'publisher' in self.config['logging']:
+            # Publish log messages to distributed logging aggregator
+            logging_config = self.config['logging']['publisher']
+            logging_config['handlers']['zmq_pub']['context'] = self._context
+            host = self.config['zmq']['host']
+            port = self.config['zmq']['ports']['logging'][self.name]
+            addr = 'tcp://*:{port}'.format(port=port)
+            logging_config['handlers']['zmq_pub']['interface_or_socket'] = addr
+            logging.config.dictConfig(logging_config)
+            for handler in self.logger.root.handlers:
+                if isinstance(handler, zmq.log.handlers.PUBHandler):
+                    handler.root_topic = self.name
+                    handler.formatters = {
+                        logging.DEBUG: logging.Formatter("%(message)s\n"),
+                        logging.INFO: logging.Formatter("%(message)s\n"),
+                        logging.WARNING: logging.Formatter("%(message)s\n"),
+                        logging.ERROR: logging.Formatter("%(message)s\n"),
+                        logging.CRITICAL: logging.Formatter("%(message)s\n"),
+                    }
+            # Not sure why, but we need a brief pause before we start logging
+            # messages
+            time.sleep(0.25)
+            msg = 'publishing logging messages to {addr}'.format(addr=addr)
+        else:
+            # Write log messages to local file system
+            #
+            # Replace logging RotatingFileHandlers with WatchedFileHandlers so
+            # that we notice when log files are rotated and switch to writing
+            # to the new ones
+            logging_config = self.config['logging']
+            logging_handlers = logging_config['handlers']
+            rotating_handler = 'logging.handlers.RotatingFileHandler'
+            watched_handler = 'logging.handlers.WatchedFileHandler'
+            for handler in logging_handlers:
+                if logging_handlers[handler]['class'] == rotating_handler:
+                    logging_handlers[handler]['class'] = watched_handler
+                    del logging_handlers[handler]['backupCount']
+            logging.config.dictConfig(logging_config)
+            msg = 'writing logging messages to local file system'
+        return msg
+
     def run(self):
         """Run the nowcast system manager:
 
@@ -160,7 +197,7 @@ class NowcastManager:
         * Launch the manager's message processing loop
         """
         self._socket = self._context.socket(zmq.REP)
-        zmq_host = self.config['zmq']['server']
+        zmq_host = self.config['zmq']['host']
         zmq_port = self.config['zmq']['ports']['manager']
         self._socket.connect(
             'tcp://{host}:{port}'.format(host=zmq_host, port=zmq_port))
@@ -211,7 +248,7 @@ class NowcastManager:
                 self.logger.info(
                     'checklist:\n{}'.format(pprint.pformat(self.checklist)))
         except FileNotFoundError as e:
-            self.logger.warning('checklist load failed: {}'.format(e))
+            self.logger.warning('checklist load failed:', exc_info=True)
             self.logger.warning('running with empty checklist')
 
     def _process_messages(self):
@@ -262,9 +299,6 @@ class NowcastManager:
         if msg.type == 'need':
             reply = self._handle_need_msg(msg)
             return reply, []
-        if msg.type.startswith('log'):
-            reply = self._handle_log_msg(msg)
-            return reply, []
         reply, next_workers = self._handle_continue_msg(msg)
         return reply, next_workers
 
@@ -304,14 +338,6 @@ class NowcastManager:
         """
         reply = Message(
             self.name, 'ack', payload=self.checklist[msg.payload]).serialize()
-        return reply
-
-    def _handle_log_msg(self, msg):
-        """Handle logging message from worker.
-        """
-        level = getattr(logging, msg.type.split('.')[1].upper())
-        self.logger.log(level, msg.payload)
-        reply = Message(self.name, 'ack').serialize()
         return reply
 
     def _handle_continue_msg(self, msg):

@@ -16,6 +16,7 @@
 """
 import argparse
 import signal
+from types import SimpleNamespace
 from unittest.mock import (
     call,
     Mock,
@@ -23,8 +24,10 @@ from unittest.mock import (
     patch,
 )
 
+import logging
 import pytest
 import zmq
+import zmq.log.handlers
 
 from nemo_nowcast import (
     Config,
@@ -194,8 +197,10 @@ class TestRun:
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
         worker.cli.parser.parse_args = Mock(name='parse_args')
-        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._configure_logging = Mock(name='_configure_logging')
+        worker.logger = m_logging()
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._do_work = Mock(name='_do_work')
         p_config_open = patch(
             'nemo_nowcast.config.open', mock_open(read_data=self.config))
@@ -210,8 +215,10 @@ class TestRun:
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
         worker.cli.parser.parse_args = Mock(name='parse_args')
-        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._configure_logging = Mock(name='_configure_logging')
+        worker.logger = m_logging()
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._do_work = Mock(name='_do_work')
         p_config_open = patch(
             'nemo_nowcast.config.open', mock_open(read_data=self.config))
@@ -226,8 +233,10 @@ class TestRun:
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
         worker.cli.parser.parse_args = Mock(name='parse_args')
-        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._configure_logging = Mock(name='_configure_logging')
+        worker.logger = m_logging()
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._do_work = Mock(name='_do_work')
         p_config_open = patch(
             'nemo_nowcast.config.open', mock_open(read_data=self.config))
@@ -242,8 +251,10 @@ class TestRun:
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
         worker.cli.parser.parse_args = Mock(name='parse_args')
-        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._configure_logging = Mock(name='_configure_logging')
+        worker.logger = m_logging()
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._do_work = Mock(name='_do_work')
         p_config_open = patch(
             'nemo_nowcast.config.open', mock_open(read_data=self.config))
@@ -264,8 +275,10 @@ class TestRun:
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
         worker.cli.parser.parse_args = Mock(name='parse_args')
-        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._configure_logging = Mock(name='_configure_logging')
+        worker.logger = m_logging()
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._do_work = Mock(name='_do_work')
         worker.run(m_worker_func, m_success, m_failure)
         worker.config.load.assert_called_once_with(
@@ -278,66 +291,16 @@ class TestRun:
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
         worker.cli.parser.parse_args = Mock(name='parse_args')
-        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._configure_logging = Mock(name='_configure_logging')
+        worker.logger = m_logging()
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._do_work = Mock(name='_do_work')
         p_config_open = patch(
             'nemo_nowcast.config.open', mock_open(read_data=self.config))
         with p_config_open:
             worker.run(m_worker_func, m_success, m_failure)
-        m_logging.config.dictConfig.assert_called_once_with(
-            worker.config['logging'])
-
-    def test_debug_mode_console_logging_only(self, m_logging):
-        test_config = '''
-            checklist file: nowcast_checklist.yaml
-            python: python
-            logging:
-              handlers:
-                console:
-                  level: 1000
-            message registry:
-              next workers module: nowcast.next_workers
-        '''
-        worker = NowcastWorker('worker_name', 'description')
-        worker.init_cli()
-        m_worker_func = Mock(name='worker_func')
-        m_success = Mock(name='success')
-        m_failure = Mock(name='failure')
-        worker.cli.parser.parse_args = Mock(name='parse_args', debug=True)
-        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
-        worker._install_signal_handlers = Mock(name='_install_signal_handlers')
-        worker._do_work = Mock(name='_do_work')
-        m_console_handler = Mock(name='m_console_handler')
-        m_console_handler.name = 'console'
-        m_file_handler = Mock(name='m_file_handler')
-        m_file_handler.name = 'debug_text'
-        m_logging.getLogger().handlers = [m_console_handler, m_file_handler]
-        p_config_open = patch(
-            'nemo_nowcast.config.open', mock_open(read_data=test_config))
-        with p_config_open:
-            worker.run(m_worker_func, m_success, m_failure)
-        m_console_handler.setLevel.assert_called_once_with(m_logging.DEBUG)
-        m_file_handler.setLevel.assert_called_once_with(1000)
-
-    def test_debug_mode_no_console_handler(self, m_logging):
-        worker = NowcastWorker('worker_name', 'description')
-        worker.init_cli()
-        m_worker_func = Mock(name='worker_func')
-        m_success = Mock(name='success')
-        m_failure = Mock(name='failure')
-        worker.cli.parser.parse_args = Mock(name='parse_args', debug=True)
-        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
-        worker._install_signal_handlers = Mock(name='_install_signal_handlers')
-        worker._do_work = Mock(name='_do_work')
-        m_file_handler = Mock(name='m_file_handler')
-        m_file_handler.name = 'debug_text'
-        m_logging.getLogger().handlers = [m_file_handler]
-        p_config_open = patch(
-            'nemo_nowcast.config.open', mock_open(read_data=self.config))
-        with p_config_open:
-            worker.run(m_worker_func, m_success, m_failure)
-        m_file_handler.setLevel.assert_called_once_with(100)
+        worker._configure_logging.assert_called_once_with()
 
     def test_logging_info(self, m_logging):
         worker = NowcastWorker('worker_name', 'description')
@@ -346,30 +309,16 @@ class TestRun:
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
         worker.cli.parser.parse_args = Mock(name='parse_args')
-        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._configure_logging = Mock(name='_configure_logging')
+        worker.logger = m_logging()
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._do_work = Mock(name='_do_work')
         p_config_open = patch(
             'nemo_nowcast.config.open', mock_open(read_data=self.config))
         with p_config_open:
             worker.run(m_worker_func, m_success, m_failure)
-        assert worker.logger.info.call_count == 2
-
-    def test_init_zmq_interface(self, m_logging):
-        worker = NowcastWorker('worker_name', 'description')
-        worker.init_cli()
-        m_worker_func = Mock(name='worker_func')
-        m_success = Mock(name='success')
-        m_failure = Mock(name='failure')
-        worker.cli.parser.parse_args = Mock(name='parse_args')
-        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
-        worker._install_signal_handlers = Mock(name='_install_signal_handlers')
-        worker._do_work = Mock(name='_do_work')
-        p_config_open = patch(
-            'nemo_nowcast.config.open', mock_open(read_data=self.config))
-        with p_config_open:
-            worker.run(m_worker_func, m_success, m_failure)
-        worker._init_zmq_interface.assert_called_once_with()
+        assert worker.logger.info.call_count == 3
 
     def test_install_signal_handlers(self, m_logging):
         worker = NowcastWorker('worker_name', 'description')
@@ -378,14 +327,34 @@ class TestRun:
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
         worker.cli.parser.parse_args = Mock(name='parse_args')
-        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._configure_logging = Mock(name='_configure_logging')
+        worker.logger = m_logging()
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._do_work = Mock(name='_do_work')
         p_config_open = patch(
             'nemo_nowcast.config.open', mock_open(read_data=self.config))
         with p_config_open:
             worker.run(m_worker_func, m_success, m_failure)
         worker._install_signal_handlers.assert_called_once_with()
+
+    def test_init_zmq_interface(self, m_logging):
+        worker = NowcastWorker('worker_name', 'description')
+        worker.init_cli()
+        m_worker_func = Mock(name='worker_func')
+        m_success = Mock(name='success')
+        m_failure = Mock(name='failure')
+        worker.cli.parser.parse_args = Mock(name='parse_args')
+        worker._configure_logging = Mock(name='_configure_logging')
+        worker.logger = m_logging()
+        worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._do_work = Mock(name='_do_work')
+        p_config_open = patch(
+            'nemo_nowcast.config.open', mock_open(read_data=self.config))
+        with p_config_open:
+            worker.run(m_worker_func, m_success, m_failure)
+        worker._init_zmq_interface.assert_called_once_with()
 
     def test_do_work(self, m_logging):
         worker = NowcastWorker('worker_name', 'description')
@@ -394,14 +363,174 @@ class TestRun:
         m_success = Mock(name='success')
         m_failure = Mock(name='failure')
         worker.cli.parser.parse_args = Mock(name='parse_args')
-        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
+        worker._configure_logging = Mock(name='_configure_logging')
+        worker.logger = m_logging()
         worker._install_signal_handlers = Mock(name='_install_signal_handlers')
+        worker._init_zmq_interface = Mock(name='_init_zmq_interface')
         worker._do_work = Mock(name='_do_work')
         p_config_open = patch(
             'nemo_nowcast.config.open', mock_open(read_data=self.config))
         with p_config_open:
             worker.run(m_worker_func, m_success, m_failure)
         assert worker._do_work.call_count == 1
+
+
+@patch('nemo_nowcast.worker.logging.config')
+class TestConfigureLogging:
+    """Unit tests for NowcastWorker._configure_logging method.
+    """
+    filesystem_logging_config = {'logging': {'handlers': {}}}
+    zmq_logging_config_ports_list = {'logging': {
+        'publisher': {'handlers': {
+            'zmq_pub': {}}}},
+        'zmq': {'ports': {'logging': {'workers': [4345, 4346]}}}}
+    zmq_logging_config_specific_port = {'logging': {
+        'publisher': {'handlers': {
+            'zmq_pub': {}}}},
+        'zmq': {'ports': {'logging': {'test_worker': 4347}}}}
+    zmq_logging_config_remote_worker = {'logging': {
+        'publisher': {'handlers': {
+            'zmq_pub': {}}}},
+        'zmq': {'ports': {'logging': {'remote_worker': 'salish:4347'}}}}
+
+    @pytest.mark.parametrize('config, worker_name, exp_msg', [
+        (filesystem_logging_config, 'test_worker',
+            'writing logging messages to local file system'),
+        (zmq_logging_config_ports_list, 'test_worker',
+            'publishing logging messages to tcp://*:4345'),
+        (zmq_logging_config_specific_port,  'test_worker',
+            'publishing logging messages to tcp://*:4347'),
+        (zmq_logging_config_remote_worker,  'remote_worker',
+            'publishing logging messages to tcp://*:4347'),
+    ])
+    def test_msg(self, m_logging_config, config, worker_name, exp_msg):
+        worker = NowcastWorker(worker_name, 'description')
+        worker.config._dict = config
+        worker._parsed_args = SimpleNamespace(debug=False)
+        msg = worker._configure_logging()
+        assert msg == exp_msg
+
+    @pytest.mark.parametrize('config, worker_name', [
+        (filesystem_logging_config, 'test_worker'),
+        (zmq_logging_config_ports_list, 'test_worker'),
+        (zmq_logging_config_specific_port, 'test_worker'),
+        (zmq_logging_config_remote_worker, 'remote_worker'),
+    ])
+    def test_logger_name(self, m_logging_config, config, worker_name):
+        worker = NowcastWorker(worker_name, 'description')
+        worker.config._dict = config
+        worker._parsed_args = SimpleNamespace(debug=False)
+        worker._configure_logging()
+        assert worker.logger.name == worker_name
+
+    @pytest.mark.parametrize('config, worker_name', [
+        (filesystem_logging_config, 'test_worker'),
+        (zmq_logging_config_ports_list, 'test_worker'),
+        (zmq_logging_config_specific_port, 'test_worker'),
+        (zmq_logging_config_remote_worker, 'remote_worker'),
+    ])
+    def test_logging_dictConfig(self, m_logging_config, config, worker_name):
+        worker = NowcastWorker(worker_name, 'description')
+        worker.config._dict = config
+        worker._parsed_args = SimpleNamespace(debug=False)
+        worker._configure_logging()
+        if 'publisher' in worker.config['logging']:
+            m_logging_config.dictConfig.assert_called_once_with(
+                worker.config['logging']['publisher'])
+        else:
+            m_logging_config.dictConfig.assert_called_once_with(
+                worker.config['logging'])
+
+    @pytest.mark.parametrize('exception', [
+        zmq.ZMQError,
+        ValueError,
+    ])
+    def test_logging_dictConfig_all_ports_in_use(
+        self, m_logging_config, exception
+    ):
+        worker = NowcastWorker('test_worker', 'description')
+        worker._socket = Mock(name='zmq_socket')
+        worker.config._dict = self.zmq_logging_config_ports_list
+        worker._parsed_args = SimpleNamespace(debug=False)
+        m_logging_config.dictConfig.side_effect = exception
+        with pytest.raises(WorkerError):
+            worker._configure_logging()
+
+    @patch('nemo_nowcast.worker.logging')
+    def test_zmq_handler_root_topic(self, m_logging, m_logging_config):
+        worker = NowcastWorker('test_worker', 'description')
+        worker.config._dict = self.zmq_logging_config_ports_list
+        worker._parsed_args = SimpleNamespace(debug=False)
+        m_handler = Mock(name='m_zmq_handler', spec=zmq.log.handlers.PUBHandler)
+        m_logging.getLogger.return_value = Mock(root=Mock(handlers=[m_handler]))
+        worker._configure_logging()
+        assert m_handler.root_topic == 'test_worker'
+
+    @patch('nemo_nowcast.worker.logging')
+    def test_zmq_handler_formatters(self, m_logging, m_logging_config):
+        worker = NowcastWorker('test_worker', 'description')
+        worker.config._dict = self.zmq_logging_config_ports_list
+        worker._parsed_args = SimpleNamespace(debug=False)
+        m_handler = Mock(name='m_zmq_handler', spec=zmq.log.handlers.PUBHandler)
+        m_logging.getLogger.return_value = Mock(root=Mock(handlers=[m_handler]))
+        worker._configure_logging()
+        expected = {
+            m_logging.DEBUG: m_logging.Formatter("%(message)s\n"),
+            m_logging.INFO: m_logging.Formatter("%(message)s\n"),
+            m_logging.WARNING: m_logging.Formatter("%(message)s\n"),
+            m_logging.ERROR: m_logging.Formatter("%(message)s\n"),
+            m_logging.CRITICAL: m_logging.Formatter("%(message)s\n"),
+        }
+        assert m_handler.formatters == expected
+
+    @pytest.mark.parametrize('config, worker_name', [
+        (filesystem_logging_config, 'test_worker'),
+        (zmq_logging_config_ports_list, 'test_worker'),
+        (zmq_logging_config_specific_port, 'test_worker'),
+        (zmq_logging_config_remote_worker, 'remote_worker'),
+    ])
+    @patch('nemo_nowcast.worker.logging')
+    def test_debug_mode_console_logging_only(
+        self, m_logging, m_logging_config, config, worker_name
+    ):
+        worker = NowcastWorker(worker_name, 'description')
+        if 'publisher' in config['logging']:
+            p_config = patch.dict(
+                config['logging']['publisher']['handlers'],
+                {'console': {'level': 1000}})
+        else:
+            p_config = patch.dict(
+                config['logging']['handlers'], {'console': {'level': 1000}})
+        worker._parsed_args = SimpleNamespace(debug=True)
+        m_file_handler = Mock(name='m_file_handler')
+        m_console_handler = Mock(name='m_console_handler')
+        m_console_handler.name = 'console'
+        m_logging.getLogger.return_value = Mock(
+            root=Mock(handlers=[m_file_handler, m_console_handler]))
+        with p_config:
+            worker.config._dict = config
+            worker._configure_logging()
+        m_console_handler.setLevel.assert_called_once_with(m_logging.DEBUG)
+        m_file_handler.setLevel.assert_called_once_with(1000)
+
+    @pytest.mark.parametrize('config, worker_name', [
+        (filesystem_logging_config, 'test_worker'),
+        (zmq_logging_config_ports_list, 'test_worker'),
+        (zmq_logging_config_specific_port, 'test_worker'),
+        (zmq_logging_config_remote_worker, 'remote_worker'),
+    ])
+    @patch('nemo_nowcast.worker.logging')
+    def test_debug_mode_no_console_handler(
+        self, m_logging, m_logging_config, config, worker_name
+    ):
+        worker = NowcastWorker(worker_name, 'description')
+        worker.config._dict = config
+        worker._parsed_args = SimpleNamespace(debug=True)
+        m_file_handler = Mock(name='m_file_handler')
+        m_logging.getLogger.return_value = Mock(
+            root=Mock(handlers=[m_file_handler]))
+        worker._configure_logging()
+        m_file_handler.setLevel.assert_called_once_with(100)
 
 
 class TestInitZmqInterface:
@@ -423,7 +552,7 @@ class TestInitZmqInterface:
         worker._context = Mock(name='context')
         worker.config = {
             'zmq': {
-                'message broker host': 'example.com',
+                'host': 'example.com',
                 'ports': {'workers': 4343}}}
         worker._init_zmq_interface()
         worker._context.socket.assert_called_once_with(zmq.REQ)
@@ -478,7 +607,6 @@ class TestDoWork:
         worker.worker_func = Mock(name='worker_func', return_value='checklist')
         worker.success = Mock(name='success_func', return_value='success')
         worker._do_work()
-        # noinspection PyUnresolvedReferences
         worker.tell_manager.assert_called_once_with('success', 'checklist')
 
     def test_failure_func(self):
@@ -499,7 +627,6 @@ class TestDoWork:
         worker.worker_func = Mock(name='worker_func', side_effect=WorkerError)
         worker.failure = Mock(name='failure_func', return_value='failure')
         worker._do_work()
-        # noinspection PyUnresolvedReferences
         worker.tell_manager.assert_called_once_with('failure')
 
     def test_system_exit_context_destroy(self):
@@ -527,7 +654,6 @@ class TestDoWork:
         worker.tell_manager = Mock(name='tell_manager')
         worker.worker_func = Mock(name='worker_func', side_effect=Exception)
         worker._do_work()
-        # noinspection PyUnresolvedReferences
         worker.tell_manager.assert_called_once_with('crash')
 
     def test_logger_debug_task_completed(self):
@@ -536,8 +662,7 @@ class TestDoWork:
         worker._context = Mock(name='context')
         worker.worker_func = Mock(name='worker_func', side_effect=SystemExit)
         worker._do_work()
-        worker.logger.debug.assert_called_once_with(
-            'task completed; shutting down')
+        worker.logger.debug.assert_called_once_with('shutting down')
 
 
 class TestTellManager:

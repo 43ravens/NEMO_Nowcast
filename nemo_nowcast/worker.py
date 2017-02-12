@@ -25,6 +25,7 @@ import time
 import attr
 import requests
 import zmq
+import zmq.log.handlers
 
 from nemo_nowcast import (
     CommandLineInterface,
@@ -247,26 +248,83 @@ class NowcastWorker:
         self.success, self.failure = success, failure
         self._parsed_args = self.cli.parser.parse_args()
         self.config.load(self._parsed_args.config_file)
-        self.logger = logging.getLogger(self.name)
-        logging.config.dictConfig(self.config['logging'])
-        if self._parsed_args.debug:
-            for handler in logging.getLogger().handlers:
-                if handler.name == 'console':
-                    handler.setLevel(logging.DEBUG)
-                else:
-                    try:
-                        # Assuming that the console logging level in the config
-                        # is set to a value >logging.DEBUG
-                        console_level = self.config['logging'] \
-                            ['handlers']['console']['level']
-                    except:
-                        console_level = 100
-                    handler.setLevel(console_level)
+        msg = self._configure_logging()
         self.logger.info('running in process {}'.format(os.getpid()))
         self.logger.info('read config from {.file}'.format(self.config))
+        self.logger.info(msg)
         self._install_signal_handlers()
         self._init_zmq_interface()
         self._do_work()
+
+    def _configure_logging(self):
+        """Configure the worker's logging system interface.
+        """
+        self.logger = logging.getLogger(self.name)
+        if 'publisher' in self.config['logging']:
+            # Publish log messages to distributed logging aggregator
+            logging_config = self.config['logging']['publisher']
+            zmq_pub_config = logging_config['handlers']['zmq_pub']
+            zmq_pub_config['context'] = self._context
+            if self.name in self.config['zmq']['ports']['logging']:
+                addrs = self.config['zmq']['ports']['logging'][self.name]
+                addrs = addrs if isinstance(addrs, list) else [addrs]
+                for addr in addrs:
+                    try:
+                        # host:port
+                        ports = [int(addr.split(':')[1])]
+                    except AttributeError:
+                        # port number
+                        ports = [addr]
+            else:
+                ports = self.config['zmq']['ports']['logging']['workers']
+            for port in ports:
+                try:
+                    addr = 'tcp://*:{port}'.format(port=port)
+                    zmq_pub_config['interface_or_socket'] = addr
+                    logging.config.dictConfig(logging_config)
+                    break
+                except (zmq.ZMQError, ValueError):
+                    continue
+            else:
+                self._socket.close()
+                raise WorkerError(
+                    'unable for find port to publish logging message to')
+            for handler in self.logger.root.handlers:
+                if isinstance(handler, zmq.log.handlers.PUBHandler):
+                    handler.root_topic = self.name
+                    handler.formatters = {
+                        logging.DEBUG: logging.Formatter("%(message)s\n"),
+                        logging.INFO: logging.Formatter("%(message)s\n"),
+                        logging.WARNING: logging.Formatter("%(message)s\n"),
+                        logging.ERROR: logging.Formatter("%(message)s\n"),
+                        logging.CRITICAL: logging.Formatter("%(message)s\n"),
+                    }
+            # Not sure why, but we need a brief pause before we start logging
+            # messages
+            time.sleep(0.25)
+            msg = 'publishing logging messages to {addr}'.format(addr=addr)
+        else:
+            # Write log messages to local file system
+            logging_config = self.config['logging']
+            logging.config.dictConfig(logging_config)
+            msg = 'writing logging messages to local file system'
+        if self._parsed_args.debug:
+            for handler in self.logger.root.handlers:
+                if handler.name == 'console':
+                    # Activate console logging handler at the debug level
+                    handler.setLevel(logging.DEBUG)
+                else:
+                    # Deactivate other logging handlers by setting their
+                    # levels very high
+                    try:
+                        # Assumes that the console logging level in the
+                        # config is set to a value >logging.DEBUG
+                        console_level = (
+                            logging_config['handlers']['console']['level'])
+                    except (KeyError, TypeError):
+                        console_level = 100
+                    handler.setLevel(console_level)
+        return msg
 
     def _install_signal_handlers(self):
         """Set up interrupt and kill signal handlers.
@@ -294,7 +352,7 @@ class NowcastWorker:
             self.logger.debug('**debug mode** no connection to manager')
             return
         self._socket = self._context.socket(zmq.REQ)
-        zmq_host = self.config['zmq']['server']
+        zmq_host = self.config['zmq']['host']
         zmq_port = self.config['zmq']['ports']['workers']
         self._socket.connect(
             'tcp://{host}:{port}'.format(host=zmq_host, port=zmq_port))
@@ -321,8 +379,8 @@ class NowcastWorker:
         except:
             self.logger.critical('unhandled exception:', exc_info=True)
             self.tell_manager('crash')
+        self.logger.debug('shutting down')
         self._context.destroy()
-        self.logger.debug('task completed; shutting down')
 
     def tell_manager(self, msg_type, payload=None):
         """Exchange messages with the nowcast manager process.

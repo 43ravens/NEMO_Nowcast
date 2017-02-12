@@ -18,6 +18,8 @@ import logging.handlers
 from types import SimpleNamespace
 from unittest.mock import patch
 
+import pytest
+
 from nemo_nowcast import Config
 from nemo_nowcast.workers import rotate_logs
 
@@ -75,35 +77,54 @@ class TestFailure:
         assert msg_type == 'failure'
 
 
+@pytest.mark.parametrize('config', [
+    {'logging': {}},
+    {'logging': {'aggregator': {}}},
+])
+@patch('nemo_nowcast.workers.rotate_logs.logging.config.dictConfig')
 @patch('nemo_nowcast.workers.rotate_logs.logger')
-@patch(('nemo_nowcast.workers.rotate_logs.logging.getLogger'))
 class TestRotateLogs:
     """Unit tests for rotate_logs function.
     """
-    def test_no_handlers(self, m_getLogger, m_logger):
-        m_getLogger().handlers = []
-        parsed_args, config = SimpleNamespace(), Config()
+
+    def test_distributed_logging(self, m_logger, m_dictConfig, config):
+        m_logger.root.handlers = []
+        parsed_args = SimpleNamespace()
+        rotate_logs.rotate_logs(parsed_args, config)
+        if 'aggregator' in config['logging']:
+            m_dictConfig.assert_called_once_with(
+                config['logging']['aggregator'])
+        else:
+            assert not m_dictConfig.called
+
+    def test_no_handlers(self, m_logger, m_dictConfig, config):
+        m_logger.root.handlers = []
+        parsed_args = SimpleNamespace()
         checklist = rotate_logs.rotate_logs(parsed_args, config)
         assert checklist == []
 
-    def test_dont_roll_timed_handler(self, m_getLogger, m_logger, tmpdir):
+    def test_dont_roll_timed_handler(
+        self, m_logger, m_dictConfig, config, tmpdir,
+    ):
         tmpfile = tmpdir.ensure('foo')
-        m_getLogger().handlers = [
+        m_logger.root.handlers = [
             logging.handlers.TimedRotatingFileHandler(tmpfile.strpath)]
-        parsed_args, config = SimpleNamespace(), Config()
+        parsed_args, config = SimpleNamespace(), {'logging': {}}
         checklist = rotate_logs.rotate_logs(parsed_args, config)
         assert checklist == []
 
-    def test_dont_roll_stream_handler(self, m_getLogger, m_logger):
-        m_getLogger().handlers = [logging.StreamHandler()]
-        parsed_args, config = SimpleNamespace(), Config()
+    def test_dont_roll_stream_handler(self, m_logger, m_dictConfig, config):
+        m_logger.root.handlers = [logging.StreamHandler()]
+        parsed_args, config = SimpleNamespace(), {'logging': {}}
         checklist = rotate_logs.rotate_logs(parsed_args, config)
         assert checklist == []
 
-    def test_roll_rotating_handler(self, m_getLogger, m_logger, tmpdir):
+    def test_roll_rotating_handler(
+        self, m_logger, m_dictConfig, config, tmpdir,
+    ):
         tmpfile = tmpdir.ensure('foo')
-        m_getLogger().handlers = [
+        m_logger.root.handlers = [
             logging.handlers.RotatingFileHandler(tmpfile.strpath)]
-        parsed_args, config = SimpleNamespace(), Config()
+        parsed_args, config = SimpleNamespace(), {'logging': {}}
         checklist = rotate_logs.rotate_logs(parsed_args, config)
         assert checklist == [tmpfile.strpath]
