@@ -287,9 +287,8 @@ class NowcastWorker:
                 except (zmq.ZMQError, ValueError):
                     continue
             else:
-                self._socket.close()
                 raise WorkerError(
-                    'unable for find port to publish logging message to')
+                    'unable for find port to publish log messages to')
             for handler in self.logger.root.handlers:
                 if isinstance(handler, zmq.log.handlers.PUBHandler):
                     handler.root_topic = self.name
