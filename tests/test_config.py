@@ -101,7 +101,7 @@ class TestConfigLoad:
             config.load('nowcast.yaml')
         assert config['python'] == 'bar/bin/python'
 
-    def test_replace_log_file_envvar(self):
+    def test_replace_log_file_envvar_local_logging(self):
         m_open = mock_open(
             read_data=(
                 'foo: bar\n'
@@ -117,6 +117,32 @@ class TestConfigLoad:
             config.load('nowcast.yaml')
         filename = config['logging']['handlers']['info_test']['filename']
         assert filename == 'bar/nowcast.log'
+
+    def test_replace_log_file_envvar_distributed_logging(self):
+        m_open = mock_open(
+            read_data=(
+                'foo: bar\n'
+                'checklist file: nowcast_checklist.yaml\n'
+                'python: python\n'
+                'logging:\n'
+                '  aggregator:\n'
+                '    handlers:\n'
+                '      info_test:\n'
+                '        filename: $(NOWCAST.ENV.foo)/nowcast.log\n'
+                '  publisher:\n'
+                '    handlers:\n'
+                '      wgrib2_test:\n'
+                '        filename: $(NOWCAST.ENV.foo)/wgrib2.log'))
+        config = Config()
+        config._replace_env = Mock(return_value='bar')
+        with patch('nemo_nowcast.config.open', m_open):
+            config.load('nowcast.yaml')
+        filename = (
+            config['logging']['aggregator']['handlers']['info_test']['filename'])
+        assert filename == 'bar/nowcast.log'
+        filename = (
+            config['logging']['publisher']['handlers']['wgrib2_test']['filename'])
+        assert filename == 'bar/wgrib2.log'
 
     def test_ignore_log_stream_handler(self):
         m_open = mock_open(
