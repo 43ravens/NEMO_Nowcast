@@ -57,13 +57,19 @@ class Config:
         for key in envvar_sub_keys:
             self._dict[key] = envvar_pattern.sub(
                 self._replace_env, self._dict[key])
+
         try:
             # Local logging
-            handlers = self._dict['logging']['handlers']
+            self._replace_handler_envvars(
+                envvar_pattern, self._dict['logging']['handlers'])
         except KeyError:
             # Distributed logging
-            handlers = self._dict['logging']['aggregator']['handlers']
-            handlers.update(self._dict['logging']['publisher']['handlers'])
+            self._replace_handler_envvars(
+                envvar_pattern, self._dict['logging']['aggregator']['handlers'])
+            self._replace_handler_envvars(
+                envvar_pattern, self._dict['logging']['publisher']['handlers'])
+
+    def _replace_handler_envvars(self, envvar_pattern, handlers):
         for handler in handlers:
             try:
                 handlers[handler]['filename'] = envvar_pattern.sub(
