@@ -63,6 +63,7 @@ class Config:
         except KeyError:
             # Distributed logging
             handlers = self._dict['logging']['aggregator']['handlers']
+            handlers.update(self._dict['logging']['publisher']['handlers'])
         for handler in handlers:
             try:
                 handlers[handler]['filename'] = envvar_pattern.sub(
