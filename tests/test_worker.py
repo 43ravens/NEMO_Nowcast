@@ -614,6 +614,10 @@ class TestInitZmqInterface:
                 'ports': {'workers': 4343}}}
         worker._init_zmq_interface()
         worker._context.socket.assert_called_once_with(zmq.REQ)
+        assert worker._socket.setsockopt.call_args_list == [
+            call(zmq.TCP_KEEPALIVE, 1),
+            call(zmq.TCP_KEEPALIVE_IDLE, 900),
+        ]
         worker._socket.connect.assert_called_once_with('tcp://example.com:4343')
         assert worker.logger.info.call_count == 1
 
