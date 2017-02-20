@@ -24,7 +24,6 @@ from unittest.mock import (
     patch,
 )
 
-import logging
 import pytest
 import zmq
 import zmq.log.handlers
@@ -416,6 +415,11 @@ class TestConfigureLogging:
         'publisher': {'handlers': {
             'zmq_pub': {}}}},
         'zmq': {'ports': {'logging': {'remote_worker': 'salish:4347'}}}}
+    zmq_logging_config_remote_workers_different_ports = {'logging': {
+        'publisher': {'handlers': {
+            'zmq_pub': {}}}},
+        'zmq': {'ports': {'logging': {'remote_worker':
+            ['salish:4347', 'west.cloud:4348']}}}}
 
     @pytest.mark.parametrize('config, worker_name, exp_msg', [
         (filesystem_logging_config, 'test_worker',
@@ -484,11 +488,22 @@ class TestConfigureLogging:
             m_logging_config.dictConfig.assert_called_once_with(
                 worker.config['logging'])
 
+    @patch('nemo_nowcast.worker.logging')
+    def test_remote_workers_different_ports(self, m_logging, m_logging_config):
+        worker = NowcastWorker('remote_worker', 'description')
+        worker.config._dict = (
+            self.zmq_logging_config_remote_workers_different_ports)
+        worker._parsed_args = SimpleNamespace(debug=False)
+        m_handler = Mock(name='m_zmq_handler', spec=zmq.log.handlers.PUBHandler)
+        m_logging.getLogger.return_value = Mock(root=Mock(handlers=[m_handler]))
+        with pytest.raises(WorkerError):
+            worker._configure_logging()
+
     @pytest.mark.parametrize('exception', [
         zmq.ZMQError,
         ValueError,
     ])
-    def test_logging_dictConfig_all_ports_in_use(
+    def test_all_ports_in_use(
         self, m_logging_config, exception
     ):
         worker = NowcastWorker('test_worker', 'description')
