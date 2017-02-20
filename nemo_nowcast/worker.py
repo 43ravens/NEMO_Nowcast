@@ -269,13 +269,21 @@ class NowcastWorker:
             if self.name in self.config['zmq']['ports']['logging']:
                 addrs = self.config['zmq']['ports']['logging'][self.name]
                 addrs = addrs if isinstance(addrs, list) else [addrs]
+                ports = set()
                 for addr in addrs:
                     try:
                         # host:port
-                        ports = [int(addr.split(':')[1])]
+                        port = int(addr.split(':')[1])
                     except AttributeError:
                         # port number
-                        ports = [addr]
+                        port = addr
+                    if ports and port not in ports:
+                        raise WorkerError(
+                            'workers on difference hosts must use the same '
+                            'port number: {0.name}: {addrs}'.format(
+                                self, addrs=addrs))
+                    else:
+                        ports.add(port)
             else:
                 ports = self.config['zmq']['ports']['logging']['workers']
             for port in ports:

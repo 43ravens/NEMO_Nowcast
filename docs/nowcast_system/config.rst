@@ -181,11 +181,11 @@ The network ports that the logging sockets are bound to are defined in the :kbd:
         scheduler: 4347
         workers: [4350, 4351, 4352]
         # **host:port pairs in lists must be quoted to project : characters**
-        make_live_ocean_files: 'salish.eos.ubc.ca:5558'
-        run_NEMO: ['salish.eos.ubc.ca:4354', '210.15.47.113:4355']
+        make_live_ocean_files: 'salish.eos.ubc.ca:4357'
+        run_NEMO: ['salish.eos.ubc.ca:4354', '210.15.47.113:4354']
         watch_NEMO:
           - 'salish.eos.ubc.ca:4356'
-          - '210.15.47.113:4357'
+          - '210.15.47.113:4356'
 
 In this example the message broker,
 manager,
@@ -196,7 +196,7 @@ but the make_live_ocean_files worker runs on a remote host,
 and the run_NEMO and watch_NEMO workers run on 2 different remote hosts,
 :kbd:`salish.eos.ubc.ca`,
 and :kbd:`210.15.47.113`.
-Note that the instances of the run_NEMO and watch_NEMO workers *must* use unique ports even though they run on different hosts.
+Note that the instances of the run_NEMO and watch_NEMO workers *must* use the same port numbers.
 
 The :kbd:`run_NEMO` and :kbd:`watch_NEMO` keys show 2 different YAML syntaxes for lists.
 
