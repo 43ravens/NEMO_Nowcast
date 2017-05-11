@@ -1,2 +1,2 @@
 conda:
-  file: environment-dev.yaml
+  file: environment-rtd.yaml

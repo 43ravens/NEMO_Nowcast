@@ -1,0 +1,16 @@
+# conda environment description file for docs build environment
+# on readthedocs.org
+
+name: sphinx-build
+
+channels:
+  - defaults
+  - gomss-nowcast
+
+dependencies:
+  - arrow
+  - attr
+  - python=3.5
+  - pyyaml
+  - requests
+  - pyzmq
