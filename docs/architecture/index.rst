@@ -23,7 +23,7 @@ The software architecture of a NEMO nowcast system based on this framework consi
 The workers and manager communicate by passing messages back and forth.
 The messages are passed between the manager and workers by way of a "message broker" process.
 
-.. figure:: ManagerBrokerWorkers.svg
+.. figure:: ManagerBrokerWorkers.png
     :align: center
 
     Schematic of a nowcast system manager, message broker, and workers exchanging messages, and a scheduler launching a worker.
