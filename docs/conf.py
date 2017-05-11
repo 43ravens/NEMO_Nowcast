@@ -40,6 +40,10 @@ intersphinx_mapping = {
     'salishseanowcast': ('https://salishsea-nowcast.readthedocs.io/en/latest', None),
 }
 
+autodoc_mock_imports = [
+    'schedule',
+]
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
