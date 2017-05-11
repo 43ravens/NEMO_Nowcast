@@ -724,7 +724,8 @@ class TestDoWork:
         worker._context = Mock(name='context')
         worker.worker_func = Mock(name='worker_func', side_effect=SystemExit)
         worker._do_work()
-        worker.logger.debug.assert_called_once_with('shutting down')
+        worker.logger.debug.assert_called_once_with(
+            'shutting down', extra={'logger_name': 'worker_name'})
 
 
 class TestTellManager:
