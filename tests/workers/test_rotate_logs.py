@@ -20,7 +20,6 @@ from unittest.mock import patch
 
 import pytest
 
-from nemo_nowcast import Config
 from nemo_nowcast.workers import rotate_logs
 
 
@@ -79,7 +78,11 @@ class TestFailure:
 
 @pytest.mark.parametrize('config', [
     {'logging': {}},
-    {'logging': {'aggregator': {}}},
+    {'logging': {
+        'aggregator': {},
+        'publisher': {
+            'handlers': {},
+        }}},
 ])
 @patch('nemo_nowcast.workers.rotate_logs.logging.config.dictConfig')
 @patch('nemo_nowcast.workers.rotate_logs.logger')

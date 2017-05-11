@@ -8,6 +8,12 @@ Next Release
 These changes have been implemented and are in the
 https://bitbucket.org/43ravens/nemo_nowcast code repository.
 
+* Fix a bug whereby ``checklist.log`` file was neither being written nor being
+  rotated.
+  See `issue #9`_
+
+  .. _issue #9: https://bitbucket.org/43ravens/nemo_nowcast/issues/9
+
 * Added option to use ZeroMQ PUB/SUB sockets for distributed logging.
   See https://nemo-nowcast.readthedocs.io/en/latest/architecture/log_aggregator.html
   With this change the ``log`` message type is eliminated since it was a less

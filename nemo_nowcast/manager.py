@@ -168,7 +168,7 @@ class NowcastManager:
                     }
             # Not sure why, but we need a brief pause before we start logging
             # messages
-            time.sleep(0.25)
+            time.sleep(1)
             msg = 'publishing logging messages to {addr}'.format(addr=addr)
         else:
             # Write log messages to local file system
@@ -405,17 +405,14 @@ class NowcastManager:
         end of processing, just before rotating the log files via the
         :py:mod:`nemo_nowcast.workers.rotate_logs` worker.
         """
-        for handler in logging.getLogger().handlers:
-            if handler.name == 'checklist':
-                checklist_handler = handler
-                break
-        else:
-            checklist_handler = None
-        if checklist_handler is not None:
+        checklist_logger = logging.getLogger('checklist')
+        if checklist_logger.handlers:
             self.logger.info('writing checklist to log file')
-            self.logger.log(
-                checklist_handler.level,
-                'checklist:\n{}'.format(pprint.pformat(self.checklist)))
+            for handler in checklist_logger.handlers:
+                checklist_logger.log(
+                    handler.level,
+                    'checklist:\n{}'.format(pprint.pformat(self.checklist)))
+                handler.close()
         self.checklist.clear()
         self._write_checklist_to_disk()
         self.logger.info('checklist cleared')
