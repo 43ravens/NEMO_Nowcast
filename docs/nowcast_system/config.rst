@@ -155,7 +155,7 @@ Important things to note in the :kbd:`aggregator` section:
 
 * The use of :kbd:`$(NOWCAST.ENV.NOWCAST_LOGS)` in the log :kbd:`filename` paths.
   Doing so allows the directory in which the log files are stored to be defined in the :envvar:`NOWCAST_LOGS` environment variable.
-  That avoids having to hard code the log files directory path in multiple palces in both the :ref:`NowcastConfigFile` and the :program:`circus` configuration file
+  That avoids having to hard code the log files directory path in multiple places in both the :ref:`NowcastConfigFile` and the :program:`circus` configuration file
   (see :ref:`NowcastProcessMgmt`)
   and risking the two getting out of sync.
 
@@ -212,6 +212,80 @@ a :py:exc:`nemo_nowcast.worker.WorkerError` exception will be raised if all of t
   the Circus process manager,
   and distributed logging all use ZeroMQ ports,
   it is crucial to ensure that all port numbers used are unique.
+
+
+.. _SystemStateChecklistLogging:
+
+System State Checklist Logging
+------------------------------
+
+The system state checklist maintained by the :ref:`SystemManager` is written to disk as serialized YAML every time it is updated in a file given by the :kbd:`checklist file` configuration key.
+By convention,
+that file is :file:`$NOWCAST_LOGS/nowcast_checklist.yaml`.
+
+It is also possible to add logging configuration to the system so that the checklist is logged to another file just before it is cleared by the :ref:`ClearChecklistWorker`.
+Doing so preserves the checklist from previous days operations.
+To enable checklist logging it is necessary to add a checklist logging handler to the logging configuration,
+and to register a logger for the checklist.
+
+For systems that use local filesystem logging,
+that is accomplished by adding a :kbd:`checklist` section to the :kbd:`logging: handlers:` configuration section:
+
+.. code-block:: yaml
+
+    logging:
+      ...
+      handlers:
+        ...
+        checklist:
+          class: logging.handlers.RotatingFileHandler
+          level: INFO
+          formatter: simple
+          filename: $(NOWCAST.ENV.NOWCAST_LOGS)/checklist.log
+          backupCount: 7
+
+The checklist logger is registered by adding a :kbd:`logging: loggers: checklist:` section:
+
+.. code-block:: yaml
+
+    logging:
+      ...
+      loggers:
+        checklist:
+          qualname: checklist
+          level: INFO
+          propagate: False
+          handlers:
+            - checklist
+
+These examples set up a :py:class:`~logging.handlers.RotatingFileHandler` for the checklist that writes it to the :file:`$NOWCAST_LOGS/checklist.log` file and retains the previous 7 versions of that file when the log files are rotated.
+
+For systems that use :ref:`DistributedLogging`,
+similar configuration sections are required,
+but they are added to the :kbd:`logging: publisher:` configuration:
+
+.. code-block:: yaml
+
+    logging:
+      ...
+      publisher:
+        ...
+        handlers:
+          ...
+          checklist:
+            class: logging.handlers.RotatingFileHandler
+            level: INFO
+            formatter: simple
+            filename: $(NOWCAST.ENV.NOWCAST_LOGS)/checklist.log
+            backupCount: 7
+        ...
+        loggers:
+          checklist:
+            qualname: checklist
+            level: INFO
+            propagate: False
+            handlers:
+              - checklist
 
 
 .. _ZeroMQServerAndPortsConfig:

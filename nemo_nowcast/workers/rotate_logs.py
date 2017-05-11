@@ -69,9 +69,21 @@ def rotate_logs(parsed_args, config, *args):
     # logger_name is required because file system handlers get loaded below
     logger.info('rotating log files', extra={'logger_name': NAME})
     checklist = []
+    checklist_logger = logging.getLogger('checklist')
     if 'aggregator' in config['logging']:
+        pub_handlers = config['logging']['publisher']['handlers']
+        if 'checklist' in pub_handlers:
+            pub_loggers = config['logging']['publisher']['loggers']
+            config['logging']['aggregator']['handlers']['checklist'] = (
+                pub_handlers['checklist'])
+            try:
+                config['logging']['aggregator']['loggers'].update(
+                    {'checklist': pub_handlers['loggers']['checklist']})
+            except KeyError:
+                config['logging']['aggregator'].update(
+                    {'loggers': {'checklist': pub_loggers['checklist']}})
         logging.config.dictConfig(config['logging']['aggregator'])
-    for handler in logger.root.handlers:
+    for handler in logger.root.handlers + checklist_logger.handlers:
         if not hasattr(handler, 'when'):
             try:
                 handler.flush()

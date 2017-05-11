@@ -706,11 +706,11 @@ class TestClearChecklist:
         mgr.logger = Mock(name='logger')
         mgr._write_checklist_to_disk = Mock(name='_write_checklist_to_disk')
         with patch('nemo_nowcast.manager.logging') as m_logging:
-            m_root = m_logging.getLogger()
-            m_root.handlers = [Mock(name='checklist', level=1000)]
-            m_root.handlers[0].name = 'checklist'
+            m_checklist_logger = m_logging.getLogger('checklist')
+            m_checklist_logger.handlers = [Mock(name='checklist', level=1000)]
+            m_checklist_logger.handlers[0].name = 'checklist'
             mgr._clear_checklist()
-        mgr.logger.log.assert_called_once_with(
+        m_checklist_logger.log.assert_called_once_with(
             1000, "checklist:\n{'foo': 'bar'}")
         assert mgr.checklist == {}
         assert mgr.logger.info.call_count == 2
