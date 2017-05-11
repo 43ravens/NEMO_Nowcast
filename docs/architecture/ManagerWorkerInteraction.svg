@@ -15,7 +15,10 @@
    id="svg7402"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="ManagerWorkerInteraction.svg">
+   sodipodi:docname="ManagerWorkerInteraction.svg"
+   inkscape:export-filename="/media/doug/warehouse/43ravens/projects/gomss-nowcast/NEMO_Nowcast/docs/architecture/ManagerWorkerInteraction.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs7404" />
   <sodipodi:namedview
@@ -26,14 +29,14 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.68493451"
-     inkscape:cx="-294.66627"
-     inkscape:cy="612.46731"
+     inkscape:cx="242.80266"
+     inkscape:cy="670.86703"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1056"
-     inkscape:window-x="0"
+     inkscape:window-x="1920"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
      inkscape:showpageshadow="false"

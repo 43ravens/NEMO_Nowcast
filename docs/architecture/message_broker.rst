@@ -34,7 +34,7 @@ and a manager port to listen for messages from the manager.
 After that,
 the broker simply listens for messages and queues them in both directions between the workers and manager ports.
 
-.. figure:: MessageBroker.svg
+.. figure:: MessageBroker.png
     :align: center
 
     Schematic of a nowcast system message broker ports and message queues.

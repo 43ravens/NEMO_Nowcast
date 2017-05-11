@@ -38,7 +38,7 @@ Workers send a message to the manager when they have something significant to re
 When the manager receives a message from a worker it acknowledges the message with a return message.
 Those messages are defined in the :ref:`MessageRegistryConfig` section of the :ref:`NowcastConfigFile`.
 
-.. figure:: ManagerWorkerInteraction.svg
+.. figure:: ManagerWorkerInteraction.png
     :align: center
 
     Schematic of a nowcast system manager and worker interacting at various stages of the worker's life cycle.
