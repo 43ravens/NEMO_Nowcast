@@ -390,7 +390,7 @@ class NowcastWorker:
         except:
             self.logger.critical('unhandled exception:', exc_info=True)
             self.tell_manager('crash')
-        self.logger.debug('shutting down')
+        self.logger.debug('shutting down', extra={'logger_name': self.name})
         self._context.destroy()
 
     def tell_manager(self, msg_type, payload=None):
@@ -434,7 +434,8 @@ class NowcastWorker:
         self._socket.send_string(message)
         self.logger.debug(
             'sent message: ({msg_type}) {msg_words}'
-            .format(msg_type=msg_type, msg_words=worker_msgs[msg_type]))
+            .format(msg_type=msg_type, msg_words=worker_msgs[msg_type]),
+            extra={'logger_name': self.name})
         # Wait for and process response
         msg = self._socket.recv_string()
         message = Message.deserialize(msg)
@@ -449,7 +450,8 @@ class NowcastWorker:
                     self, config_file=self.config.file, msg_type=message.type))
         self.logger.debug(
             'received message from {msg.source}: ({msg.type}) {msg_words}'
-            .format(msg=message, msg_words=msg_words))
+            .format(msg=message, msg_words=msg_words),
+            extra={'logger_name': self.name})
         return message
 
 
