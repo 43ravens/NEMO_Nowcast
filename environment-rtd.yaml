@@ -9,7 +9,7 @@ channels:
 
 dependencies:
   - arrow
-  - attr
+  - attrs
   - python=3.5
   - pyyaml
   - requests
