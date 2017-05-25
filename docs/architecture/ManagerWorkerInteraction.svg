@@ -14,7 +14,7 @@
    viewBox="0 0 485.60527 1341.7341"
    id="svg7402"
    version="1.1"
-   inkscape:version="0.91 r13725"
+   inkscape:version="0.92.1 r15371"
    sodipodi:docname="ManagerWorkerInteraction.svg"
    inkscape:export-filename="/media/doug/warehouse/43ravens/projects/gomss-nowcast/NEMO_Nowcast/docs/architecture/ManagerWorkerInteraction.png"
    inkscape:export-xdpi="90"
@@ -32,7 +32,7 @@
      inkscape:cx="242.80266"
      inkscape:cy="670.86703"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g8783"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1056"
@@ -79,7 +79,7 @@
        inkscape:connector-curvature="0"
        inkscape:connector-type="polyline"
        id="path3827"
-       d="m 197.1974,14.99422 0,0"
+       d="m 197.1974,14.99422 v 0"
        style="display:inline;fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <g
        id="g8251"
@@ -92,18 +92,17 @@
          id="rect4299-8"
          style="fill:#eec73e;fill-opacity:1;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:2, 4;stroke-dashoffset:0" />
       <text
-         sodipodi:linespacing="125%"
          id="text4301-3"
          y="287.65073"
          x="385.83337"
-         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
          xml:space="preserve"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
            y="287.65073"
            x="385.83337"
            id="tspan4303-7"
            sodipodi:role="line">listen for</tspan><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
            id="tspan4305-2"
            y="310.15073"
            x="385.83337"
@@ -141,32 +140,31 @@
        y="15.503807" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:18px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
        x="202.70691"
        y="37.934914"
-       id="text3897-0"
-       sodipodi:linespacing="125%"><tspan
+       id="text3897-0"><tspan
          sodipodi:role="line"
          id="tspan3899-1"
          x="202.70691"
          y="37.934914"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro'">manager</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro'">manager</tspan></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="195.72516"
        y="192.18585"
-       id="text8368"
-       sodipodi:linespacing="125%"><tspan
+       id="text8368"><tspan
          sodipodi:role="line"
          id="tspan8370"
          x="195.72516"
-         y="192.18585">Listening...</tspan></text>
+         y="192.18585"
+         style="font-size:15px;line-height:1.25;font-family:sans-serif">Listening...</tspan></text>
     <path
        inkscape:connector-curvature="0"
        inkscape:connector-type="polyline"
        id="path8416"
-       d="m 197.1974,234.99422 0,0"
+       d="m 197.1974,234.99422 v 0"
        style="display:inline;fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <g
        id="g8432"
@@ -180,17 +178,16 @@
          y="324.72446" />
     </g>
     <text
-       sodipodi:linespacing="125%"
        id="text8436"
        y="394.93491"
        x="604.70691"
-       style="font-style:normal;font-weight:normal;font-size:18px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
        xml:space="preserve"><tspan
          y="394.93491"
          x="604.70691"
          id="tspan8438"
          sodipodi:role="line"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro'">worker</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro'">worker</tspan></text>
     <g
        id="g8440"
        transform="translate(580,40)">
@@ -203,25 +200,24 @@
          y="451.93491" />
       <text
          xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
          x="-134.66663"
          y="474.60336"
-         id="text8444"
-         sodipodi:linespacing="125%"><tspan
+         id="text8444"><tspan
            sodipodi:role="line"
            x="-134.66663"
            y="474.60336"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
            id="tspan8446">launch</tspan><tspan
            sodipodi:role="line"
            x="-134.66663"
            y="497.10336"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
            id="tspan8448">worker</tspan><tspan
            sodipodi:role="line"
            x="-134.66663"
            y="519.60339"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
            id="tspan8450">process</tspan></text>
     </g>
     <path
@@ -265,21 +261,20 @@
          y="363.93491" />
       <text
          xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
          x="-194.16663"
          y="387.65073"
-         id="text8466"
-         sodipodi:linespacing="125%"><tspan
+         id="text8466"><tspan
            sodipodi:role="line"
            id="tspan8468"
            x="-194.16663"
            y="387.65073"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle">handle</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle">handle</tspan><tspan
            sodipodi:role="line"
            x="-194.16663"
            y="410.15073"
            id="tspan8470"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle">messages</tspan></text>
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle">messages</tspan></text>
     </g>
     <g
        transform="translate(64.7069,151.57271)"
@@ -309,18 +304,17 @@
          id="rect8480"
          style="fill:#eec73e;fill-opacity:1;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:2, 4;stroke-dashoffset:0" />
       <text
-         sodipodi:linespacing="125%"
          id="text8482"
          y="287.65073"
          x="385.83337"
-         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
          xml:space="preserve"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
            y="287.65073"
            x="385.83337"
            id="tspan8484"
            sodipodi:role="line">listen for</tspan><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
            id="tspan8486"
            y="310.15073"
            x="385.83337"
@@ -358,53 +352,58 @@
        y="235.50381" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:18px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
        x="202.70691"
        y="257.93491"
-       id="text8496"
-       sodipodi:linespacing="125%"><tspan
+       id="text8496"><tspan
          sodipodi:role="line"
          id="tspan8498"
          x="202.70691"
          y="257.93491"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro'">manager</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro'">manager</tspan></text>
     <text
-       sodipodi:linespacing="125%"
        id="text8500"
        y="619.39703"
        x="195.72516"
-       style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"><tspan
          y="619.39703"
          x="195.72516"
          id="tspan8502"
-         sodipodi:role="line">Launching a worker.</tspan></text>
+         sodipodi:role="line"
+         style="font-size:15px;line-height:1.25;font-family:sans-serif">Launching a worker.</tspan></text>
     <flowRoot
        xml:space="preserve"
        id="flowRoot8504"
-       style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"><flowRegion
-         id="flowRegion8506"><rect
+       style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"><flowRegion
+         id="flowRegion8506"
+         style="font-family:sans-serif"><rect
            id="rect8508"
            width="543.47821"
            height="425.1593"
            x="-425.1593"
-           y="167.33673" /></flowRegion><flowPara
-         id="flowPara8510" /></flowRoot>    <flowRoot
-       style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           y="167.33673"
+           style="font-family:sans-serif" /></flowRegion><flowPara
+         id="flowPara8510"
+         style="font-size:15px;line-height:1.25;font-family:sans-serif"> </flowPara></flowRoot>    <flowRoot
+       style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="flowRoot8512"
        xml:space="preserve"><flowRegion
-         id="flowRegion8514"><rect
+         id="flowRegion8514"
+         style="font-family:sans-serif"><rect
            y="167.33673"
            x="-425.1593"
            height="425.1593"
            width="543.47821"
-           id="rect8516" /></flowRegion><flowPara
-         id="flowPara8518" /></flowRoot>    <g
+           id="rect8516"
+           style="font-family:sans-serif" /></flowRegion><flowPara
+         id="flowPara8518"
+         style="font-size:15px;line-height:1.25;font-family:sans-serif"> </flowPara></flowRoot>    <g
        id="g8783"
        transform="translate(0,426)">
       <path
          style="display:inline;fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="m 317.1974,660.99422 0,0"
+         d="m 317.1974,660.99422 v 0"
          id="path8542"
          inkscape:connector-type="polyline"
          inkscape:connector-curvature="0" />
@@ -458,12 +457,11 @@
       </g>
       <text
          xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:18px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
          x="604.70691"
          y="820.93494"
-         id="text8562"
-         sodipodi:linespacing="125%"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro'"
+         id="text8562"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro'"
            sodipodi:role="line"
            id="tspan8564"
            x="604.70691"
@@ -479,18 +477,17 @@
            id="rect8590"
            style="fill:#eec73e;fill-opacity:1;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:2, 4;stroke-dashoffset:0" />
         <text
-           sodipodi:linespacing="125%"
            id="text8592"
            y="387.65073"
            x="-194.16663"
-           style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+           style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
            xml:space="preserve"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
              y="387.65073"
              x="-194.16663"
              id="tspan8594"
              sodipodi:role="line">handle</tspan><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
              id="tspan8596"
              y="410.15073"
              x="-194.16663"
@@ -525,21 +522,20 @@
            y="263.93491" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+           style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
            x="385.83337"
            y="287.65073"
-           id="text8608"
-           sodipodi:linespacing="125%"><tspan
+           id="text8608"><tspan
              sodipodi:role="line"
              id="tspan8610"
              x="385.83337"
              y="287.65073"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle">listen for</tspan><tspan
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle">listen for</tspan><tspan
              sodipodi:role="line"
              x="385.83337"
              y="310.15073"
              id="tspan8612"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle">messages</tspan></text>
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle">messages</tspan></text>
       </g>
       <g
          id="g8614"
@@ -572,40 +568,42 @@
          id="rect8620"
          style="fill:none;stroke:#000000;stroke-width:1.01916945;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
       <text
-         sodipodi:linespacing="125%"
          id="text8622"
          y="683.93494"
          x="202.70691"
-         style="font-style:normal;font-weight:normal;font-size:18px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
          xml:space="preserve"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro'"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro'"
            y="683.93494"
            x="202.70691"
            id="tspan8624"
            sodipodi:role="line">manager</tspan></text>
       <text
-         sodipodi:linespacing="125%"
          id="text8626"
          y="926.60822"
          x="195.72516"
-         style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          xml:space="preserve"><tspan
            y="926.60822"
            x="195.72516"
            id="tspan8628"
-           sodipodi:role="line">Handling &quot;need&quot; and &quot;log&quot; messages from workers.</tspan></text>
+           sodipodi:role="line"
+           style="font-size:15px;line-height:1.25;font-family:sans-serif">Handling &quot;need&quot; messages from workers.</tspan></text>
     </g>
     <flowRoot
        xml:space="preserve"
        id="flowRoot8630"
-       style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"><flowRegion
-         id="flowRegion8632"><rect
+       style="font-style:normal;font-weight:normal;line-height:0.01%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"><flowRegion
+         id="flowRegion8632"
+         style="font-family:sans-serif"><rect
            id="rect8634"
            width="539.53424"
            height="405.43948"
            x="-409.38345"
-           y="172.85828" /></flowRegion><flowPara
-         id="flowPara8636" /></flowRoot>    <g
+           y="172.85828"
+           style="font-family:sans-serif" /></flowRegion><flowPara
+         id="flowPara8636"
+         style="font-size:15px;line-height:1.25;font-family:sans-serif"> </flowPara></flowRoot>    <g
        id="g8638"
        transform="translate(580,466)">
       <rect
@@ -616,19 +614,18 @@
          id="rect8640"
          style="fill:#eec73e;fill-opacity:1;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:2, 4;stroke-dashoffset:0" />
       <text
-         sodipodi:linespacing="125%"
          id="text8642"
          y="489.39536"
          x="-254.56995"
-         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
          xml:space="preserve"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
            id="tspan8644"
            y="489.39536"
            x="-254.56995"
            sodipodi:role="line">update</tspan><tspan
            id="tspan8646"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
            y="511.89536"
            x="-254.56995"
            sodipodi:role="line">checklist</tspan></text>
@@ -671,7 +668,7 @@
        inkscape:connector-curvature="0"
        inkscape:connector-type="polyline"
        id="path8660"
-       d="m 197.1974,660.99422 0,0"
+       d="m 197.1974,660.99422 v 0"
        style="display:inline;fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <g
        transform="translate(64.7069,577.57271)"
@@ -721,12 +718,11 @@
       </g>
       <text
          xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:18px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
          x="604.70691"
          y="1128.9348"
-         id="text8680"
-         sodipodi:linespacing="125%"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro'"
+         id="text8680"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro'"
            sodipodi:role="line"
            id="tspan8682"
            x="604.70691"
@@ -744,25 +740,24 @@
          y="451.93491" />
       <text
          xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
          x="-134.66663"
          y="474.60336"
-         id="text8688"
-         sodipodi:linespacing="125%"><tspan
+         id="text8688"><tspan
            sodipodi:role="line"
            x="-134.66663"
            y="474.60336"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
            id="tspan8690">launch</tspan><tspan
            sodipodi:role="line"
            x="-134.66663"
            y="497.10336"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
            id="tspan8692">worker</tspan><tspan
            sodipodi:role="line"
            x="-134.66663"
            y="519.60339"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
            id="tspan8694">process</tspan></text>
     </g>
     <g
@@ -794,21 +789,20 @@
          y="363.93491" />
       <text
          xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
          x="-194.16663"
          y="387.65073"
-         id="text8710"
-         sodipodi:linespacing="125%"><tspan
+         id="text8710"><tspan
            sodipodi:role="line"
            id="tspan8712"
            x="-194.16663"
            y="387.65073"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle">handle</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle">handle</tspan><tspan
            sodipodi:role="line"
            x="-194.16663"
            y="410.15073"
            id="tspan8714"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle">messages</tspan></text>
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle">messages</tspan></text>
     </g>
     <g
        transform="translate(64.7069,577.57271)"
@@ -838,18 +832,17 @@
          id="rect8724"
          style="fill:#eec73e;fill-opacity:1;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:2, 4;stroke-dashoffset:0" />
       <text
-         sodipodi:linespacing="125%"
          id="text8726"
          y="287.65073"
          x="385.83337"
-         style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
          xml:space="preserve"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
            y="287.65073"
            x="385.83337"
            id="tspan8728"
            sodipodi:role="line">listen for</tspan><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
            id="tspan8730"
            y="310.15073"
            x="385.83337"
@@ -887,27 +880,26 @@
        y="661.50378" />
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:18px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
        x="202.70691"
        y="683.93494"
-       id="text8740"
-       sodipodi:linespacing="125%"><tspan
+       id="text8740"><tspan
          sodipodi:role="line"
          id="tspan8742"
          x="202.70691"
          y="683.93494"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro'">manager</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro'">manager</tspan></text>
     <text
-       sodipodi:linespacing="125%"
        id="text8744"
        y="1044.6082"
        x="195.72516"
-       style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"><tspan
          y="1044.6082"
          x="195.72516"
          id="tspan8746"
-         sodipodi:role="line">Handling &quot;success&quot;, &quot;failure&quot;, or &quot;crash&quot; messages from workers.</tspan></text>
+         sodipodi:role="line"
+         style="font-size:15px;line-height:1.25;font-family:sans-serif">Handling &quot;success&quot;, &quot;failure&quot;, or &quot;crash&quot; messages from workers.</tspan></text>
     <g
        id="g8754"
        transform="translate(0,-208)">
@@ -922,18 +914,17 @@
            y="1098.7245" />
         <text
            xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:18px;line-height:125%;font-family:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+           style="font-style:normal;font-weight:normal;line-height:0%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
            x="636.45032"
            y="1116.4645"
-           id="text8760"
-           sodipodi:linespacing="125%"><tspan
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
+           id="text8760"><tspan
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
              sodipodi:role="line"
              id="tspan8762"
              x="636.45032"
              y="1116.4645">next</tspan><tspan
              id="tspan8775"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:18px;line-height:1.25;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro';text-align:center;text-anchor:middle"
              sodipodi:role="line"
              x="636.45032"
              y="1138.9645">worker</tspan></text>

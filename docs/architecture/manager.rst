@@ -101,13 +101,6 @@ To accomplish that a :kbd:`need` message must be registered for the worker.
 When the worker sends a :kbd:`need` message to the manager with a checklist key as the payload the manager replies by sending the value stored at that key in the checklist back to the worker as the payload of and :kbd:`ack` message,
 and resumes listening for messages from workers.
 
-Workers running on a machine other than the one where the manager is running
-(and where the log files are stored)
-can send events to the logging system by registering and using a :kbd:`log` type message.
-When the manager receives a :kbd:`log` message from a worker it emits the message payload as a logging event at the level specified in the message,
-replies to the worker with an :kbd:`ack` message,
-and resumes listening for messages from workers.
-
 The recommended way to launch the manager is to put it under the control of a process manager like `Circus`_.
 Please see :ref:`NowcastProcessMgmt` for details.
 
