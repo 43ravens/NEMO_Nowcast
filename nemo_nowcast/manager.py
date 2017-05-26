@@ -151,7 +151,6 @@ class NowcastManager:
             # Publish log messages to distributed logging aggregator
             logging_config = self.config['logging']['publisher']
             logging_config['handlers']['zmq_pub']['context'] = self._context
-            host = self.config['zmq']['host']
             port = self.config['zmq']['ports']['logging'][self.name]
             addr = 'tcp://*:{port}'.format(port=port)
             logging_config['handlers']['zmq_pub']['interface_or_socket'] = addr
@@ -247,7 +246,7 @@ class NowcastManager:
                     'checklist read from {}'.format(checklist_file))
                 self.logger.info(
                     'checklist:\n{}'.format(pprint.pformat(self.checklist)))
-        except FileNotFoundError as e:
+        except FileNotFoundError:
             self.logger.warning('checklist load failed:', exc_info=True)
             self.logger.warning('running with empty checklist')
 
