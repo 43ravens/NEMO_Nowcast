@@ -27,7 +27,7 @@ logging:
 
 # Message system
 zmq:
-  server: localhost
+  host: localhost
   ports:
     # traffic between manager and message broker
     manager: 4343
@@ -60,8 +60,3 @@ message registry:
       success: sleep worker slept well
       failure: sleep worker slept badly
       crash: sleep worker crashed
-    awaken:
-      checklist key: sleepyhead
-      success: awaken worker awoke - where's the coffee?
-      failure: awaken worker failed to awake
-      crash: awaken worker crashed
