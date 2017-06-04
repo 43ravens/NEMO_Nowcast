@@ -24,7 +24,7 @@ forcing data or model products for open boundary conditions,
 river run-off flows,
 and atmospheric forcing.
 
-.. _NEMO_Nowcast: https://anaconda.org/GoMSS-Nowcast/nemo_nowcast
+.. _NEMO_Nowcast: https://bitbucket.org/43ravens/nemo_nowcast
 .. _NEMO ocean model: http://www.nemo-ocean.eu/
 
 The runs are automated using an asynchronous,
