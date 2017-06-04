@@ -60,7 +60,7 @@ release packages are available from the `gomss-nowcast channel`_ at anaconda.org
 .. _gomss-nowcast channel: https://anaconda.org/GoMSS-Nowcast/repo
 
 .. image:: https://anaconda.org/gomss-nowcast/nemo_nowcast/badges/installer/conda.svg
-    :target: https://conda.anaconda.org/gomss-nowcast/repo
+    :target: https://anaconda.org/gomss-nowcast/repo
     :alt: Install with Conda
 
 .. image:: https://anaconda.org/gomss-nowcast/nemo_nowcast/badges/downloads.svg
