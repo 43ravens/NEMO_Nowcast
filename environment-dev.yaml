@@ -33,3 +33,4 @@ dependencies:
 
   # For documentation
   - sphinx
+  - sphinx_rtd_theme
