@@ -100,7 +100,8 @@ class CommandLineInterface:
                 '{help} Use YYYY-MM-DD format. Defaults to {default}.'
                 .format(help=help, default=default.format('YYYY-MM-DD'))))
 
-    def _arrow_date(self, string):
+    @staticmethod
+    def _arrow_date(string):
         """Convert a YYYY-MM-DD string to a UTC arrow object or raise
         :py:exc:`argparse.ArgumentTypeError`.
 
