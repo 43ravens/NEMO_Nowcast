@@ -39,9 +39,32 @@ class TestConfig:
             config['foo']
 
     def test_getitem(self):
+        m_open = mock_open(
+            read_data=(
+                'foo: bar\n'
+                'checklist file: nowcast_checklist.yaml\n'
+                'python: python\n'
+                'logging:\n'
+                '  handlers: []'
+            ))
         config = Config()
-        config._dict['foo'] = 'bar'
+        with patch('nemo_nowcast.config.open', m_open):
+            config.load('nowcast.yaml')
         assert config['foo'] == 'bar'
+
+    def test_contains(self):
+        m_open = mock_open(
+            read_data=(
+                'foo: bar\n'
+                'checklist file: nowcast_checklist.yaml\n'
+                'python: python\n'
+                'logging:\n'
+                '  handlers: []'
+            ))
+        config = Config()
+        with patch('nemo_nowcast.config.open', m_open):
+            config.load('nowcast.yaml')
+        assert 'foo' in config
 
 
 class TestConfigLoad:
