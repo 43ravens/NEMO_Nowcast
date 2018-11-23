@@ -18,6 +18,9 @@ v18.1.dev0 (unreleased)
 
   .. _CalVer: https://calver.org/
 
+* Add ``Config.__contains__()`` to enable checking for existence of top level keys in
+  config.
+
 
 v1.4
 ====

@@ -40,6 +40,9 @@ class Config:
     def __getitem__(self, item):
         return self._dict[item]
 
+    def __contains__(self, item):
+        return item in self._dict
+
     def load(self, config_file):
         """Load the YAML config_file.
 
