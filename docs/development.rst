@@ -19,10 +19,36 @@
 :kbd:`NEMO_Nowcast` Package Development
 ***************************************
 
+.. image:: https://img.shields.io/badge/license-Apache%202-cb2533.svg
+    :target: https://www.apache.org/licenses/LICENSE-2.0
+    :alt: Licensed under the Apache License, Version 2.0
+.. image:: https://img.shields.io/badge/License-BSD%203--Clause-orange.svg
+    :target: https://opensource.org/licenses/BSD-3-Clause
+    :alt: Licensed under the BSD-3-Clause License
+.. image:: https://img.shields.io/badge/python-3.5-blue.svg
+    :target: https://docs.python.org/3.5/
+    :alt: Python Version
+.. image:: https://img.shields.io/badge/version%20control-hg-blue.svg
+    :target: https://bitbucket.org/43ravens/nemo_nowcast/
+    :alt: Mercurial on Bitbucket
+.. image:: https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest
+    :target: https://nemo-nowcast.readthedocs.io/en/latest/
+    :alt: Documentation Status
+.. image:: https://img.shields.io/bitbucket/issues/43ravens/nemo_nowcast.svg
+    :target: https://bitbucket.org/43ravens/nemo_nowcast/issues?status=new&status=open
+    :alt: Issue Tracker
+.. image:: https://anaconda.org/gomss-nowcast/nemo_nowcast/badges/installer/conda.svg
+    :target: https://conda.anaconda.org/gomss-nowcast
+    :alt: Install with conda
+
 .. _NEMO_NowcastPythonVersions:
 
 Python Versions
 ===============
+
+.. image:: https://img.shields.io/badge/python-3.5-blue.svg
+    :target: https://docs.python.org/3.5/
+    :alt: Python Version
 
 The :kbd:`NEMO_Nowcast` package is developed and tested using `Python`_ 3.5 or later.
 
@@ -33,6 +59,10 @@ The :kbd:`NEMO_Nowcast` package is developed and tested using `Python`_ 3.5 or l
 
 Getting the Code
 ================
+
+.. image:: https://img.shields.io/badge/version%20control-hg-blue.svg
+    :target: https://bitbucket.org/43ravens/nemo_nowcast/
+    :alt: Mercurial on Bitbucket
 
 Clone the code and documentation `repository`_ from Bitbucket with:
 
@@ -88,6 +118,10 @@ To deactivate the environment use:
 
 Building the Documentation
 ==========================
+
+.. image:: https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest
+    :target: https://nemo-nowcast.readthedocs.io/en/latest/
+    :alt: Documentation Status
 
 The documentation for the :kbd:`NEMO_Nowcast` package is written in `reStructuredText`_ and converted to HTML using `Sphinx`_.
 Creating a :ref:`NEMO_NowcastDevelopmentEnvironment` as described above includes the installation of Sphinx.
@@ -206,6 +240,10 @@ to produce an HTML report that you can view in your browser by opening :file:`NE
 Version Control Repository
 ==========================
 
+.. image:: https://img.shields.io/badge/version%20control-hg-blue.svg
+    :target: https://bitbucket.org/43ravens/nemo_nowcast/
+    :alt: Mercurial on Bitbucket
+
 The :kbd:`NEMO_Nowcast` package code and documentation source files are available as a `Mercurial`_ repository at https://bitbucket.org/43ravens/nemo_nowcast.
 
 
@@ -213,6 +251,10 @@ The :kbd:`NEMO_Nowcast` package code and documentation source files are availabl
 
 Issue Tracker
 =============
+
+.. image:: https://img.shields.io/bitbucket/issues/43ravens/nemo_nowcast.svg
+    :target: https://bitbucket.org/43ravens/nemo_nowcast/issues?status=new&status=open
+    :alt: Issue Tracker
 
 Development tasks,
 bug reports,
@@ -223,6 +265,10 @@ and enhancement ideas are recorded and managed in the issue tracker at https://b
 
 Release Packages
 ================
+
+.. image:: https://anaconda.org/gomss-nowcast/nemo_nowcast/badges/installer/conda.svg
+    :target: https://conda.anaconda.org/gomss-nowcast
+    :alt: Install with conda
 
 Versioned releases of the :kbd:`NEMO_Nowcast` package are available as `Conda`_ packages on `Anaconda.org`_.
 
