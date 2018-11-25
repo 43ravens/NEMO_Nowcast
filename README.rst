@@ -2,6 +2,28 @@
 NEMO Ocean Model Nowcast Framework
 **********************************
 
+.. image:: https://img.shields.io/badge/license-Apache%202-cb2533.svg
+    :target: https://www.apache.org/licenses/LICENSE-2.0
+    :alt: Licensed under the Apache License, Version 2.0
+.. image:: https://img.shields.io/badge/License-BSD%203--Clause-orange.svg
+    :target: https://opensource.org/licenses/BSD-3-Clause
+    :alt: Licensed under the BSD-3-Clause License
+.. image:: https://img.shields.io/badge/python-3.5-blue.svg
+    :target: https://docs.python.org/3.5/
+    :alt: Python Version
+.. image:: https://img.shields.io/badge/version%20control-hg-blue.svg
+    :target: https://bitbucket.org/43ravens/nemo_nowcast/
+    :alt: Mercurial on Bitbucket
+.. image:: https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest
+    :target: https://nemo-nowcast.readthedocs.io/en/latest/
+    :alt: Documentation Status
+.. image:: https://img.shields.io/bitbucket/issues/43ravens/nemo_nowcast.svg
+    :target: https://bitbucket.org/43ravens/nemo_nowcast/issues?status=new&status=open
+    :alt: Issue Tracker
+.. image:: https://anaconda.org/gomss-nowcast/nemo_nowcast/badges/installer/conda.svg
+    :target: https://conda.anaconda.org/gomss-nowcast
+    :alt: Install with conda
+
 The `NEMO_Nowcast`_ package is a collection of Python modules that can be used to build a software system to run the `NEMO ocean model`_ in a daily nowcast/forecast mode.
 Such a system typically uses as-recent-as-available
 forcing data or model products for open boundary conditions,
@@ -71,6 +93,13 @@ release packages are available from the `gomss-nowcast channel`_ at anaconda.org
 
 Licenses
 ========
+
+.. image:: https://img.shields.io/badge/license-Apache%202-cb2533.svg
+    :target: https://www.apache.org/licenses/LICENSE-2.0
+    :alt: Licensed under the Apache License, Version 2.0
+.. image:: https://img.shields.io/badge/License-BSD%203--Clause-orange.svg
+    :target: https://opensource.org/licenses/BSD-3-Clause
+    :alt: Licensed under the BSD-3-Clause License
 
 The NEMO_Nowcast framework code and documentation are copyright 2016 by Doug Latornell, 43ravens.
 
