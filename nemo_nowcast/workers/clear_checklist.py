@@ -29,7 +29,7 @@ import logging
 from nemo_nowcast import NowcastWorker
 
 
-NAME = 'clear_checklist'
+NAME = "clear_checklist"
 logger = logging.getLogger(NAME)
 
 
@@ -40,29 +40,28 @@ def main():
 
     :command:`python -m nemo_nowcast.workers.clear_checklist --help`
     """
-    worker = NowcastWorker(
-        NAME, description=__doc__, package='nemo_nowcast.workers')
+    worker = NowcastWorker(NAME, description=__doc__, package="nemo_nowcast.workers")
     worker.init_cli()
     worker.run(clear_checklist, success, failure)
 
 
 def success(parsed_args):
-    logger.info('nowcast system checklist cleared')
-    msg_type = 'success'
+    logger.info("nowcast system checklist cleared")
+    msg_type = "success"
     return msg_type
 
 
 def failure(parsed_args):
-    logger.critical('failed to clear nowcast system checklist')
-    msg_type = 'failure'
+    logger.critical("failed to clear nowcast system checklist")
+    msg_type = "failure"
     return msg_type
 
 
 def clear_checklist(parsed_args, config, tell_manager):
-    logger.info('requesting that manager clear system state checklist')
-    tell_manager('clear checklist')
+    logger.info("requesting that manager clear system state checklist")
+    tell_manager("clear checklist")
     # Don't return a checklist entry because we just cleared it!
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()  # pragma: no cover

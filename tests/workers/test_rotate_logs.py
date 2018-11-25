@@ -23,16 +23,17 @@ import pytest
 from nemo_nowcast.workers import rotate_logs
 
 
-@patch('nemo_nowcast.workers.rotate_logs.NowcastWorker')
+@patch("nemo_nowcast.workers.rotate_logs.NowcastWorker")
 class TestMain:
     """Unit tests for main function.
     """
+
     def test_instantiate_worker(self, m_worker):
         rotate_logs.main()
         args, kwargs = m_worker.call_args
-        assert args == ('rotate_logs',)
-        assert 'description' in kwargs
-        assert 'package' in kwargs
+        assert args == ("rotate_logs",)
+        assert "description" in kwargs
+        assert "package" in kwargs
 
     def test_init_cli(self, m_worker):
         rotate_logs.main()
@@ -41,15 +42,15 @@ class TestMain:
     def test_run_worker(self, m_worker):
         rotate_logs.main()
         args, kwargs = m_worker().run.call_args
-        expected = (
-            rotate_logs.rotate_logs, rotate_logs.success, rotate_logs.failure)
+        expected = (rotate_logs.rotate_logs, rotate_logs.success, rotate_logs.failure)
         assert args == expected
 
 
-@patch('nemo_nowcast.workers.rotate_logs.logger')
+@patch("nemo_nowcast.workers.rotate_logs.logger")
 class TestSuccess:
     """Unit tests for success function.
     """
+
     def test_success_log_info(self, m_logger):
         parsed_args = SimpleNamespace()
         rotate_logs.success(parsed_args)
@@ -58,13 +59,14 @@ class TestSuccess:
     def test_success_msg_type(self, m_logger):
         parsed_args = SimpleNamespace()
         msg_type = rotate_logs.success(parsed_args)
-        assert msg_type == 'success'
+        assert msg_type == "success"
 
 
-@patch('nemo_nowcast.workers.rotate_logs.logger')
+@patch("nemo_nowcast.workers.rotate_logs.logger")
 class TestFailure:
     """Unit tests for failure function.
     """
+
     def test_failure_log_critical(self, m_logger):
         parsed_args = SimpleNamespace()
         rotate_logs.failure(parsed_args)
@@ -73,19 +75,15 @@ class TestFailure:
     def test_failure_msg_type(self, m_logger):
         parsed_args = SimpleNamespace()
         msg_type = rotate_logs.failure(parsed_args)
-        assert msg_type == 'failure'
+        assert msg_type == "failure"
 
 
-@pytest.mark.parametrize('config', [
-    {'logging': {}},
-    {'logging': {
-        'aggregator': {},
-        'publisher': {
-            'handlers': {},
-        }}},
-])
-@patch('nemo_nowcast.workers.rotate_logs.logging.config.dictConfig')
-@patch('nemo_nowcast.workers.rotate_logs.logger')
+@pytest.mark.parametrize(
+    "config",
+    [{"logging": {}}, {"logging": {"aggregator": {}, "publisher": {"handlers": {}}}}],
+)
+@patch("nemo_nowcast.workers.rotate_logs.logging.config.dictConfig")
+@patch("nemo_nowcast.workers.rotate_logs.logger")
 class TestRotateLogs:
     """Unit tests for rotate_logs function.
     """
@@ -94,9 +92,8 @@ class TestRotateLogs:
         m_logger.root.handlers = []
         parsed_args = SimpleNamespace()
         rotate_logs.rotate_logs(parsed_args, config)
-        if 'aggregator' in config['logging']:
-            m_dictConfig.assert_called_once_with(
-                config['logging']['aggregator'])
+        if "aggregator" in config["logging"]:
+            m_dictConfig.assert_called_once_with(config["logging"]["aggregator"])
         else:
             assert not m_dictConfig.called
 
@@ -106,28 +103,24 @@ class TestRotateLogs:
         checklist = rotate_logs.rotate_logs(parsed_args, config)
         assert checklist == []
 
-    def test_dont_roll_timed_handler(
-        self, m_logger, m_dictConfig, config, tmpdir,
-    ):
-        tmpfile = tmpdir.ensure('foo')
+    def test_dont_roll_timed_handler(self, m_logger, m_dictConfig, config, tmpdir):
+        tmpfile = tmpdir.ensure("foo")
         m_logger.root.handlers = [
-            logging.handlers.TimedRotatingFileHandler(tmpfile.strpath)]
-        parsed_args, config = SimpleNamespace(), {'logging': {}}
+            logging.handlers.TimedRotatingFileHandler(tmpfile.strpath)
+        ]
+        parsed_args, config = SimpleNamespace(), {"logging": {}}
         checklist = rotate_logs.rotate_logs(parsed_args, config)
         assert checklist == []
 
     def test_dont_roll_stream_handler(self, m_logger, m_dictConfig, config):
         m_logger.root.handlers = [logging.StreamHandler()]
-        parsed_args, config = SimpleNamespace(), {'logging': {}}
+        parsed_args, config = SimpleNamespace(), {"logging": {}}
         checklist = rotate_logs.rotate_logs(parsed_args, config)
         assert checklist == []
 
-    def test_roll_rotating_handler(
-        self, m_logger, m_dictConfig, config, tmpdir,
-    ):
-        tmpfile = tmpdir.ensure('foo')
-        m_logger.root.handlers = [
-            logging.handlers.RotatingFileHandler(tmpfile.strpath)]
-        parsed_args, config = SimpleNamespace(), {'logging': {}}
+    def test_roll_rotating_handler(self, m_logger, m_dictConfig, config, tmpdir):
+        tmpfile = tmpdir.ensure("foo")
+        m_logger.root.handlers = [logging.handlers.RotatingFileHandler(tmpfile.strpath)]
+        parsed_args, config = SimpleNamespace(), {"logging": {}}
         checklist = rotate_logs.rotate_logs(parsed_args, config)
         assert checklist == [tmpfile.strpath]

@@ -1,11 +1,13 @@
 # Python packages and version used in development environment
 
 alabaster==0.7.12
+appdirs==1.4.3
 arrow==0.12.1
 asn1crypto==0.24.0
 atomicwrites==1.2.1
 attrs==18.2.0
 Babel==2.6.0
+black==18.9b0
 certifi==2018.10.15
 cffi==1.11.5
 chardet==3.0.4
@@ -42,4 +44,5 @@ snowballstemmer==1.2.1
 Sphinx==1.8.2
 sphinx-rtd-theme==0.4.2
 sphinxcontrib-websupport==1.1.0
+toml==0.10.0
 tornado==5.1.1

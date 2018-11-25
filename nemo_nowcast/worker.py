@@ -27,11 +27,7 @@ import requests
 import zmq
 import zmq.log.handlers
 
-from nemo_nowcast import (
-    CommandLineInterface,
-    Config,
-    Message,
-)
+from nemo_nowcast import CommandLineInterface, Config, Message
 
 
 class WorkerError(Exception):
@@ -50,6 +46,7 @@ class NextWorker:
     instances that provide the sequence of workers and their arguments
     that are to be launched next.
     """
+
     #: Name of the worker module including its package path,
     #: in dotted notation;
     #: e.g. :kbd:`nowcast.workers.download_weather`.
@@ -59,7 +56,7 @@ class NextWorker:
     args = attr.ib(default=attr.Factory(list))
     #: Host to launch the worker on.
     #: Defaults to :kbd:`localhost`
-    host = attr.ib(default='localhost')
+    host = attr.ib(default="localhost")
 
     def launch(self, config, logger_name):
         """Use a subprocess to launch worker on host with args as the
@@ -74,22 +71,26 @@ class NextWorker:
         This method *does not* wait for the subprocess to complete.
         """
         logger = logging.getLogger(logger_name)
-        if self.host == 'localhost':
-            cmd = [config['python'], '-m']
+        if self.host == "localhost":
+            cmd = [config["python"], "-m"]
             config_file = config.file
         else:
-            enabled_host_config = config['run']['enabled hosts'][self.host]
+            enabled_host_config = config["run"]["enabled hosts"][self.host]
             cmd = [
-                'ssh', self.host,
-                'source', enabled_host_config['envvars'], ';',
-                enabled_host_config['python'], '-m',
+                "ssh",
+                self.host,
+                "source",
+                enabled_host_config["envvars"],
+                ";",
+                enabled_host_config["python"],
+                "-m",
             ]
-            config_file = enabled_host_config['config file']
+            config_file = enabled_host_config["config file"]
         cmd.extend([self.module, config_file])
         if self.args:
             cmd.extend(self.args)
-        logger.info('launching {}'.format(self), extra={'worker': self})
-        logger.debug('cmd = {}'.format(cmd), extra={'cmd': cmd})
+        logger.info("launching {}".format(self), extra={"worker": self})
+        logger.debug("cmd = {}".format(cmd), extra={"cmd": cmd})
         subprocess.Popen(cmd)
 
 
@@ -97,6 +98,7 @@ class NextWorker:
 class NowcastWorker:
     """Construct a :py:class:`nemo_nowcast.worker.NowcastWorker` instance.
     """
+
     #: The name of the worker instance.
     #: Used in the nowcast messaging system and for logging.
     name = attr.ib()
@@ -109,7 +111,7 @@ class NowcastWorker:
     #: used to build the usage message.
     #: Use dotted notation;
     #: e.g. :kbd:`nowcast.workers`.
-    package = attr.ib(default='nowcast.workers')
+    package = attr.ib(default="nowcast.workers")
     #: :py:class:`nemo_nowcast.config.Config` object that holds
     #: the nowcast system configuration that is loaded from the configuration
     #: file in the :py:meth:`~nemo_nowcast.worker.NowcastWorker.run` method.
@@ -179,11 +181,13 @@ class NowcastWorker:
         (e.g. :kbd:`--run-date`) to the interface.
         """
         self.cli = CommandLineInterface(
-            self.name, description=self.description, package=self.package)
+            self.name, description=self.description, package=self.package
+        )
         self.cli.build_parser()
         self.cli.parser.add_argument(
-            '--debug', action='store_true',
-            help='''
+            "--debug",
+            action="store_true",
+            help="""
             Send logging output to the console instead of the log file,
             and suppress messages to the nowcast manager process.
             Nowcast system messages that would normally be sent to the manager
@@ -192,7 +196,7 @@ class NowcastWorker:
             workers.
             Intended only for use when the worker is run in foreground
             from the command-line.
-            ''',
+            """,
         )
 
     def run(self, worker_func, success, failure):
@@ -249,8 +253,8 @@ class NowcastWorker:
         self._parsed_args = self.cli.parser.parse_args()
         self.config.load(self._parsed_args.config_file)
         msg = self._configure_logging()
-        self.logger.info('running in process {}'.format(os.getpid()))
-        self.logger.info('read config from {.file}'.format(self.config))
+        self.logger.info("running in process {}".format(os.getpid()))
+        self.logger.info("read config from {.file}".format(self.config))
         if not self._parsed_args.debug:
             self.logger.info(msg)
         self._install_signal_handlers()
@@ -261,42 +265,41 @@ class NowcastWorker:
         """Configure the worker's logging system interface.
         """
         self.logger = logging.getLogger(self.name)
-        if 'publisher' in self.config['logging']:
+        if "publisher" in self.config["logging"]:
             # Publish log messages to distributed logging aggregator
-            logging_config = self.config['logging']['publisher']
-            zmq_pub_config = logging_config['handlers']['zmq_pub']
-            zmq_pub_config['context'] = self._context
-            if self.name in self.config['zmq']['ports']['logging']:
-                addrs = self.config['zmq']['ports']['logging'][self.name]
+            logging_config = self.config["logging"]["publisher"]
+            zmq_pub_config = logging_config["handlers"]["zmq_pub"]
+            zmq_pub_config["context"] = self._context
+            if self.name in self.config["zmq"]["ports"]["logging"]:
+                addrs = self.config["zmq"]["ports"]["logging"][self.name]
                 addrs = addrs if isinstance(addrs, list) else [addrs]
                 ports = set()
                 for addr in addrs:
                     try:
                         # host:port
-                        port = int(addr.split(':')[1])
+                        port = int(addr.split(":")[1])
                     except AttributeError:
                         # port number
                         port = addr
                     if ports and port not in ports:
                         raise WorkerError(
-                            'workers on difference hosts must use the same '
-                            'port number: {0.name}: {addrs}'.format(
-                                self, addrs=addrs))
+                            "workers on difference hosts must use the same "
+                            "port number: {0.name}: {addrs}".format(self, addrs=addrs)
+                        )
                     else:
                         ports.add(port)
             else:
-                ports = self.config['zmq']['ports']['logging']['workers']
+                ports = self.config["zmq"]["ports"]["logging"]["workers"]
             for port in ports:
                 try:
-                    addr = 'tcp://*:{port}'.format(port=port)
-                    zmq_pub_config['interface_or_socket'] = addr
+                    addr = "tcp://*:{port}".format(port=port)
+                    zmq_pub_config["interface_or_socket"] = addr
                     logging.config.dictConfig(logging_config)
                     break
                 except (zmq.ZMQError, ValueError):
                     continue
             else:
-                raise WorkerError(
-                    'unable for find port to publish log messages to')
+                raise WorkerError("unable for find port to publish log messages to")
             for handler in self.logger.root.handlers:
                 if isinstance(handler, zmq.log.handlers.PUBHandler):
                     handler.root_topic = self.name
@@ -310,15 +313,15 @@ class NowcastWorker:
             # Not sure why, but we need a brief pause before we start logging
             # messages
             time.sleep(0.25)
-            msg = 'publishing log messages to {addr}'.format(addr=addr)
+            msg = "publishing log messages to {addr}".format(addr=addr)
         else:
             # Write log messages to local file system
-            logging_config = self.config['logging']
+            logging_config = self.config["logging"]
             logging.config.dictConfig(logging_config)
-            msg = 'writing log messages to local file system'
+            msg = "writing log messages to local file system"
         if self._parsed_args.debug:
             for handler in self.logger.root.handlers:
-                if handler.name == 'console':
+                if handler.name == "console":
                     # Activate console logging handler at the debug level
                     handler.setLevel(logging.DEBUG)
                 else:
@@ -327,29 +330,31 @@ class NowcastWorker:
                     try:
                         # Assumes that the console logging level in the
                         # config is set to a value >logging.DEBUG
-                        console_level = (
-                            logging_config['handlers']['console']['level'])
+                        console_level = logging_config["handlers"]["console"]["level"]
                     except (KeyError, TypeError):
                         console_level = 100
                     handler.setLevel(console_level)
-            msg = '**debug mode** writing log messages to console'
+            msg = "**debug mode** writing log messages to console"
         return msg
 
     def _install_signal_handlers(self):
         """Set up interrupt and kill signal handlers.
         """
+
         def sigint_handler(signal, frame):
             self.logger.info(
-                'interrupt signal (SIGINT or Ctrl-C) received; shutting down')
+                "interrupt signal (SIGINT or Ctrl-C) received; shutting down"
+            )
             self._socket.close()
             raise SystemExit
+
         signal.signal(signal.SIGINT, sigint_handler)
 
         def sigterm_handler(signal, frame):
-            self.logger.info(
-                'termination signal (SIGTERM) received; shutting down')
+            self.logger.info("termination signal (SIGTERM) received; shutting down")
             self._socket.close()
             raise SystemExit
+
         signal.signal(signal.SIGTERM, sigterm_handler)
 
     def _init_zmq_interface(self):
@@ -358,18 +363,17 @@ class NowcastWorker:
         :returns: ZeroMQ socket for communication with nowcast manager process.
         """
         if self._parsed_args.debug:
-            self.logger.debug('**debug mode** no connection to manager')
+            self.logger.debug("**debug mode** no connection to manager")
             return
         self._socket = self._context.socket(zmq.REQ)
-        zmq_host = self.config['zmq']['host']
-        zmq_port = self.config['zmq']['ports']['workers']
+        zmq_host = self.config["zmq"]["host"]
+        zmq_port = self.config["zmq"]["ports"]["workers"]
         self._socket.setsockopt(zmq.TCP_KEEPALIVE, 1)
         self._socket.setsockopt(zmq.TCP_KEEPALIVE_IDLE, 900)
-        self._socket.connect(
-            'tcp://{host}:{port}'.format(host=zmq_host, port=zmq_port))
+        self._socket.connect("tcp://{host}:{port}".format(host=zmq_host, port=zmq_port))
         self.logger.info(
-            'connected to {host} port {port}'
-            .format(host=zmq_host, port=zmq_port))
+            "connected to {host} port {port}".format(host=zmq_host, port=zmq_port)
+        )
 
     def _do_work(self):
         """Execute the worker function, communicate its success or failure to
@@ -378,7 +382,8 @@ class NowcastWorker:
         """
         try:
             checklist = self.worker_func(
-                self._parsed_args, self.config, self.tell_manager)
+                self._parsed_args, self.config, self.tell_manager
+            )
             msg_type = self.success(self._parsed_args)
             self.tell_manager(msg_type, checklist)
         except WorkerError:
@@ -388,9 +393,9 @@ class NowcastWorker:
             # Normal termination
             pass
         except:
-            self.logger.critical('unhandled exception:', exc_info=True)
-            self.tell_manager('crash')
-        self.logger.debug('shutting down', extra={'logger_name': self.name})
+            self.logger.critical("unhandled exception:", exc_info=True)
+            self.tell_manager("crash")
+        self.logger.debug("shutting down", extra={"logger_name": self.name})
         self._context.destroy()
 
     def tell_manager(self, msg_type, payload=None):
@@ -410,58 +415,71 @@ class NowcastWorker:
         :returns: Acknowledgement message from manager process.
         """
         try:
-            worker_msgs = self.config['message registry']['workers'][self.name]
+            worker_msgs = self.config["message registry"]["workers"][self.name]
         except (KeyError, TypeError):
             raise WorkerError(
-                'worker not found in {config_file} message registry: {name}'
-                .format(config_file=self.config.file, name=self.name))
+                "worker not found in {config_file} message registry: {name}".format(
+                    config_file=self.config.file, name=self.name
+                )
+            )
         try:
             msg_words = worker_msgs[msg_type]
         except (KeyError, TypeError):
             raise WorkerError(
-                'message type not found for {.name} worker in {config_file} '
-                'message registry: {msg_type}'
-                .format(self, config_file=self.config.file, msg_type=msg_type))
+                "message type not found for {.name} worker in {config_file} "
+                "message registry: {msg_type}".format(
+                    self, config_file=self.config.file, msg_type=msg_type
+                )
+            )
         if self._parsed_args.debug:
             self.logger.debug(
-                '**debug mode** '
-                'message that would have been sent to manager: '
-                '({msg_type} {msg_words})'
-                .format(msg_type=msg_type, msg_words=msg_words))
+                "**debug mode** "
+                "message that would have been sent to manager: "
+                "({msg_type} {msg_words})".format(
+                    msg_type=msg_type, msg_words=msg_words
+                )
+            )
             return
         # Send message to nowcast manager
         message = Message(self.name, msg_type, payload).serialize()
         self._socket.send_string(message)
         self.logger.debug(
-            'sent message: ({msg_type}) {msg_words}'
-            .format(msg_type=msg_type, msg_words=worker_msgs[msg_type]),
-            extra={'logger_name': self.name})
+            "sent message: ({msg_type}) {msg_words}".format(
+                msg_type=msg_type, msg_words=worker_msgs[msg_type]
+            ),
+            extra={"logger_name": self.name},
+        )
         # Wait for and process response
         msg = self._socket.recv_string()
         message = Message.deserialize(msg)
-        mgr_msgs = self.config['message registry']['manager']
+        mgr_msgs = self.config["message registry"]["manager"]
         try:
             msg_words = mgr_msgs[message.type]
         except KeyError:
             raise WorkerError(
-                'message type not found for manager in {config_file} '
-                'message registry: {msg_type}'
-                .format(
-                    self, config_file=self.config.file, msg_type=message.type))
+                "message type not found for manager in {config_file} "
+                "message registry: {msg_type}".format(
+                    self, config_file=self.config.file, msg_type=message.type
+                )
+            )
         self.logger.debug(
-            'received message from {msg.source}: ({msg.type}) {msg_words}'
-            .format(msg=message, msg_words=msg_words),
-            extra={'logger_name': self.name})
+            "received message from {msg.source}: ({msg.type}) {msg_words}".format(
+                msg=message, msg_words=msg_words
+            ),
+            extra={"logger_name": self.name},
+        )
         return message
 
 
 def get_web_data(
-        file_url, logger_name,
-        filepath=None, session=None,
-        chunk_size=100 * 1024,
-        wait_exponential_multiplier=2,
-        wait_retry_max=256,
-        wait_exponential_max=60 * 60,
+    file_url,
+    logger_name,
+    filepath=None,
+    session=None,
+    chunk_size=100 * 1024,
+    wait_exponential_multiplier=2,
+    wait_retry_max=256,
+    wait_exponential_max=60 * 60,
 ):
     """Download content from file_url and store it in filepath.
 
@@ -546,7 +564,7 @@ def get_web_data(
             response.raise_for_status()
             if filepath is None:
                 return response.content
-            with filepath.open('wb') as f:
+            with filepath.open("wb") as f:
                 for block in response.iter_content(chunk_size=chunk_size):
                     if not block:
                         break
@@ -556,7 +574,7 @@ def get_web_data(
             requests.exceptions.HTTPError,
             socket.error,
         ) as e:
-            logger.debug('received {msg} from {url}'.format(msg=e, url=file_url))
+            logger.debug("received {msg} from {url}".format(msg=e, url=file_url))
             raise e
 
     try:
@@ -567,8 +585,10 @@ def get_web_data(
         while wait_seconds < wait_exponential_max:
             sleep_seconds = min(wait_seconds, wait_retry_max)
             logger.debug(
-                'waiting {s} seconds until retry {n}'
-                .format(s=sleep_seconds, n=retries+1))
+                "waiting {s} seconds until retry {n}".format(
+                    s=sleep_seconds, n=retries + 1
+                )
+            )
             time.sleep(sleep_seconds)
             try:
                 return _get_data()
@@ -580,6 +600,8 @@ def get_web_data(
                 wait_seconds *= wait_exponential_multiplier
                 retries += 1
         logger.error(
-            'giving up; download from {url} failed {fail_count} times'
-            .format(url=file_url, fail_count=retries+1))
+            "giving up; download from {url} failed {fail_count} times".format(
+                url=file_url, fail_count=retries + 1
+            )
+        )
         raise WorkerError

@@ -22,6 +22,7 @@ import yaml
 class Message:
     """Construct a :py:class:`nemo_nowcast.message.Message` instance.
     """
+
     #: Name of the worker or manager sending the message.
     source = attr.ib()
     #: Key of a message type that is defined for source in the message
@@ -37,11 +38,9 @@ class Message:
 
         :returns: Message data structure serialized using YAML.
         """
-        return yaml.dump({
-            'source': self.source,
-            'type': self.type,
-            'payload': self.payload,
-        })
+        return yaml.dump(
+            {"source": self.source, "type": self.type, "payload": self.payload}
+        )
 
     @classmethod
     def deserialize(cls, message):
@@ -52,8 +51,4 @@ class Message:
         :returns: :py:class:`nemo_nowcast.lib.Message` instance
         """
         msg = yaml.safe_load(message)
-        return cls(
-            source=msg['source'],
-            type=msg['type'],
-            payload=msg['payload'],
-        )
+        return cls(source=msg["source"], type=msg["type"], payload=msg["payload"])

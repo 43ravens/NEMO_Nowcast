@@ -27,6 +27,9 @@ dependencies:
   - requests
   - schedule
 
+  # For coding style
+  - black
+
   # For unit tests
   - coverage
   - pytest

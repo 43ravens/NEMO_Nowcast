@@ -18,6 +18,10 @@ v18.1.dev0 (unreleased)
 
   .. _CalVer: https://calver.org/
 
+* Change to use `black`_ for code style management.
+
+  .. _black: https://black.readthedocs.io/en/stable/
+
 * Add ``Config.__contains__()`` to enable checking for existence of top level keys in
   config.
 

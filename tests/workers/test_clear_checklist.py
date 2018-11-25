@@ -15,24 +15,22 @@
 """Unit tests for nemo_nowcast.workers.clear_checklist module.
 """
 from types import SimpleNamespace
-from unittest.mock import (
-    Mock,
-    patch,
-)
+from unittest.mock import Mock, patch
 
 from nemo_nowcast.workers import clear_checklist
 
 
-@patch('nemo_nowcast.workers.clear_checklist.NowcastWorker')
+@patch("nemo_nowcast.workers.clear_checklist.NowcastWorker")
 class TestMain:
     """Unit tests for main function.
     """
+
     def test_instantiate_worker(self, m_worker):
         clear_checklist.main()
         args, kwargs = m_worker.call_args
-        assert args == ('clear_checklist',)
-        assert 'description' in kwargs
-        assert 'package' in kwargs
+        assert args == ("clear_checklist",)
+        assert "description" in kwargs
+        assert "package" in kwargs
 
     def test_init_cli(self, m_worker):
         clear_checklist.main()
@@ -42,15 +40,18 @@ class TestMain:
         clear_checklist.main()
         args, kwargs = m_worker().run.call_args
         expected = (
-            clear_checklist.clear_checklist, clear_checklist.success,
-            clear_checklist.failure)
+            clear_checklist.clear_checklist,
+            clear_checklist.success,
+            clear_checklist.failure,
+        )
         assert args == expected
 
 
-@patch('nemo_nowcast.workers.clear_checklist.logger')
+@patch("nemo_nowcast.workers.clear_checklist.logger")
 class TestSuccess:
     """Unit tests for success function.
     """
+
     def test_success_log_info(self, m_logger):
         parsed_args = SimpleNamespace()
         clear_checklist.success(parsed_args)
@@ -59,13 +60,14 @@ class TestSuccess:
     def test_success_msg_type(self, m_logger):
         parsed_args = SimpleNamespace()
         msg_type = clear_checklist.success(parsed_args)
-        assert msg_type == 'success'
+        assert msg_type == "success"
 
 
-@patch('nemo_nowcast.workers.clear_checklist.logger')
+@patch("nemo_nowcast.workers.clear_checklist.logger")
 class TestFailure:
     """Unit tests for failure function.
     """
+
     def test_failure_log_critical(self, m_logger):
         parsed_args = SimpleNamespace()
         clear_checklist.failure(parsed_args)
@@ -74,15 +76,16 @@ class TestFailure:
     def test_failure_msg_type(self, m_logger):
         parsed_args = SimpleNamespace()
         msg_type = clear_checklist.failure(parsed_args)
-        assert msg_type == 'failure'
+        assert msg_type == "failure"
 
 
-@patch('nemo_nowcast.workers.clear_checklist.logger')
+@patch("nemo_nowcast.workers.clear_checklist.logger")
 class TestClearChecklist:
     """Unit test for clear_checklist function.
     """
+
     def test_send_clear_checklist_msg(self, m_logger):
         parsed_args, config = SimpleNamespace(), {}
-        m_tell_manager = Mock(name='tell_manager')
+        m_tell_manager = Mock(name="tell_manager")
         clear_checklist.clear_checklist(parsed_args, config, m_tell_manager)
-        m_tell_manager.assert_called_once_with('clear checklist')
+        m_tell_manager.assert_called_once_with("clear checklist")

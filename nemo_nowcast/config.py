@@ -28,10 +28,11 @@ import yaml
 class Config:
     """Construct a :py:class:`nemo_nowcast.config.Config` instance.
     """
+
     #: Path/name of YAML configuration file for the NEMO nowcast system.
     #: Assigned when :py:meth:`~nemo_nowcast.config.Config.load` method
     #: is called.
-    file = attr.ib(init=False, default='')
+    file = attr.ib(init=False, default="")
     #: :py:class:`dict` containing the nowcast system configuration
     #: that is read from the configuration file by the
     #: :py:meth:`~nemo_nowcast.config.Config.load` method.
@@ -53,30 +54,33 @@ class Config:
                               the NEMO nowcast system.
         """
         self.file = config_file
-        with open(config_file, 'rt') as f:
+        with open(config_file, "rt") as f:
             self._dict = yaml.safe_load(f)
-        envvar_pattern = re.compile(r'\$\(NOWCAST\.ENV\.(\w*)\)\w*')
-        envvar_sub_keys = ('checklist file', 'python')
+        envvar_pattern = re.compile(r"\$\(NOWCAST\.ENV\.(\w*)\)\w*")
+        envvar_sub_keys = ("checklist file", "python")
         for key in envvar_sub_keys:
-            self._dict[key] = envvar_pattern.sub(
-                self._replace_env, self._dict[key])
+            self._dict[key] = envvar_pattern.sub(self._replace_env, self._dict[key])
 
         try:
             # Local logging
             self._replace_handler_envvars(
-                envvar_pattern, self._dict['logging']['handlers'])
+                envvar_pattern, self._dict["logging"]["handlers"]
+            )
         except KeyError:
             # Distributed logging
             self._replace_handler_envvars(
-                envvar_pattern, self._dict['logging']['aggregator']['handlers'])
+                envvar_pattern, self._dict["logging"]["aggregator"]["handlers"]
+            )
             self._replace_handler_envvars(
-                envvar_pattern, self._dict['logging']['publisher']['handlers'])
+                envvar_pattern, self._dict["logging"]["publisher"]["handlers"]
+            )
 
     def _replace_handler_envvars(self, envvar_pattern, handlers):
         for handler in handlers:
             try:
-                handlers[handler]['filename'] = envvar_pattern.sub(
-                    self._replace_env, handlers[handler]['filename'])
+                handlers[handler]["filename"] = envvar_pattern.sub(
+                    self._replace_env, handlers[handler]["filename"]
+                )
             except KeyError:
                 # Not a file handler
                 pass
@@ -86,5 +90,4 @@ class Config:
         try:
             return os.environ[var.group(1)]
         except KeyError:
-            raise KeyError(
-                'environment variable not set: {}'.format(var.group(1)))
+            raise KeyError("environment variable not set: {}".format(var.group(1)))
