@@ -69,20 +69,15 @@ to produce daily nowcast runs that calculate the state of the Gulf of Maine and 
 Documentation
 =============
 
-Documentation for the framework is in the ``docs/`` directory and is rendered at http://nemo-nowcast.readthedocs.io/en/latest/.
-
 .. image:: https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest
     :target: http://nemo-nowcast.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Build Status
 
+Documentation for the framework is in the ``docs/`` directory and is rendered at http://nemo-nowcast.readthedocs.io/en/latest/.
+
 
 Release Packages
 ================
-
-In addition to the `NEMO_Nowcast`_ code repository,
-release packages are available from the `gomss-nowcast channel`_ at anaconda.org.
-
-.. _gomss-nowcast channel: https://anaconda.org/GoMSS-Nowcast/repo
 
 .. image:: https://anaconda.org/gomss-nowcast/nemo_nowcast/badges/installer/conda.svg
     :target: https://anaconda.org/gomss-nowcast/repo
@@ -91,6 +86,11 @@ release packages are available from the `gomss-nowcast channel`_ at anaconda.org
 .. image:: https://anaconda.org/gomss-nowcast/nemo_nowcast/badges/downloads.svg
     :target: https://anaconda.org/GoMSS-Nowcast/nemo_nowcast
     :alt: Install latest release
+
+In addition to the `NEMO_Nowcast`_ code repository,
+release packages are available from the `gomss-nowcast channel`_ at anaconda.org.
+
+.. _gomss-nowcast channel: https://anaconda.org/GoMSS-Nowcast/repo
 
 
 Licenses
