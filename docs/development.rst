@@ -279,3 +279,29 @@ The latest release package can be installed with:
 .. code-block:: bash
 
     $ conda install -c gomss-nowcast nemo_nowcast
+
+
+.. _NEMO_NowcastLicenses:
+
+Licenses
+========
+
+.. image:: https://img.shields.io/badge/license-Apache%202-cb2533.svg
+    :target: https://www.apache.org/licenses/LICENSE-2.0
+    :alt: Licensed under the Apache License, Version 2.0
+.. image:: https://img.shields.io/badge/License-BSD%203--Clause-orange.svg
+    :target: https://opensource.org/licenses/BSD-3-Clause
+    :alt: Licensed under the BSD-3-Clause License
+
+The NEMO_Nowcast framework code and documentation are copyright 2016-2018 by Doug Latornell, 43ravens.
+
+They are licensed under the Apache License, Version 2.0.
+http://www.apache.org/licenses/LICENSE-2.0
+Please see the LICENSE file for details of the license.
+
+The `fileutils`_ module from the `boltons`_ project is included in the NEMO_Nowcast package.
+It is copyright 2013-2018 by Mahmoud Hashemi and used under the terms of the `boltons BSD license`_.
+
+.. _fileutils: https://boltons.readthedocs.io/en/latest/fileutils.html
+.. _boltons: https://pypi.python.org/pypi/boltons
+.. _boltons BSD license: https://github.com/mahmoud/boltons/blob/master/LICENSE
