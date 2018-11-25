@@ -12,9 +12,9 @@
 name: nemo-nowcast
 
 channels:
-  - gomss-nowcast
   - conda-forge
   - defaults
+  - gomss-nowcast
 
 dependencies:
   - arrow
