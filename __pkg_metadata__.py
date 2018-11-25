@@ -14,7 +14,7 @@
 
 """NEMO_Nowcast -- NEMO ocean model nowcast framework
 """
-PROJECT = 'NEMO_Nowcast'
-DESCRIPTION = 'NEMO ocean model nowcast framework'
-VERSION = '18.1.dev0'
-DEV_STATUS = '5 - Production/Stable'
+PROJECT = "NEMO_Nowcast"
+DESCRIPTION = "NEMO ocean model nowcast framework"
+VERSION = "18.1.dev0"
+DEV_STATUS = "5 - Production/Stable"

@@ -26,13 +26,10 @@ import signal
 
 import zmq
 
-from nemo_nowcast import (
-    CommandLineInterface,
-    Config,
-)
+from nemo_nowcast import CommandLineInterface, Config
 
 
-NAME = 'log_aggregator'
+NAME = "log_aggregator"
 logger = logging.getLogger(NAME)
 
 context = zmq.Context()
@@ -60,18 +57,16 @@ def main():
     See :command:`python -m nowcast.log_aggregator --help`
     for details of the command-line interface.
     """
-    cli = CommandLineInterface(
-        NAME, package='nemo_nowcast', description=__doc__)
+    cli = CommandLineInterface(NAME, package="nemo_nowcast", description=__doc__)
     cli.build_parser()
     parsed_args = cli.parser.parse_args()
     config = Config()
     config.load(parsed_args.config_file)
     _configure_logging(config)
     logger.info(
-        'running in process {}'.format(os.getpid()),
-        extra={'logger_name': NAME})
-    logger.info(
-        'read config from {.file}'.format(config), extra={'logger_name': NAME})
+        "running in process {}".format(os.getpid()), extra={"logger_name": NAME}
+    )
+    logger.info("read config from {.file}".format(config), extra={"logger_name": NAME})
     run(config)
 
 
@@ -83,14 +78,14 @@ def _configure_logging(config):
     """
     # Replace logging RotatingFileHandlers with WatchedFileHandlers so that we
     # notice when log files are rotated and switch to writing to the new ones
-    logging_handlers = config['logging']['aggregator']['handlers']
-    rotating_handler = 'logging.handlers.RotatingFileHandler'
-    watched_handler = 'logging.handlers.WatchedFileHandler'
+    logging_handlers = config["logging"]["aggregator"]["handlers"]
+    rotating_handler = "logging.handlers.RotatingFileHandler"
+    watched_handler = "logging.handlers.WatchedFileHandler"
     for handler in logging_handlers:
-        if logging_handlers[handler]['class'] == rotating_handler:
-            logging_handlers[handler]['class'] = watched_handler
-            del logging_handlers[handler]['backupCount']
-    logging.config.dictConfig(config['logging']['aggregator'])
+        if logging_handlers[handler]["class"] == rotating_handler:
+            logging_handlers[handler]["class"] = watched_handler
+            del logging_handlers[handler]["backupCount"]
+    logging.config.dictConfig(config["logging"]["aggregator"])
 
 
 def run(config):
@@ -108,23 +103,24 @@ def run(config):
     :type config: :py:class:`nemo_nowcast.config.Config`
     """
     socket = context.socket(zmq.SUB)
-    for publisher, addrs in config['zmq']['ports']['logging'].items():
+    for publisher, addrs in config["zmq"]["ports"]["logging"].items():
         if not isinstance(addrs, list):
             addrs = [addrs]
         for addr in addrs:
             try:
-                host, port = addr.split(':')
+                host, port = addr.split(":")
             except AttributeError:
-                host = config['zmq']['host']
+                host = config["zmq"]["host"]
                 port = addr
-            socket.connect(
-                'tcp://{host}:{port}'.format(host=host, port=port))
-            socket.setsockopt_string(zmq.SUBSCRIBE, '')
+            socket.connect("tcp://{host}:{port}".format(host=host, port=port))
+            socket.setsockopt_string(zmq.SUBSCRIBE, "")
             logger.info(
-                'subscribed to {host} port {port} '
-                'for all messages from {publisher}'.format(
-                    host=host, port=port, publisher=publisher),
-                extra={'logger_name': NAME})
+                "subscribed to {host} port {port} "
+                "for all messages from {publisher}".format(
+                    host=host, port=port, publisher=publisher
+                ),
+                extra={"logger_name": NAME},
+            )
     _install_signal_handlers(socket)
     _process_messages(socket)
 
@@ -142,16 +138,18 @@ def _process_messages(socket):
         except zmq.ZMQError as e:
             # Fatal ZeroMQ problem
             logger.critical(
-                'ZMQError:'.format(e), exc_info=e, extra={'logger_name': NAME})
-            logger.critical('shutting down', extra={'logger_name': NAME})
+                "ZMQError:".format(e), exc_info=e, extra={"logger_name": NAME}
+            )
+            logger.critical("shutting down", extra={"logger_name": NAME})
             break
         except SystemExit:
             # Termination by signal
             break
         except Exception as e:
             logger.critical(
-                'unhandled exception:', exc_info=e, extra={'logger_name': NAME})
-            logger.critical('shutting down', extra={'logger_name': NAME})
+                "unhandled exception:", exc_info=e, extra={"logger_name": NAME}
+            )
+            logger.critical("shutting down", extra={"logger_name": NAME})
             break
 
 
@@ -165,10 +163,12 @@ def _log_messages(socket):
     :type socket: :py:class:`zmq.Context.socket`
     """
     topic, message = socket.recv_multipart()
-    logger_name, level = topic.decode().split('.')
+    logger_name, level = topic.decode().split(".")
     logger.log(
-        getattr(logging, level), message.decode().strip(),
-        extra={'logger_name': logger_name})
+        getattr(logging, level),
+        message.decode().strip(),
+        extra={"logger_name": logger_name},
+    )
 
 
 def _install_signal_handlers(socket):
@@ -178,12 +178,15 @@ def _install_signal_handlers(socket):
                    messages.
     :type socket: :py:class:`zmq.Context.socket`
     """
+
     def sighup_handler(signal, frame):
         logger.info(
-            'hangup signal (SIGHUP) received; reloading configuration',
-            extra={'logger_name': NAME})
+            "hangup signal (SIGHUP) received; reloading configuration",
+            extra={"logger_name": NAME},
+        )
         socket.close()
         main()
+
     signal.signal(signal.SIGHUP, sighup_handler)
 
     def cleanup():
@@ -192,20 +195,24 @@ def _install_signal_handlers(socket):
 
     def sigint_handler(signal, frame):
         logger.info(
-            'interrupt signal (SIGINT or Ctrl-C) received; shutting down',
-            extra={'logger_name': NAME})
+            "interrupt signal (SIGINT or Ctrl-C) received; shutting down",
+            extra={"logger_name": NAME},
+        )
         cleanup()
         raise SystemExit
+
     signal.signal(signal.SIGINT, sigint_handler)
 
     def sigterm_handler(signal, frame):
         logger.info(
-            'termination signal (SIGTERM) received; shutting down',
-            extra={'logger_name': NAME})
+            "termination signal (SIGTERM) received; shutting down",
+            extra={"logger_name": NAME},
+        )
         cleanup()
         raise SystemExit
+
     signal.signal(signal.SIGTERM, sigterm_handler)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

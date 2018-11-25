@@ -14,6 +14,9 @@ NEMO Ocean Model Nowcast Framework
 .. image:: https://img.shields.io/badge/version%20control-hg-blue.svg
     :target: https://bitbucket.org/43ravens/nemo_nowcast/
     :alt: Mercurial on Bitbucket
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://black.readthedocs.io/en/stable/
+    :alt: The uncompromising Python code formatter
 .. image:: https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest
     :target: https://nemo-nowcast.readthedocs.io/en/latest/
     :alt: Documentation Status

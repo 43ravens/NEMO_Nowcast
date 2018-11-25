@@ -31,6 +31,9 @@
 .. image:: https://img.shields.io/badge/version%20control-hg-blue.svg
     :target: https://bitbucket.org/43ravens/nemo_nowcast/
     :alt: Mercurial on Bitbucket
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://black.readthedocs.io/en/stable/
+    :alt: The uncompromising Python code formatter
 .. image:: https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest
     :target: https://nemo-nowcast.readthedocs.io/en/latest/
     :alt: Documentation Status
@@ -112,6 +115,43 @@ To deactivate the environment use:
 .. code-block:: bash
 
     (nemo-nowcast)$ source deactivate
+
+
+.. _NEMO_NowcastCodingStyle:
+
+Coding Style
+============
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://black.readthedocs.io/en/stable/
+    :alt: The uncompromising Python code formatter
+
+The :kbd:`NEMO_Nowcast` package uses the `black`_ code formatting tool to maintain a coding style that is very close to `PEP 8`_.
+
+.. _black: https://black.readthedocs.io/en/stable/
+.. _PEP 8: https://www.python.org/dev/peps/pep-0008/
+
+:command:`black` is installed as part of the :ref:`NEMO_NowcastDevelopmentEnvironment` setup.
+
+To run :command:`black` on the entire code-base use:
+
+.. code-block:: bash
+
+    $ cd NEMO_Nowcast
+    $ conda activate nemo-nowcast
+    (nemo-nowcast)$ black ./
+
+in the repository root directory.
+The output looks something like::
+
+  reformatted /media/doug/warehouse/MEOPAR/NEMO_Nowcast/nemo_nowcast/workers/clear_checklist.py
+  reformatted /media/doug/warehouse/MEOPAR/NEMO_Nowcast/nemo_nowcast/config.py
+  reformatted /media/doug/warehouse/MEOPAR/NEMO_Nowcast/tests/workers/test_clear_checklist.py
+  reformatted /media/doug/warehouse/MEOPAR/NEMO_Nowcast/tests/test_config.py
+  reformatted /media/doug/warehouse/MEOPAR/NEMO_Nowcast/nemo_nowcast/worker.py
+  reformatted /media/doug/warehouse/MEOPAR/NEMO_Nowcast/tests/test_worker.py
+  All done! ✨ 🍰 ✨
+  6 files reformatted, 26 files left unchanged.
 
 
 .. _NEMO_NowcastBuildingTheDocumentation:

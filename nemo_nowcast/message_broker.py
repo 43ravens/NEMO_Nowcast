@@ -26,13 +26,10 @@ import time
 import zmq
 import zmq.log.handlers
 
-from nemo_nowcast import (
-    CommandLineInterface,
-    Config,
-)
+from nemo_nowcast import CommandLineInterface, Config
 
 
-NAME = 'message_broker'
+NAME = "message_broker"
 logger = logging.getLogger(NAME)
 
 context = zmq.Context()
@@ -59,15 +56,14 @@ def main():
     See :command:`python -m nemo_nowcast.message_broker --help`
     for details of the command-line interface.
     """
-    cli = CommandLineInterface(
-        NAME, package='nemo_nowcast', description=__doc__)
+    cli = CommandLineInterface(NAME, package="nemo_nowcast", description=__doc__)
     cli.build_parser()
     parsed_args = cli.parser.parse_args()
     config = Config()
     config.load(parsed_args.config_file)
     msg = _configure_logging(config)
-    logger.info('running in process {}'.format(os.getpid()))
-    logger.info('read config from {.file}'.format(config))
+    logger.info("running in process {}".format(os.getpid()))
+    logger.info("read config from {.file}".format(config))
     logger.info(msg)
     run(config)
 
@@ -78,14 +74,14 @@ def _configure_logging(config):
     :param config: Nowcast system configuration.
     :type config: :py:class:`nemo_nowcast.config.Config`
     """
-    if 'publisher' in config['logging']:
+    if "publisher" in config["logging"]:
         # Publish log messages to distributed logging aggregator
-        logging_config = config['logging']['publisher']
-        logging_config['handlers']['zmq_pub']['context'] = context
-        host = config['zmq']['host']
-        port = config['zmq']['ports']['logging'][NAME]
-        addr = 'tcp://*:{port}'.format(port=port)
-        logging_config['handlers']['zmq_pub']['interface_or_socket'] = addr
+        logging_config = config["logging"]["publisher"]
+        logging_config["handlers"]["zmq_pub"]["context"] = context
+        host = config["zmq"]["host"]
+        port = config["zmq"]["ports"]["logging"][NAME]
+        addr = "tcp://*:{port}".format(port=port)
+        logging_config["handlers"]["zmq_pub"]["interface_or_socket"] = addr
         logging.config.dictConfig(logging_config)
         for handler in logger.root.handlers:
             if isinstance(handler, zmq.log.handlers.PUBHandler):
@@ -100,23 +96,23 @@ def _configure_logging(config):
         # Not sure why, but we need a brief pause before we start logging
         # messages
         time.sleep(0.25)
-        msg = 'publishing logging messages to {addr}'.format(addr=addr)
+        msg = "publishing logging messages to {addr}".format(addr=addr)
     else:
         # Write log messages to local file system
         #
         # Replace logging RotatingFileHandlers with WatchedFileHandlers so
         # that we notice when log files are rotated and switch to writing to
         # the new ones
-        logging_config = config['logging']
-        logging_handlers = logging_config['handlers']
-        rotating_handler = 'logging.handlers.RotatingFileHandler'
-        watched_handler = 'logging.handlers.WatchedFileHandler'
+        logging_config = config["logging"]
+        logging_handlers = logging_config["handlers"]
+        rotating_handler = "logging.handlers.RotatingFileHandler"
+        watched_handler = "logging.handlers.WatchedFileHandler"
         for handler in logging_handlers:
-            if logging_handlers[handler]['class'] == rotating_handler:
-                logging_handlers[handler]['class'] = watched_handler
-                del logging_handlers[handler]['backupCount']
+            if logging_handlers[handler]["class"] == rotating_handler:
+                logging_handlers[handler]["class"] = watched_handler
+                del logging_handlers[handler]["backupCount"]
         logging.config.dictConfig(logging_config)
-        msg = 'writing logging messages to local file system'
+        msg = "writing logging messages to local file system"
     return msg
 
 
@@ -138,14 +134,14 @@ def run(config):
         zmq.device(zmq.QUEUE, workers_socket, manager_socket)
     except zmq.ZMQError as e:
         # Fatal ZeroMQ problem
-        logger.critical('ZMQError: {}'.format(e), exc_info=True)
-        logger.critical('shutting down')
+        logger.critical("ZMQError: {}".format(e), exc_info=True)
+        logger.critical("shutting down")
     except SystemExit:
         # Termination by signal
         pass
     except:
-        logger.critical('unhandled exception:', exc_info=True)
-        logger.critical('shutting down')
+        logger.critical("unhandled exception:", exc_info=True)
+        logger.critical("shutting down")
 
 
 def _bind_zmq_sockets(config):
@@ -156,24 +152,25 @@ def _bind_zmq_sockets(config):
     """
     workers_socket = context.socket(zmq.ROUTER)
     manager_socket = context.socket(zmq.DEALER)
-    workers_port = config['zmq']['ports']['workers']
-    workers_socket.bind('tcp://*:{}'.format(workers_port))
-    logger.info('worker socket bound to port {}'.format(workers_port))
-    manager_port = config['zmq']['ports']['manager']
-    manager_socket.bind('tcp://*:{}'.format(manager_port))
-    logger.info('manager socket bound to port {}'.format(manager_port))
+    workers_port = config["zmq"]["ports"]["workers"]
+    workers_socket.bind("tcp://*:{}".format(workers_port))
+    logger.info("worker socket bound to port {}".format(workers_port))
+    manager_port = config["zmq"]["ports"]["manager"]
+    manager_socket.bind("tcp://*:{}".format(manager_port))
+    logger.info("manager socket bound to port {}".format(manager_port))
     return workers_socket, manager_socket
 
 
 def _install_signal_handlers(workers_socket, manager_socket):
     """Set up hangup, interrupt, and kill signal handlers.
     """
+
     def sighup_handler(signal, frame):
-        logger.info(
-            'hangup signal (SIGHUP) received; reloading configuration')
+        logger.info("hangup signal (SIGHUP) received; reloading configuration")
         workers_socket.close()
         manager_socket.close()
         main()
+
     signal.signal(signal.SIGHUP, sighup_handler)
 
     def cleanup():
@@ -182,19 +179,19 @@ def _install_signal_handlers(workers_socket, manager_socket):
         context.destroy()
 
     def sigint_handler(signal, frame):
-        logger.info(
-            'interrupt signal (SIGINT or Ctrl-C) received; shutting down')
+        logger.info("interrupt signal (SIGINT or Ctrl-C) received; shutting down")
         cleanup()
         raise SystemExit
+
     signal.signal(signal.SIGINT, sigint_handler)
 
     def sigterm_handler(signal, frame):
-        logger.info(
-            'termination signal (SIGTERM) received; shutting down')
+        logger.info("termination signal (SIGTERM) received; shutting down")
         cleanup()
         raise SystemExit
+
     signal.signal(signal.SIGTERM, sigterm_handler)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()  # pragma: no cover

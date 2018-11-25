@@ -28,13 +28,14 @@ import attr
 class CommandLineInterface:
     """Construct a :py:class:`nemo_nowcast.cli.CommandLineInterface` instance.
     """
+
     #: Name of the module that the parser is for;
     #: used to build the usage message.
     module_name = attr.ib()
     #: Name of the package that the module is part of;
     #: used to build the usage message.
     #: Use dotted notation; e.g. :kbd:`nowcast.workers`.
-    package = attr.ib(default='nowcast')
+    package = attr.ib(default="nowcast")
     #: Brief description of what the module does that will be displayed in the
     #: help messages.
     description = attr.ib(default=None)
@@ -54,11 +55,11 @@ class CommandLineInterface:
         :return: :class:`argparse.ArgumentParser` object
         """
         self.parser = argparse.ArgumentParser(
-            description=self.description, add_help=add_help)
-        self.parser.prog = 'python -m {}.{}'.format(self.package, self.module_name)
+            description=self.description, add_help=add_help
+        )
+        self.parser.prog = "python -m {}.{}".format(self.package, self.module_name)
         self.parser.add_argument(
-            'config_file',
-            help='Path/name of YAML configuration file for NEMO nowcast.'
+            "config_file", help="Path/name of YAML configuration file for NEMO nowcast."
         )
 
     def add_argument(self, *args, **kwargs):
@@ -95,10 +96,15 @@ class CommandLineInterface:
                        formatted as :kbd:`YYYY-MM-DD`.
         """
         self.parser.add_argument(
-            name, type=self._arrow_date, default=default,
+            name,
+            type=self._arrow_date,
+            default=default,
             help=(
-                '{help} Use YYYY-MM-DD format. Defaults to {default}.'
-                .format(help=help, default=default.format('YYYY-MM-DD'))))
+                "{help} Use YYYY-MM-DD format. Defaults to {default}.".format(
+                    help=help, default=default.format("YYYY-MM-DD")
+                )
+            ),
+        )
 
     @staticmethod
     def _arrow_date(string):
@@ -114,9 +120,7 @@ class CommandLineInterface:
         :raises: :py:exc:`argparse.ArgumentTypeError`
         """
         try:
-            return arrow.get(string, 'YYYY-MM-DD')
+            return arrow.get(string, "YYYY-MM-DD")
         except arrow.parser.ParserError:
-            msg = (
-                'unrecognized date format: {} - '
-                'please use YYYY-MM-DD'.format(string))
+            msg = "unrecognized date format: {} - please use YYYY-MM-DD".format(string)
             raise argparse.ArgumentTypeError(msg)

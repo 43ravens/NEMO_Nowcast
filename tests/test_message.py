@@ -23,34 +23,40 @@ from nemo_nowcast import Message
 class TestMessage:
     """Unit tests for nemo_nowcast.message.Message class.
     """
+
     def test_default_attrs(self):
-        msg = Message('test_runner', 'foo')
-        assert msg.source == 'test_runner'
-        assert msg.type == 'foo'
+        msg = Message("test_runner", "foo")
+        assert msg.source == "test_runner"
+        assert msg.type == "foo"
         assert msg.payload is None
 
     def test_payload_attr(self):
-        msg = Message('test_runner', 'foo', 'payload')
-        assert msg.source == 'test_runner'
-        assert msg.type == 'foo'
-        assert msg.payload == 'payload'
+        msg = Message("test_runner", "foo", "payload")
+        assert msg.source == "test_runner"
+        assert msg.type == "foo"
+        assert msg.payload == "payload"
 
-    @pytest.mark.parametrize('source, msg_type, payload', [
-        ('manager', 'unregistered worker', None),
-        ('download_weather', 'success 00', {'00 forecast': True}),
-    ])
+    @pytest.mark.parametrize(
+        "source, msg_type, payload",
+        [
+            ("manager", "unregistered worker", None),
+            ("download_weather", "success 00", {"00 forecast": True}),
+        ],
+    )
     def test_serialize(self, source, msg_type, payload):
         msg = Message(source, msg_type, payload).serialize()
-        expected = {'source': source, 'type': msg_type, 'payload': payload}
+        expected = {"source": source, "type": msg_type, "payload": payload}
         assert yaml.safe_load(msg) == expected
 
-    @pytest.mark.parametrize('source, msg_type, payload', [
-        ('manager', 'ack', None),
-        ('download_weather', 'success 00', {'00 forecast': True}),
-    ])
+    @pytest.mark.parametrize(
+        "source, msg_type, payload",
+        [
+            ("manager", "ack", None),
+            ("download_weather", "success 00", {"00 forecast": True}),
+        ],
+    )
     def test_deserialize(self, source, msg_type, payload):
-        message = yaml.dump(
-            {'source': source, 'type': msg_type, 'payload': payload})
+        message = yaml.dump({"source": source, "type": msg_type, "payload": payload})
         msg = Message.deserialize(message)
         assert msg.source == source
         assert msg.type == msg_type

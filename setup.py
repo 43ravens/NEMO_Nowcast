@@ -14,64 +14,59 @@
 
 """NEMO_Nowcast -- NEMO ocean model nowcast framework
 """
-from setuptools import (
-    find_packages,
-    setup,
-)
+from setuptools import find_packages, setup
 
 import __pkg_metadata__
 
 
 python_classifiers = [
-    'Programming Language :: Python :: {0}'.format(py_version)
-    for py_version in ('3', '3.5')]
+    "Programming Language :: Python :: {0}".format(py_version)
+    for py_version in ("3", "3.5", "3.6", "3.7")
+]
 other_classifiers = [
-    'Development Status :: ' + __pkg_metadata__.DEV_STATUS,
-    'License :: OSI Approved :: Apache Software License',
-    'Programming Language :: Python :: Implementation :: CPython',
-    'Operating System :: MacOS :: MacOS X',
-    'Operating System :: POSIX :: Linux',
-    'Operating System :: Unix',
-    'Environment :: Console',
-    'Intended Audience :: Science/Research',
-    'Intended Audience :: Education',
-    'Intended Audience :: Developers',
+    "Development Status :: " + __pkg_metadata__.DEV_STATUS,
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Unix",
+    "Environment :: Console",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Education",
+    "Intended Audience :: Developers",
 ]
 try:
-    long_description = open('README.rst', 'rt').read()
+    long_description = open("README.rst", "rt").read()
 except IOError:
-    long_description = ''
+    long_description = ""
 install_requires = [
     # see environment-dev.yaml for conda environment dev installation,
     # see requirements.txt for package versions used during recent development
-    'arrow',
-    'attrs',
-    'circus',
-    'PyYAML',
-    'pyzmq',
-    'requests',
-    'schedule',
+    "arrow",
+    "attrs",
+    "circus",
+    "PyYAML",
+    "pyzmq",
+    "requests",
+    "schedule",
 ]
-tests_require = [
-    'coverage',
-    'pytest',
-]
-extra_require = {'docs': ['sphinx']}
+tests_require = ["coverage", "pytest"]
+extra_require = {"docs": ["sphinx"]}
 
 setup(
     name=__pkg_metadata__.PROJECT,
     version=__pkg_metadata__.VERSION,
     description=__pkg_metadata__.DESCRIPTION,
     long_description=long_description,
-    author='Doug Latornell',
-    author_email='doug.latornell@43ravens.ca',
-    url='https://nemo-nowcast.readthedocs.io/en/latest/NEMO_Nowcast/',
-    license='Apache License, Version 2.0',
+    author="Doug Latornell",
+    author_email="doug.latornell@43ravens.ca",
+    url="https://nemo-nowcast.readthedocs.io/en/latest/NEMO_Nowcast/",
+    license="Apache License, Version 2.0",
     classifiers=python_classifiers + other_classifiers,
-    platforms=['Linux'],
+    platforms=["Linux"],
     install_requires=install_requires,
     tests_require=tests_require,
     extra_require=extra_require,
     packages=find_packages(),
-    zip_safe=False
+    zip_safe=False,
 )

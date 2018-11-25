@@ -28,11 +28,7 @@ import yaml
 import zmq
 import zmq.log.handlers
 
-from nemo_nowcast import (
-    CommandLineInterface,
-    Config,
-    Message,
-)
+from nemo_nowcast import CommandLineInterface, Config, Message
 
 
 def main():
@@ -51,9 +47,10 @@ def main():
 class NowcastManager:
     """Construct a :py:class:`nemo_nowcast.manager.NowcastManager` instance.
     """
+
     #: The name of the manager instance.
     #: Used in the nowcast messaging system and for logging.
-    name = attr.ib(default='manager')
+    name = attr.ib(default="manager")
     #: :py:class:`nemo_nowcast.config.Config` object that holds
     #: the nowcast system configuration that is loaded from the configuration
     #: file in the :py:meth:`~nemo_nowcast.manager.NowcastManager.setup` method.
@@ -106,40 +103,49 @@ class NowcastManager:
         """
         self._parsed_args = self._cli()
         self.config.load(self._parsed_args.config_file)
-        self._msg_registry = self.config['message registry']
+        self._msg_registry = self.config["message registry"]
         msg = self._configure_logging()
-        self.logger.info('running in process {}'.format(os.getpid()))
-        self.logger.info('read config from {.file}'.format(self.config))
+        self.logger.info("running in process {}".format(os.getpid()))
+        self.logger.info("read config from {.file}".format(self.config))
         self.logger.info(msg)
         try:
             self._next_workers_module = importlib.import_module(
-                self._msg_registry['next workers module'])
+                self._msg_registry["next workers module"]
+            )
         except ImportError:
             self.logger.critical(
-                'could not find next workers module: {[next workers module]}'
-                .format(self._msg_registry), exc_info=True)
+                "could not find next workers module: {[next workers module]}".format(
+                    self._msg_registry
+                ),
+                exc_info=True,
+            )
             raise
         self.logger.info(
-            'next workers module loaded from {[next workers module]}'
-            .format(self._msg_registry))
+            "next workers module loaded from {[next workers module]}".format(
+                self._msg_registry
+            )
+        )
 
     def _cli(self, args=None):
         """Configure command-line argument parser and return parsed arguments
         object.
         """
         cli = CommandLineInterface(
-            self.name, package='nemo_nowcast', description=__doc__)
+            self.name, package="nemo_nowcast", description=__doc__
+        )
         cli.build_parser(add_help=False)
         parser = argparse.ArgumentParser(
             prog=cli.parser.prog,
             description=cli.parser.description,
-            parents=[cli.parser])
+            parents=[cli.parser],
+        )
         parser.add_argument(
-            '--ignore-checklist', action='store_true',
-            help='''
+            "--ignore-checklist",
+            action="store_true",
+            help="""
             Don't load the serialized checklist left by a previously
             running manager instance.
-            ''',
+            """,
         )
         return parser.parse_args(args)
 
@@ -147,13 +153,13 @@ class NowcastManager:
         """Configure the manager's logging system interface.
         """
         self.logger = logging.getLogger(self.name)
-        if 'publisher' in self.config['logging']:
+        if "publisher" in self.config["logging"]:
             # Publish log messages to distributed logging aggregator
-            logging_config = self.config['logging']['publisher']
-            logging_config['handlers']['zmq_pub']['context'] = self._context
-            port = self.config['zmq']['ports']['logging'][self.name]
-            addr = 'tcp://*:{port}'.format(port=port)
-            logging_config['handlers']['zmq_pub']['interface_or_socket'] = addr
+            logging_config = self.config["logging"]["publisher"]
+            logging_config["handlers"]["zmq_pub"]["context"] = self._context
+            port = self.config["zmq"]["ports"]["logging"][self.name]
+            addr = "tcp://*:{port}".format(port=port)
+            logging_config["handlers"]["zmq_pub"]["interface_or_socket"] = addr
             logging.config.dictConfig(logging_config)
             for handler in self.logger.root.handlers:
                 if isinstance(handler, zmq.log.handlers.PUBHandler):
@@ -168,23 +174,23 @@ class NowcastManager:
             # Not sure why, but we need a brief pause before we start logging
             # messages
             time.sleep(1)
-            msg = 'publishing logging messages to {addr}'.format(addr=addr)
+            msg = "publishing logging messages to {addr}".format(addr=addr)
         else:
             # Write log messages to local file system
             #
             # Replace logging RotatingFileHandlers with WatchedFileHandlers so
             # that we notice when log files are rotated and switch to writing
             # to the new ones
-            logging_config = self.config['logging']
-            logging_handlers = logging_config['handlers']
-            rotating_handler = 'logging.handlers.RotatingFileHandler'
-            watched_handler = 'logging.handlers.WatchedFileHandler'
+            logging_config = self.config["logging"]
+            logging_handlers = logging_config["handlers"]
+            rotating_handler = "logging.handlers.RotatingFileHandler"
+            watched_handler = "logging.handlers.WatchedFileHandler"
             for handler in logging_handlers:
-                if logging_handlers[handler]['class'] == rotating_handler:
-                    logging_handlers[handler]['class'] = watched_handler
-                    del logging_handlers[handler]['backupCount']
+                if logging_handlers[handler]["class"] == rotating_handler:
+                    logging_handlers[handler]["class"] = watched_handler
+                    del logging_handlers[handler]["backupCount"]
             logging.config.dictConfig(logging_config)
-            msg = 'writing logging messages to local file system'
+            msg = "writing logging messages to local file system"
         return msg
 
     def run(self):
@@ -196,13 +202,12 @@ class NowcastManager:
         * Launch the manager's message processing loop
         """
         self._socket = self._context.socket(zmq.REP)
-        zmq_host = self.config['zmq']['host']
-        zmq_port = self.config['zmq']['ports']['manager']
-        self._socket.connect(
-            'tcp://{host}:{port}'.format(host=zmq_host, port=zmq_port))
+        zmq_host = self.config["zmq"]["host"]
+        zmq_port = self.config["zmq"]["ports"]["manager"]
+        self._socket.connect("tcp://{host}:{port}".format(host=zmq_host, port=zmq_port))
         self.logger.info(
-            'connected to {host} port {port}'
-            .format(host=zmq_host, port=zmq_port))
+            "connected to {host} port {port}".format(host=zmq_host, port=zmq_port)
+        )
         self._install_signal_handlers(zmq_host, zmq_port)
         if not self._parsed_args.ignore_checklist:
             self._load_checklist()
@@ -211,63 +216,67 @@ class NowcastManager:
     def _install_signal_handlers(self, zmq_host, zmq_port):
         """Set up hangup, interrupt, and kill signal handlers.
         """
+
         def sighup_handler(signal, frame):
-            self.logger.info(
-                'hangup signal (SIGHUP) received; reloading configuration')
+            self.logger.info("hangup signal (SIGHUP) received; reloading configuration")
             self._socket.disconnect(
-                'tcp://{host}:{port}'.format(host=zmq_host, port=zmq_port))
+                "tcp://{host}:{port}".format(host=zmq_host, port=zmq_port)
+            )
             self.setup()
             self.run()
+
         signal.signal(signal.SIGHUP, sighup_handler)
 
         def sigint_handler(signal, frame):
             self.logger.info(
-                'interrupt signal (SIGINT or Ctrl-C) received; shutting down')
+                "interrupt signal (SIGINT or Ctrl-C) received; shutting down"
+            )
             self._socket.close()
             raise SystemExit
+
         signal.signal(signal.SIGINT, sigint_handler)
 
         def sigterm_handler(signal, frame):
-            self.logger.info(
-                'termination signal (SIGTERM) received; shutting down')
+            self.logger.info("termination signal (SIGTERM) received; shutting down")
             self._socket.close()
             raise SystemExit
+
         signal.signal(signal.SIGTERM, sigterm_handler)
 
     def _load_checklist(self):
         """Load the serialized checklist left on disk by a previously
         running manager instance.
         """
-        checklist_file = self.config['checklist file']
+        checklist_file = self.config["checklist file"]
         try:
-            with open(checklist_file, 'rt') as f:
+            with open(checklist_file, "rt") as f:
                 self.checklist = yaml.safe_load(f)
+                self.logger.info("checklist read from {}".format(checklist_file))
                 self.logger.info(
-                    'checklist read from {}'.format(checklist_file))
-                self.logger.info(
-                    'checklist:\n{}'.format(pprint.pformat(self.checklist)))
+                    "checklist:\n{}".format(pprint.pformat(self.checklist))
+                )
         except FileNotFoundError:
-            self.logger.warning('checklist load failed:', exc_info=True)
-            self.logger.warning('running with empty checklist')
+            self.logger.warning("checklist load failed:", exc_info=True)
+            self.logger.warning("running with empty checklist")
 
     def _process_messages(self):
         """Process messages from workers.
         """
         while True:
-            self.logger.debug('listening...')
+            self.logger.debug("listening...")
             try:
                 self._try_messages()
             except zmq.ZMQError as e:
                 # Fatal ZeroMQ problem
-                self.logger.critical('ZMQError:', exc_info=e)
-                self.logger.critical('shutting down')
+                self.logger.critical("ZMQError:", exc_info=e)
+                self.logger.critical("shutting down")
                 break
             except SystemExit:
                 # Termination by signal
                 break
             except Exception as e:
-                self.logger.critical('unhandled exception:', exc_info=e)
-                self.logger.critical('shutting down')
+                self.logger.critical("unhandled exception:", exc_info=e)
+                self.logger.critical("shutting down")
 
     def _try_messages(self):
         """Try to process messages.
@@ -285,17 +294,17 @@ class NowcastManager:
         """Handle message from worker.
         """
         msg = Message.deserialize(message)
-        if msg.source not in self._msg_registry['workers']:
+        if msg.source not in self._msg_registry["workers"]:
             reply = self._handle_unregistered_worker_msg(msg)
             return reply, []
-        if msg.type not in self._msg_registry['workers'][msg.source]:
+        if msg.type not in self._msg_registry["workers"][msg.source]:
             reply = self._handle_unregistered_msg_type(msg)
             return reply, []
         self._log_received_msg(msg)
-        if msg.type == 'clear checklist':
+        if msg.type == "clear checklist":
             reply = self._clear_checklist()
             return reply, []
-        if msg.type == 'need':
+        if msg.type == "need":
             reply = self._handle_need_msg(msg)
             return reply, []
         reply, next_workers = self._handle_continue_msg(msg)
@@ -306,9 +315,10 @@ class NowcastManager:
         that is not included in the message registry.
         """
         self.logger.error(
-            'message received from unregistered worker: {.source}'.format(msg),
-            extra={'worker_msg': msg})
-        reply = Message(self.name, 'unregistered worker').serialize()
+            "message received from unregistered worker: {.source}".format(msg),
+            extra={"worker_msg": msg},
+        )
+        reply = Message(self.name, "unregistered worker").serialize()
         return reply
 
     def _handle_unregistered_msg_type(self, msg):
@@ -316,27 +326,29 @@ class NowcastManager:
         that is not included in the message registry.
         """
         self.logger.error(
-            'unregistered message type received from '
-            '{0.source} worker: {0.type}'.format(msg),
-            extra={'worker_msg': msg})
-        reply = Message(self.name, 'unregistered message type').serialize()
+            "unregistered message type received from "
+            "{0.source} worker: {0.type}".format(msg),
+            extra={"worker_msg": msg},
+        )
+        reply = Message(self.name, "unregistered message type").serialize()
         return reply
 
     def _log_received_msg(self, msg):
         """Emit debug message about message received from worker.
         """
         self.logger.debug(
-            'received message from {0.source}: ({0.type}) {msg_words}'
-            .format(
-                msg,
-                msg_words=self._msg_registry['workers'][msg.source][msg.type]),
-            extra={'worker_msg': msg})
+            "received message from {0.source}: ({0.type}) {msg_words}".format(
+                msg, msg_words=self._msg_registry["workers"][msg.source][msg.type]
+            ),
+            extra={"worker_msg": msg},
+        )
 
     def _handle_need_msg(self, msg):
         """Handle request for checklist section message from worker.
         """
         reply = Message(
-            self.name, 'ack', payload=self.checklist[msg.payload]).serialize()
+            self.name, "ack", payload=self.checklist[msg.payload]
+        ).serialize()
         return reply
 
     def _handle_continue_msg(self, msg):
@@ -348,19 +360,20 @@ class NowcastManager:
         importlib.reload(self._next_workers_module)
         try:
             after_func = getattr(
-                self._next_workers_module,
-                'after_{worker}'.format(worker=msg.source))
+                self._next_workers_module, "after_{worker}".format(worker=msg.source)
+            )
         except AttributeError:
             self.logger.critical(
-                'could not find after_{worker} in {next_workers} module'
-                .format(
+                "could not find after_{worker} in {next_workers} module".format(
                     worker=msg.source,
-                    next_workers=self._msg_registry['next workers module']),
-                exc_info=True)
-            reply = Message(self.name, 'no after_worker function').serialize()
+                    next_workers=self._msg_registry["next workers module"],
+                ),
+                exc_info=True,
+            )
+            reply = Message(self.name, "no after_worker function").serialize()
             return reply, []
         next_workers = after_func(msg, self.config, self.checklist)
-        reply = Message(self.name, 'ack').serialize()
+        reply = Message(self.name, "ack").serialize()
         return reply, next_workers
 
     def _update_checklist(self, msg):
@@ -374,25 +387,26 @@ class NowcastManager:
         inspected and/or recovered if the manager instance is restarted.
         """
         try:
-            key = self._msg_registry['workers'][msg.source]['checklist key']
+            key = self._msg_registry["workers"][msg.source]["checklist key"]
         except KeyError:
-            raise KeyError(
-                'checklist key not found for {.source} worker'.format(msg))
+            raise KeyError("checklist key not found for {.source} worker".format(msg))
         try:
             self.checklist[key].update(msg.payload)
         except (KeyError, AttributeError):
             self.checklist[key] = msg.payload
         self.logger.info(
-            'checklist updated with [{0}] items from {1.source} worker'
-            .format(key, msg),
-            extra={'worker_msg': msg})
+            "checklist updated with [{0}] items from {1.source} worker".format(
+                key, msg
+            ),
+            extra={"worker_msg": msg},
+        )
         self._write_checklist_to_disk()
 
     def _write_checklist_to_disk(self):
         """Write the checklist to disk as a YAML file so that it can be
         inspected and/or recovered if the manager instance is restarted.
         """
-        with open(self.config['checklist file'], 'wt') as f:
+        with open(self.config["checklist file"], "wt") as f:
             yaml.dump(self.checklist, f)
 
     def _clear_checklist(self):
@@ -404,20 +418,21 @@ class NowcastManager:
         end of processing, just before rotating the log files via the
         :py:mod:`nemo_nowcast.workers.rotate_logs` worker.
         """
-        checklist_logger = logging.getLogger('checklist')
+        checklist_logger = logging.getLogger("checklist")
         if checklist_logger.handlers:
-            self.logger.info('writing checklist to log file')
+            self.logger.info("writing checklist to log file")
             for handler in checklist_logger.handlers:
                 checklist_logger.log(
                     handler.level,
-                    'checklist:\n{}'.format(pprint.pformat(self.checklist)))
+                    "checklist:\n{}".format(pprint.pformat(self.checklist)),
+                )
                 handler.close()
         self.checklist.clear()
         self._write_checklist_to_disk()
-        self.logger.info('checklist cleared')
-        reply = Message(self.name, 'checklist cleared').serialize()
+        self.logger.info("checklist cleared")
+        reply = Message(self.name, "checklist cleared").serialize()
         return reply
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()  # pragma: no cover
