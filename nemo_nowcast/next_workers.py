@@ -47,9 +47,9 @@ def after_sleep(msg, config, checklist):
     :rtype: list
     """
     next_workers = {
-        'crash': [],
-        'failure': [],
-        'success': [NextWorker('nemo_nowcast.workers.awaken')],
+        "crash": [],
+        "failure": [],
+        "success": [NextWorker("nemo_nowcast.workers.awaken")],
     }
     return next_workers[msg.type]
 
@@ -72,9 +72,5 @@ def after_awaken(msg, config, checklist):
     :returns: Sequence of :py:class:`nemo_nowcast.worker.NextWorker` instances
               for worker(s) to launch next.
     """
-    next_workers = {
-        'crash': [],
-        'failure': [],
-        'success': [],
-    }
+    next_workers = {"crash": [], "failure": [], "success": []}
     return next_workers[msg.type]

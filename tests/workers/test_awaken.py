@@ -14,24 +14,22 @@
 
 """Unit tests for nemo_nowcast.workers.awaken module.
 """
-from unittest.mock import (
-    Mock,
-    patch,
-)
+from unittest.mock import Mock, patch
 
 from nemo_nowcast.workers import awaken
 
 
-@patch('nemo_nowcast.workers.awaken.NowcastWorker')
+@patch("nemo_nowcast.workers.awaken.NowcastWorker")
 class TestMain:
     """Unit tests for main function.
     """
+
     def test_instantiate_worker(self, m_worker):
         awaken.main()
         args, kwargs = m_worker.call_args
-        assert args == ('awaken',)
-        assert 'description' in kwargs
-        assert 'package' in kwargs
+        assert args == ("awaken",)
+        assert "description" in kwargs
+        assert "package" in kwargs
 
     def test_init_cli(self, m_worker):
         awaken.main()
@@ -46,40 +44,43 @@ class TestMain:
 class TestSuccess:
     """Unit tests for success function.
     """
+
     def test_success_log_info(self):
         parsed_args = Mock(awaken_time=5)
-        with patch('nemo_nowcast.workers.awaken.logger') as m_logger:
+        with patch("nemo_nowcast.workers.awaken.logger") as m_logger:
             awaken.success(parsed_args)
         assert m_logger.info.called
 
     def test_success_msg_type(self):
         parsed_args = Mock(awaken_time=5)
-        with patch('nemo_nowcast.workers.awaken.logger') as m_logger:
+        with patch("nemo_nowcast.workers.awaken.logger") as m_logger:
             msg_type = awaken.success(parsed_args)
-        assert msg_type == 'success'
+        assert msg_type == "success"
 
 
 class TestFailure:
     """Unit tests for failure function.
     """
+
     def test_failure_log_critical(self):
         parsed_args = Mock(awaken_time=5)
-        with patch('nemo_nowcast.workers.awaken.logger') as m_logger:
+        with patch("nemo_nowcast.workers.awaken.logger") as m_logger:
             awaken.failure(parsed_args)
         assert m_logger.critical.called
 
     def test_failure_msg_type(self):
         parsed_args = Mock(awaken_time=5)
-        with patch('nemo_nowcast.workers.awaken.logger') as m_logger:
+        with patch("nemo_nowcast.workers.awaken.logger") as m_logger:
             msg_type = awaken.failure(parsed_args)
-        assert msg_type == 'failure'
+        assert msg_type == "failure"
 
 
 class TestAwaken:
     """Unit tests for awaken function.
     """
+
     def test_example(self):
         parsed_args = Mock(awaken_time=5)
         config = {}
         checklist = awaken.awaken(parsed_args, config)
-        assert checklist == {'awoke': True}
+        assert checklist == {"awoke": True}
