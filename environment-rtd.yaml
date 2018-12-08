@@ -5,12 +5,12 @@ name: sphinx-build
 
 channels:
   - defaults
-  - gomss-nowcast
 
 dependencies:
-  - arrow
-  - attrs
-  - python=3.5
-  - pyyaml
-  - requests
-  - pyzmq
+  - python=3.6
+
+  # RTD packages
+  - mock
+  - pillow
+  - sphinx
+  - sphinx_rtd_theme
