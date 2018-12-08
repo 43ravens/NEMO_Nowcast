@@ -24,7 +24,7 @@ import logging
 from nemo_nowcast import NowcastWorker
 
 
-NAME = 'awaken'
+NAME = "awaken"
 logger = logging.getLogger(NAME)
 
 
@@ -35,28 +35,27 @@ def main():
 
     :command:`python -m nemo_nowcast.workers.awaken --help`
     """
-    worker = NowcastWorker(
-        NAME, description=__doc__, package='nemo_nowcast.workers')
+    worker = NowcastWorker(NAME, description=__doc__, package="nemo_nowcast.workers")
     worker.init_cli()
     worker.run(awaken, success, failure)
 
 
 def success(parsed_args):
-    logger.info('awoke')
-    msg_type = 'success'
+    logger.info("awoke")
+    msg_type = "success"
     return msg_type
 
 
 def failure(parsed_args):
-    logger.critical('failed to awaken')
-    msg_type = 'failure'
+    logger.critical("failed to awaken")
+    msg_type = "failure"
     return msg_type
 
 
 def awaken(parsed_args, config, *args):
-    checklist = {'awoke': True}
+    checklist = {"awoke": True}
     return checklist
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()  # pragma: no cover

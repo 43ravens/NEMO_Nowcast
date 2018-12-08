@@ -23,7 +23,7 @@ import time
 from nemo_nowcast import NowcastWorker
 
 
-NAME = 'sleep'
+NAME = "sleep"
 logger = logging.getLogger(NAME)
 
 
@@ -34,41 +34,45 @@ def main():
 
     :command:`python -m nemo_nowcast.workers.sleep --help`
     """
-    worker = NowcastWorker(
-        NAME, description=__doc__, package='nemo_nowcast.workers')
+    worker = NowcastWorker(NAME, description=__doc__, package="nemo_nowcast.workers")
     worker.init_cli()
-    arg_defaults = {'sleep_time': 5}
+    arg_defaults = {"sleep_time": 5}
     worker.cli.parser.set_defaults(**arg_defaults)
     worker.cli.parser.add_argument(
-        '--sleep-time', type=int,
+        "--sleep-time",
+        type=int,
         help=(
-            'number of seconds to sleep for; defaults to {[sleep_time]}'
-            .format(arg_defaults))
+            "number of seconds to sleep for; defaults to {[sleep_time]}".format(
+                arg_defaults
+            )
+        ),
     )
     worker.run(sleep, success, failure)
 
 
 def success(parsed_args):
     logger.info(
-        'slept for {.sleep_time} seconds'
-        .format(parsed_args), extra={'sleep_time': parsed_args.sleep_time})
-    msg_type = 'success'
+        "slept for {.sleep_time} seconds".format(parsed_args),
+        extra={"sleep_time": parsed_args.sleep_time},
+    )
+    msg_type = "success"
     return msg_type
 
 
 def failure(parsed_args):
     logger.critical(
-        'failed to sleep for {.sleep_time} seconds'
-        .format(parsed_args), extra={'sleep_time': parsed_args.sleep_time})
-    msg_type = 'failure'
+        "failed to sleep for {.sleep_time} seconds".format(parsed_args),
+        extra={"sleep_time": parsed_args.sleep_time},
+    )
+    msg_type = "failure"
     return msg_type
 
 
 def sleep(parsed_args, config, *args):
     time.sleep(parsed_args.sleep_time)
-    checklist = {'sleep time': parsed_args.sleep_time}
+    checklist = {"sleep time": parsed_args.sleep_time}
     return checklist
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()  # pragma: no cover
