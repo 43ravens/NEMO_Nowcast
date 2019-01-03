@@ -491,7 +491,7 @@ def get_web_data(
 
     So, with the default argument values, the first retry will occur
     2 seconds after the download fails, and subsequent retries will
-    occur at 4, 8, 16, 32, 64, ..., 2048 seconds after each failure.
+    occur at 4, 8, 16, 32, 64, ..., 256, 256, ..., 3582 seconds after each failure.
 
     :param str file_url: URL to download content from.
 
@@ -581,8 +581,9 @@ def get_web_data(
         return _get_data()
     except:
         wait_seconds = wait_exponential_multiplier
+        total_seconds = wait_exponential_multiplier
         retries = 0
-        while wait_seconds < wait_exponential_max:
+        while total_seconds < wait_exponential_max:
             sleep_seconds = min(wait_seconds, wait_retry_max)
             logger.debug(
                 "waiting {s} seconds until retry {n}".format(
@@ -598,6 +599,7 @@ def get_web_data(
                 socket.error,
             ):
                 wait_seconds *= wait_exponential_multiplier
+                total_seconds += sleep_seconds
                 retries += 1
         logger.error(
             "giving up; download from {url} failed {fail_count} times".format(
