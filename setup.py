@@ -51,7 +51,7 @@ install_requires = [
     "schedule",
 ]
 tests_require = ["coverage", "pytest"]
-extra_require = {"docs": ["sphinx"]}
+extras_require = {"docs": ["sphinx"]}
 
 setup(
     name=__pkg_metadata__.PROJECT,
@@ -66,7 +66,7 @@ setup(
     platforms=["Linux"],
     install_requires=install_requires,
     tests_require=tests_require,
-    extra_require=extra_require,
+    extras_require=extras_require,
     packages=find_packages(),
     zip_safe=False,
 )
