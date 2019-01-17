@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = moad_tools
+SPHINXPROJ    = NEMO_Nowcast
 SOURCEDIR     = .
 BUILDDIR      = _build
 

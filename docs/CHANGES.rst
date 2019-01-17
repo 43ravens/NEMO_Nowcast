@@ -2,8 +2,8 @@
 Change Log
 **********
 
-v18.1.dev0 (unreleased)
-=======================
+v19.1
+=====
 
 * Change to `CalVer`_ versioning convention.
   Version identifier format is now ``yy.n[.devn]``,
@@ -13,7 +13,7 @@ v18.1.dev0 (unreleased)
   and ``.dev0`` is appended to the version identifier to indicate changes that will be
   included in the next release.
   ``v18.1.dev0`` is an exception to that scheme.
-  That version identifies the period of development between the ``v1.4`` and ``v18.1``
+  That version identifies the period of development between the ``v1.4`` and ``v19.1``
   releases.
 
   .. _CalVer: https://calver.org/
@@ -21,6 +21,9 @@ v18.1.dev0 (unreleased)
 * Change to use `black`_ for code style management.
 
   .. _black: https://black.readthedocs.io/en/stable/
+
+* Fix bug in ``get_web_data()`` re: calculation of total time of retries.
+  Previously waiting would time out long before ``wait_exponential_max``.
 
 * Add ``Config.__contains__()`` to enable checking for existence of top level keys in
   config.
