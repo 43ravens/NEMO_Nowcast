@@ -191,6 +191,14 @@ class TestInitCli:
             argparse._StoreTrueAction,
         )
 
+    def test_concurrent_arg(self):
+        worker = NowcastWorker("worker_name", "description")
+        worker.init_cli()
+        assert isinstance(
+            worker.cli.parser._get_option_tuples("--concurrent")[0][0],
+            argparse._StoreTrueAction,
+        )
+
 
 @patch("nemo_nowcast.worker.logging")
 class TestRun:
@@ -731,10 +739,24 @@ class TestDoWork:
         worker.init_cli()
         worker.logger = Mock(name="logger")
         worker.tell_manager = Mock(name="tell_manager")
-        worker.worker_func = Mock(name="worker_func", return_value="checklist")
+        checklist = {}
+        worker.worker_func = Mock(name="worker_func", return_value=checklist)
         worker.success = Mock(name="success_func", return_value="success")
+        worker._parsed_args = SimpleNamespace(debug=False, concurrent=True)
         worker._do_work()
-        worker.tell_manager.assert_called_once_with("success", "checklist")
+        worker.tell_manager.assert_called_once_with("success", checklist)
+
+    def test_success_concurrent_tell_manager(self):
+        worker = NowcastWorker("worker_name", "description")
+        worker.init_cli()
+        worker.logger = Mock(name="logger")
+        worker.tell_manager = Mock(name="tell_manager")
+        checklist = {}
+        worker.worker_func = Mock(name="worker_func", return_value=checklist)
+        worker.success = Mock(name="success_func", return_value="success")
+        worker._parsed_args = SimpleNamespace(debug=False, concurrent=True)
+        worker._do_work()
+        worker.tell_manager.assert_called_once_with("success", {"__concurrent": True})
 
     def test_failure_func(self):
         worker = NowcastWorker("worker_name", "description")

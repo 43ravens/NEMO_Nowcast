@@ -198,6 +198,18 @@ class NowcastWorker:
             from the command-line.
             """,
         )
+        self.cli.parser.add_argument(
+            "--concurrent",
+            action="store_true",
+            help="""
+            Launch worker to run concurrently with one or more other workers 
+            such that all workers in the concurrent group will finish before 
+            after_* functions are called by the manager.
+            A :kbd:`__concurrent` item is added to the checklist that the worker 
+            returns with its value set to :py:obj:`True` if this flag is present,
+            otherwise, :py:obj:`False`. 
+            """,
+        )
 
     def run(self, worker_func, success, failure):
         """Prepare the worker to do its work, then do it.
@@ -385,6 +397,7 @@ class NowcastWorker:
                 self._parsed_args, self.config, self.tell_manager
             )
             msg_type = self.success(self._parsed_args)
+            checklist["__concurrent"] = self._parsed_args.concurrent
             self.tell_manager(msg_type, checklist)
         except WorkerError:
             msg_type = self.failure(self._parsed_args)
