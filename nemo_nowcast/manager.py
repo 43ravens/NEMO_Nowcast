@@ -21,9 +21,10 @@ import logging.config
 import os
 import pprint
 import signal
+import time
 
 import attr
-import time
+import requests
 import yaml
 import zmq
 import zmq.log.handlers
@@ -357,6 +358,7 @@ class NowcastManager:
         """
         if msg.payload is not None:
             self._update_checklist(msg)
+        self._slack_notification(msg)
         importlib.reload(self._next_workers_module)
         try:
             after_func = getattr(
@@ -408,6 +410,54 @@ class NowcastManager:
         """
         with open(self.config["checklist file"], "wt") as f:
             yaml.dump(self.checklist, f)
+
+    def _slack_notification(self, msg):
+        try:
+            slack_notifications = self.config["slack notifications"]
+        except KeyError:
+            # No slack notification section in config, and that's okay!
+            return
+        slack_msg = {
+            "text": "{worker}: {msg_type}".format(worker=msg.source, msg_type=msg.type)
+        }
+        try:
+            slack_msg["text"] = "\n".join(
+                (
+                    slack_msg["text"],
+                    "Log: {}".format(slack_notifications["website log url"]),
+                )
+            )
+        except KeyError:
+            # Not everyone publishes their logs and/or checklist to the web...
+            pass
+        try:
+            slack_msg["text"] = "\n".join(
+                (
+                    slack_msg["text"],
+                    "Checklist: {}".format(
+                        slack_notifications["website checklist url"]
+                    ),
+                )
+            )
+        except KeyError:
+            # Not everyone publishes their logs and/or checklist to the web...
+            pass
+        for key, workers in slack_notifications.items():
+            if not key.startswith("SLACK"):
+                continue
+            slack_url_envvar = key
+            try:
+                slack_url = os.environ[slack_url_envvar]
+            except KeyError:
+                # No value found in environment
+                self.logger.debug(
+                    "slack notification environment variable not found: {}".format(
+                        slack_url_envvar
+                    )
+                )
+                continue
+            if msg.source in workers:
+                requests.post(slack_url, json=slack_msg)
 
     def _clear_checklist(self):
         """Write the checklist to a log file, then clear it.
