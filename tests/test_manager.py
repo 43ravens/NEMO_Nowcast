@@ -14,6 +14,7 @@
 
 """Unit tests for nemo_nowcast.manager module.
 """
+import os
 import signal
 from unittest.mock import patch, Mock, mock_open
 
@@ -596,6 +597,14 @@ class TestHandleContinueMsg:
         mgr._handle_continue_msg(msg)
         mgr._update_checklist.assert_called_once_with(msg)
 
+    def test_slack_notification(self, m_importlib):
+        mgr = manager.NowcastManager()
+        mgr._slack_notification = Mock(name="_slack_notification")
+        mgr._next_workers_module = Mock(name="nowcast.next_workers", test_worker=Mock())
+        msg = Message(source="test_worker", type="success")
+        mgr._handle_continue_msg(msg)
+        assert mgr._slack_notification.called
+
     def test_reload_next_workers_module(self, m_importlib):
         mgr = manager.NowcastManager()
         mgr._update_checklist = Mock(name="_update_checklist")
@@ -687,6 +696,90 @@ class TestUpdateChecklist:
         msg = Message(source="test_worker", type="success", payload="baz")
         mgr._update_checklist(msg)
         mgr._write_checklist_to_disk.assert_called_once_with()
+
+
+@patch("nemo_nowcast.manager.requests.post", autospec=True)
+class TestSlackNotification:
+    """Unit tests for NowcastManager._slack_notification method.
+    """
+
+    def test_no_config_section(self, m_post):
+        mgr = manager.NowcastManager()
+        msg = Message(source="test_worker", type="success")
+        mgr._slack_notification(msg)
+        assert not m_post.called
+
+    def test_no_slack_url_envvar(self, m_post):
+        mgr = manager.NowcastManager()
+        mgr.logger = Mock(name="logger")
+        mgr.config = {"slack notifications": {"SLACK_URL": []}}
+        msg = Message(source="test_worker", type="success")
+        mgr._slack_notification(msg)
+        mgr.logger.debug.assert_called_once_with(
+            "slack notification environment variable not found: SLACK_URL"
+        )
+        assert not m_post.called
+
+    def test_worker_not_in_notifications_list(self, m_post):
+        mgr = manager.NowcastManager()
+        mgr.config = {"slack notifications": {"SLACK_URL": []}}
+        msg = Message(source="test_worker", type="success")
+        with patch.dict(
+            os.environ, {"SLACK_URL": "https://hooks.slack.com/services/..."}
+        ):
+            mgr._slack_notification(msg)
+        assert not m_post.called
+
+    def test_notification_posted(self, m_post):
+        mgr = manager.NowcastManager()
+        mgr.config = {"slack notifications": {"SLACK_URL": ["test_worker"]}}
+        msg = Message(source="test_worker", type="success")
+        slack_url = "https://hooks.slack.com/services/..."
+        with patch.dict(os.environ, {"SLACK_URL": slack_url}):
+            mgr._slack_notification(msg)
+        m_post.assert_called_once_with(slack_url, json={"text": "test_worker: success"})
+
+    def test_notification_posted_with_log_url(self, m_post):
+        mgr = manager.NowcastManager()
+        website_log_url = "https://salishsea.eos.ubc.ca/nemo/nowcast/logs/nowcast.log"
+        mgr.config = {
+            "slack notifications": {
+                "SLACK_URL": ["test_worker"],
+                "website log url": website_log_url,
+            }
+        }
+        msg = Message(source="test_worker", type="success")
+        slack_url = "https://hooks.slack.com/services/..."
+        with patch.dict(os.environ, {"SLACK_URL": slack_url}):
+            mgr._slack_notification(msg)
+        m_post.assert_called_once_with(
+            slack_url,
+            json={"text": "test_worker: success\nLog: {}".format(website_log_url)},
+        )
+
+    def test_notification_posted_with_checklist_url(self, m_post):
+        mgr = manager.NowcastManager()
+        website_checklist_url = (
+            "https://salishsea.eos.ubc.ca/nemo/nowcast/logs/nowcast_checklist.yaml"
+        )
+        mgr.config = {
+            "slack notifications": {
+                "SLACK_URL": ["test_worker"],
+                "website checklist url": website_checklist_url,
+            }
+        }
+        msg = Message(source="test_worker", type="success")
+        slack_url = "https://hooks.slack.com/services/..."
+        with patch.dict(os.environ, {"SLACK_URL": slack_url}):
+            mgr._slack_notification(msg)
+        m_post.assert_called_once_with(
+            slack_url,
+            json={
+                "text": "test_worker: success\nChecklist: {}".format(
+                    website_checklist_url
+                )
+            },
+        )
 
 
 class TestClearChecklist:
