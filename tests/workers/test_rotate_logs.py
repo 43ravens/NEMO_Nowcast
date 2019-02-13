@@ -101,7 +101,7 @@ class TestRotateLogs:
         m_logger.root.handlers = []
         parsed_args = SimpleNamespace()
         checklist = rotate_logs.rotate_logs(parsed_args, config)
-        assert checklist == []
+        assert checklist == {"log files": []}
 
     def test_dont_roll_timed_handler(self, m_logger, m_dictConfig, config, tmpdir):
         tmpfile = tmpdir.ensure("foo")
@@ -110,17 +110,17 @@ class TestRotateLogs:
         ]
         parsed_args, config = SimpleNamespace(), {"logging": {}}
         checklist = rotate_logs.rotate_logs(parsed_args, config)
-        assert checklist == []
+        assert checklist == {"log files": []}
 
     def test_dont_roll_stream_handler(self, m_logger, m_dictConfig, config):
         m_logger.root.handlers = [logging.StreamHandler()]
         parsed_args, config = SimpleNamespace(), {"logging": {}}
         checklist = rotate_logs.rotate_logs(parsed_args, config)
-        assert checklist == []
+        assert checklist == {"log files": []}
 
     def test_roll_rotating_handler(self, m_logger, m_dictConfig, config, tmpdir):
         tmpfile = tmpdir.ensure("foo")
         m_logger.root.handlers = [logging.handlers.RotatingFileHandler(tmpfile.strpath)]
         parsed_args, config = SimpleNamespace(), {"logging": {}}
         checklist = rotate_logs.rotate_logs(parsed_args, config)
-        assert checklist == [tmpfile.strpath]
+        assert checklist == {"log files": [tmpfile.strpath]}
