@@ -89,3 +89,9 @@ class TestClearChecklist:
         m_tell_manager = Mock(name="tell_manager")
         clear_checklist.clear_checklist(parsed_args, config, m_tell_manager)
         m_tell_manager.assert_called_once_with("clear checklist")
+
+    def test_checklist(self, m_logger):
+        parsed_args, config = SimpleNamespace(), {}
+        m_tell_manager = Mock(name="tell_manager")
+        checklist = clear_checklist.clear_checklist(parsed_args, config, m_tell_manager)
+        assert checklist == {}
