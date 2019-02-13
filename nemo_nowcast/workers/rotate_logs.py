@@ -67,7 +67,7 @@ def failure(parsed_args):
 def rotate_logs(parsed_args, config, *args):
     # logger_name is required because file system handlers get loaded below
     logger.info("rotating log files", extra={"logger_name": NAME})
-    checklist = []
+    checklist = {"log files": []}
     checklist_logger = logging.getLogger("checklist")
     if "aggregator" in config["logging"]:
         pub_handlers = config["logging"]["publisher"]["handlers"]
@@ -106,7 +106,7 @@ def rotate_logs(parsed_args, config, *args):
                 ),
                 extra={"logger_name": NAME},
             )
-            checklist.append(handler.baseFilename)
+            checklist["log files"].append(handler.baseFilename)
     return checklist
 
 
