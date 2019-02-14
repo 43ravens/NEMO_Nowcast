@@ -60,7 +60,7 @@ def failure(parsed_args):
 def clear_checklist(parsed_args, config, tell_manager):
     logger.info("requesting that manager clear system state checklist")
     tell_manager("clear checklist")
-    return {}
+    # Don't return a checklist entry because we just cleared it!
 
 
 if __name__ == "__main__":
