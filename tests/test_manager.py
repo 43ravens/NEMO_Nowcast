@@ -596,8 +596,11 @@ class TestHandleContinueMsg:
         msg = Message(source="test_worker", type="success", payload=payload)
         mgr._handle_continue_msg(msg)
         mgr._update_checklist.assert_called_once_with(msg)
+
     def test_slack_notification(self, m_importlib):
+        mgr = manager.NowcastManager()
         mgr._slack_notification = Mock(name="_slack_notification")
+        mgr._next_workers_module = Mock(name="nowcast.next_workers", test_worker=Mock())
         msg = Message(source="test_worker", type="success")
         mgr._handle_continue_msg(msg)
         assert mgr._slack_notification.called
