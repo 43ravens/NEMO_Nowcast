@@ -5,9 +5,14 @@ Change Log
 v19.2.dev0 (unreleased)
 =======================
 
+* Add Bitbucket continuous integration pipeline to run unit tests and generate unit
+  tests coverage report; https://bitbucket.org/43ravens/nemo_nowcast/addon/pipelines/home.
+
 * Add ability to send worker completion messages to a Slack channel via the
   `Slack incoming webhooks API`_.
   Documentation coming soon...
+
+  .. _Slack incoming webhooks API: https://api.slack.com/incoming-webhooks
 
 
 v19.1
