@@ -275,6 +275,34 @@ or
 to produce an HTML report that you can view in your browser by opening :file:`NEMO_Nowcast/htmlcov/index.html`.
 
 
+Continuous Integration
+----------------------
+
+The :kbd:`NEMO_Nowcast` package unit test suite is run and a coverage report is generated whenever changes are pushed to Bitbucket.
+The results are visible on the `repo pipelines page`_,
+from the :guilabel:`Builds` column on the `repo commits page`_,
+or from a link in the build status area on the right side of the `repo summary page`_ .
+
+.. _repo pipelines page: https://bitbucket.org/43ravnes/nemo_nowcast/addon/pipelines/home
+.. _repo commits page: https://bitbucket.org/43ravnes/nemo_nowcast/commits/all
+.. _repo summary page: https://bitbucket.org/43ravnes/nemo_nowcast/
+
+
+Pipelines Container Image
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The Bitbucket pipelines configuration in :file:`bitbucket-pipelines.yml` uses a custom image that includes a :command:`conda` environment for running the test suite with coverage analysis.
+The image is defined and maintained using the :file:`Dockerfile` and :file:`environment-test.yaml` files in the :file:`pipelines-test-env/` directory.
+
+To build or update the image and push it to Docker Hub use:
+
+.. code-block:: bash
+
+    docker build -t nemo-nowcast-test pipelines-test-env/
+    docker tag nemo-nowcast-test:latest douglatornell/salishsea:nemo-nowcast-test
+    docker push douglatornell/salishsea:nemo-nowcast-test
+
+
 .. _NEMO_NowcastVersionControlRepository:
 
 Version Control Repository
