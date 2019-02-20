@@ -1,0 +1,9 @@
+image: douglatornell/salishsea:nemo-nowcast-test
+
+pipelines:
+  default:
+    - step:
+        name: pytest package
+        script:
+          - /opt/conda/envs/nemo-nowcast-test/bin/coverage run -m pytest --junitxml=./test-reports/junit.xml
+          - /opt/conda/envs/nemo-nowcast-test/bin/coverage report
