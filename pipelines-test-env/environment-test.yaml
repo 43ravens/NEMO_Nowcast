@@ -1,0 +1,30 @@
+# conda environment description file for NEMO_Nowcast package testing environment
+#
+# Creates a conda environment in which the NEMO_Nowcast package unit tests and
+# coverage analysis can be run.
+# Primarily intended for creation of a docker image for use by bitbucket-pipelines.yml.
+
+name: nemo-nowcast-test
+
+channels:
+  - conda-forge
+  - defaults
+  - gomss-nowcast
+
+dependencies:
+  - arrow
+  - attrs
+  - circus
+  - pip
+  - python=3.6
+  - PyYAML
+  - pyzmq
+  - requests
+  - schedule
+
+  # For unit tests
+  - coverage
+  - pytest
+
+  - pip:
+      - python-hglib
