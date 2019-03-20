@@ -25,8 +25,8 @@
 .. image:: https://img.shields.io/badge/License-BSD%203--Clause-orange.svg
     :target: https://opensource.org/licenses/BSD-3-Clause
     :alt: Licensed under the BSD-3-Clause License
-.. image:: https://img.shields.io/badge/python-3.5-blue.svg
-    :target: https://docs.python.org/3.5/
+.. image:: https://img.shields.io/badge/python-3.6+-blue.svg
+    :target: https://docs.python.org/3.7/
     :alt: Python Version
 .. image:: https://img.shields.io/badge/version%20control-hg-blue.svg
     :target: https://bitbucket.org/43ravens/nemo_nowcast/
@@ -49,13 +49,22 @@
 Python Versions
 ===============
 
-.. image:: https://img.shields.io/badge/python-3.5-blue.svg
-    :target: https://docs.python.org/3.5/
+.. image:: https://img.shields.io/badge/python-3.6+-blue.svg
+    :target: https://docs.python.org/3.7/
     :alt: Python Version
 
-The :kbd:`NEMO_Nowcast` package is developed and tested using `Python`_ 3.5 or later.
+
+The :kbd:`SalishSeaNowcast` package is developed and tested using `Python`_ 3.7 or later.
+The package uses some Python language features that are not available in versions prior to 3.6,
+in particular:
+
+* `formatted string literals`_
+  (aka *f-strings*)
+* the `file system path protocol`_
 
 .. _Python: https://www.python.org/
+.. _formatted string literals: https://docs.python.org/3/reference/lexical_analysis.html#f-strings
+.. _file system path protocol: https://docs.python.org/3/whatsnew/3.6.html#whatsnew36-pep519
 
 
 .. _NEMO_NowcastGettingTheCode:
@@ -235,20 +244,27 @@ to run the test suite.
 The output looks something like::
 
   ============================ test session starts ============================
-  platform linux -- Python 3.5.1, pytest-2.9.2, py-1.4.31, pluggy-0.3.1
+  platform linux -- Python 3.6.7, pytest-4.0.1, py-1.7.0, pluggy-0.8.1
   rootdir: /media/doug/warehouse/43ravens/projects/gomss-nowcast/NEMO_Nowcast, inifile:
-  collected 164 items
+  collected 300 items
 
-  tests/test_lib.py ..................
-  tests/test_manager.py ...........................................................
-  tests/test_message_broker.py ..........
-  tests/test_next_workers.py ......
-  tests/test_worker.py ..............................................
-  tests/workers/test_awaken.py .......
-  tests/workers/test_rotate_logs.py ..........
-  tests/workers/test_sleep.py ........
+  tests/test_cli.py .................                                                       [  5%]
+  tests/test_config.py .............                                                        [ 10%]
+  tests/test_log_aggregator.py .................                                            [ 15%]
+  tests/test_manager.py ...............................................................
+  ...................                                                                       [ 43%]
+  tests/test_message.py ......                                                              [ 45%]
+  tests/test_message_broker.py ...................                                          [ 51%]
+  tests/test_next_workers.py ......                                                         [ 53%]
+  tests/test_scheduler.py ...................                                               [ 59%]
+  tests/test_worker.py ................................................................
+  ..............                                                                            [ 85%]
+  tests/workers/test_awaken.py ........                                                     [ 88%]
+  tests/workers/test_clear_checklist.py .........                                           [ 91%]
+  tests/workers/test_rotate_logs.py .................                                       [ 97%]
+  tests/workers/test_sleep.py .........                                                     [100%]
 
-  ======================== 164 passed in 0.51 seconds =========================
+  ========================= 300 passed in 16.77 seconds =========================
 
 You can monitor what lines of code the test suite exercises using the `coverage.py`_ tool with the command:
 

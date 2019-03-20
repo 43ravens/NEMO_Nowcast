@@ -5,6 +5,8 @@ Change Log
 v19.2.dev0 (unreleased)
 =======================
 
+* Drop support for Python 3.5.
+
 * Add worker race condition management.
   See https://nemo-nowcast.readthedocs.io/en/latest/elements.html#handling-worker-race-conditions
 
