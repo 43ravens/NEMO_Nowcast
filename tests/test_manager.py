@@ -70,6 +70,10 @@ class TestNowcastManagerConstructor:
         mgr = manager.NowcastManager()
         assert mgr._msg_registry is None
 
+    def test_race_condition_mgmt(self):
+        mgr = manager.NowcastManager()
+        assert mgr._race_condition_mgmt == {}
+
     def test_next_workers_module(self):
         mgr = manager.NowcastManager()
         assert mgr._next_workers_module is None
@@ -583,7 +587,10 @@ class TestHandleContinueMsg:
     def test_no_checklist_update_when_no_payload(self, m_importlib):
         mgr = manager.NowcastManager()
         mgr._update_checklist = Mock(name="_update_checklist")
-        mgr._next_workers_module = Mock(name="nowcast.next_workers", test_worker=Mock())
+        mgr._next_workers_module = Mock(
+            name="nowcast.next_workers",
+            after_test_worker=Mock(name="after_test_worker", return_value=[]),
+        )
         msg = Message(source="test_worker", type="success")
         mgr._handle_continue_msg(msg)
         assert not mgr._update_checklist.called
@@ -592,7 +599,10 @@ class TestHandleContinueMsg:
     def test_update_checklist(self, m_importlib, payload):
         mgr = manager.NowcastManager()
         mgr._update_checklist = Mock(name="_update_checklist")
-        mgr._next_workers_module = Mock(name="nowcast.next_workers", test_worker=Mock())
+        mgr._next_workers_module = Mock(
+            name="nowcast.next_workers",
+            after_test_worker=Mock(name="after_test_worker", return_value=[]),
+        )
         msg = Message(source="test_worker", type="success", payload=payload)
         mgr._handle_continue_msg(msg)
         mgr._update_checklist.assert_called_once_with(msg)
@@ -600,7 +610,10 @@ class TestHandleContinueMsg:
     def test_slack_notification(self, m_importlib):
         mgr = manager.NowcastManager()
         mgr._slack_notification = Mock(name="_slack_notification")
-        mgr._next_workers_module = Mock(name="nowcast.next_workers", test_worker=Mock())
+        mgr._next_workers_module = Mock(
+            name="nowcast.next_workers",
+            after_test_worker=Mock(name="after_test_worker", return_value=[]),
+        )
         msg = Message(source="test_worker", type="success")
         mgr._handle_continue_msg(msg)
         assert mgr._slack_notification.called
@@ -608,7 +621,10 @@ class TestHandleContinueMsg:
     def test_reload_next_workers_module(self, m_importlib):
         mgr = manager.NowcastManager()
         mgr._update_checklist = Mock(name="_update_checklist")
-        mgr._next_workers_module = Mock(name="nowcast.next_workers", test_worker=Mock())
+        mgr._next_workers_module = Mock(
+            name="nowcast.next_workers",
+            after_test_worker=Mock(name="after_test_worker", return_value=[]),
+        )
         msg = Message(source="test_worker", type="success")
         mgr._handle_continue_msg(msg)
         m_importlib.reload.assert_called_once_with(mgr._next_workers_module)
@@ -618,7 +634,6 @@ class TestHandleContinueMsg:
         mgr.logger = Mock(name="logger")
         mgr._msg_registry = {"next workers module": "nowcast.next_workers"}
         mgr._update_checklist = Mock(name="_update_checklist")
-        mgr._next_workers_module = Mock(name="nowcast.next_workers", spec=[])
         msg = Message(source="test_worker", type="success")
         reply, next_workers = mgr._handle_continue_msg(msg)
         assert Message.deserialize(reply) == Message(
@@ -626,21 +641,133 @@ class TestHandleContinueMsg:
         )
         assert mgr.logger.critical.call_count == 1
 
+    def test_activate_race_condition_mgmt(self, m_importlib):
+        mgr = manager.NowcastManager()
+        mgr.logger = Mock(name="logger")
+        mgr._update_checklist = Mock(name="_update_checklist")
+        mgr._next_workers_module = Mock(
+            name="nowcast.next_workers",
+            after_test_worker=Mock(
+                name="after_download_weather",
+                return_value=(
+                    [
+                        NextWorker("get_NeahBay_ssh"),
+                        NextWorker("grib_to_netcdf"),
+                        NextWorker("download_live_ocean"),
+                    ],
+                    {"grib_to_netcdf", "make_live_ocean_files"},
+                ),
+            ),
+        )
+        msg = Message(source="test_worker", type="success")
+        mgr._handle_continue_msg(msg)
+        assert mgr._race_condition_mgmt == {
+            "must finish": {"grib_to_netcdf", "make_live_ocean_files"},
+            "then launch": [],
+        }
+
+    def test_one_next_worker_no_race_condition_mgmt(self, m_importlib):
+        mgr = manager.NowcastManager()
+        mgr._update_checklist = Mock(name="_update_checklist")
+        mgr._next_workers_module = Mock(
+            name="nowcast.next_workers",
+            after_test_worker=Mock(
+                name="after_test_worker",
+                return_value=[NextWorker("another_test_worker")],
+            ),
+        )
+        msg = Message(source="test_worker", type="success", payload=None)
+        reply, next_workers = mgr._handle_continue_msg(msg)
+        assert next_workers == [NextWorker("another_test_worker")]
+
+    def test_multiple_next_workers_no_race_condition_mgmt(self, m_importlib):
+        mgr = manager.NowcastManager()
+        mgr._update_checklist = Mock(name="_update_checklist")
+        mgr._next_workers_module = Mock(
+            name="nowcast.next_workers",
+            after_test_worker=Mock(
+                name="after_test_worker",
+                return_value=[
+                    NextWorker("another_test_worker"),
+                    NextWorker("yet_another_test_worker"),
+                ],
+            ),
+        )
+        msg = Message(source="test_worker", type="success", payload=None)
+        reply, next_workers = mgr._handle_continue_msg(msg)
+        assert next_workers == [
+            NextWorker("another_test_worker"),
+            NextWorker("yet_another_test_worker"),
+        ]
+
+    def test_race_condition_worker_finished(self, m_importlib):
+        mgr = manager.NowcastManager()
+        mgr.logger = Mock(name="logger")
+        mgr._update_checklist = Mock(name="_update_checklist")
+        mgr._next_workers_module = Mock(
+            name="nowcast.next_workers",
+            after_grib_to_netcdf=Mock(
+                name="after_grib_to_netcdf", return_value=[NextWorker("ping_erddap")]
+            ),
+        )
+        mgr._race_condition_mgmt = {
+            "must finish": {"grib_to_netcdf", "make_live_ocean_files"},
+            "then launch": [],
+        }
+        msg = Message(source="grib_to_netcdf", type="success")
+        _, next_workers = mgr._handle_continue_msg(msg)
+        assert mgr._race_condition_mgmt == {
+            "must finish": {"make_live_ocean_files"},
+            "then launch": [NextWorker("ping_erddap")],
+        }
+        assert next_workers == []
+
+    def test_worker_not_in_race_condition_mgmt(self, m_importlib):
+        mgr = manager.NowcastManager()
+        mgr._update_checklist = Mock(name="_update_checklist")
+        mgr._next_workers_module = Mock(
+            name="nowcast.next_workers",
+            after_get_NeahBay_ssh=Mock(name="after_get_NeahBay_ssh", return_value=[]),
+        )
+        mgr._race_condition_mgmt = {
+            "must finish": {"grib_to_netcdf", "make_live_ocean_files"},
+            "then launch": [],
+        }
+        msg = Message(source="get_NeahBay_ssh", type="success")
+        mgr._handle_continue_msg(msg)
+        assert mgr._race_condition_mgmt == {
+            "must finish": {"grib_to_netcdf", "make_live_ocean_files"},
+            "then launch": [],
+        }
+
+    def test_race_condition_ended_release_held_next_workers(self, m_importlib):
+        mgr = manager.NowcastManager()
+        mgr.logger = Mock(name="logger")
+        mgr._update_checklist = Mock(name="_update_checklist")
+        mgr._next_workers_module = Mock(
+            name="nowcast.next_workers",
+            after_grib_to_netcdf=Mock(
+                name="after_grib_to_netcdf", return_value=[NextWorker("ping_erddap")]
+            ),
+        )
+        mgr._race_condition_mgmt = {
+            "must finish": {"grib_to_netcdf"},
+            "then launch": [NextWorker("upload_forcing")],
+        }
+        msg = Message(source="grib_to_netcdf", type="success")
+        _, next_workers = mgr = mgr._handle_continue_msg(msg)
+        assert next_workers == [NextWorker("upload_forcing"), NextWorker("ping_erddap")]
+
     def test_reply(self, m_importlib):
         mgr = manager.NowcastManager()
         mgr._update_checklist = Mock(name="_update_checklist")
-        mgr._next_workers_module = Mock(name="nowcast.next_workers", test_worker=Mock())
+        mgr._next_workers_module = Mock(
+            name="nowcast.next_workers",
+            after_test_worker=Mock(name="after_test_worker", return_value=[]),
+        )
         msg = Message(source="test_worker", type="success")
         reply, next_workers = mgr._handle_continue_msg(msg)
         assert Message.deserialize(reply) == Message(source="manager", type="ack")
-
-    def test_next_workers(self, m_importlib):
-        mgr = manager.NowcastManager()
-        mgr._update_checklist = Mock(name="_update_checklist")
-        mgr._next_workers_module = Mock(name="nowcast.next_workers", test_worker=Mock())
-        msg = Message(source="test_worker", type="success", payload=None)
-        reply, next_workers = mgr._handle_continue_msg(msg)
-        assert next_workers == mgr._next_workers_module.after_test_worker()
 
 
 class TestUpdateChecklist:

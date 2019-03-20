@@ -5,6 +5,9 @@ Change Log
 v19.2.dev0 (unreleased)
 =======================
 
+* Add worker race condition management.
+  See https://nemo-nowcast.readthedocs.io/en/latest/elements.html#handling-worker-race-conditions
+
 * Add general and module indices to docs sidebar.
 
 * Add Bitbucket continuous integration pipeline to run unit tests and generate unit
