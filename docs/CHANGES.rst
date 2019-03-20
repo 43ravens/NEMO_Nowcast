@@ -5,6 +5,8 @@ Change Log
 v19.2.dev0 (unreleased)
 =======================
 
+* Add general and module indices to docs sidebar.
+
 * Add Bitbucket continuous integration pipeline to run unit tests and generate unit
   tests coverage report; https://bitbucket.org/43ravens/nemo_nowcast/addon/pipelines/home.
 
