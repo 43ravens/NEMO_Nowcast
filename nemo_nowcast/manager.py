@@ -70,6 +70,10 @@ class NowcastManager:
     #: The :kbd:`message registry` section of
     #: :py:attr:`~nemo_nowcast.manager.config`.
     _msg_registry = attr.ib(default=None)
+    #: Worker race condition management data structure: :py:class:`dict`
+    #: containing collections of workers that must all finish before
+    #: another collection of workers are launched
+    _race_condition_mgmt = attr.ib(default=attr.Factory(dict))
     #: Name of the Python module that contains functions to calculate
     #: lists of workers to launch after previous workers end their work.
     #: Set from the :kbd:`message registry` section of
@@ -375,6 +379,39 @@ class NowcastManager:
             reply = Message(self.name, "no after_worker function").serialize()
             return reply, []
         next_workers = after_func(msg, self.config, self.checklist)
+        if len(next_workers) > 1 and isinstance(next_workers[-1], set):
+            next_workers, self._race_condition_mgmt["must finish"] = next_workers
+            self._race_condition_mgmt["then launch"] = []
+            self.logger.debug(
+                "race condition management activated: {._race_condition_mgmt}".format(
+                    self
+                )
+            )
+        try:
+            self._race_condition_mgmt["must finish"].remove(msg.source)
+            self._race_condition_mgmt["then launch"].extend(next_workers)
+            next_workers.clear()
+            self.logger.debug(
+                "{worker} finished and race condition management updated: {race_condition_mgmt}".format(
+                    worker=msg.source, race_condition_mgmt=self._race_condition_mgmt
+                )
+            )
+        except (KeyError, ValueError):
+            # No race condition management in effect, or worker not in "must finish" list
+            pass
+        try:
+            if not self._race_condition_mgmt["must finish"]:
+                next_workers = self._race_condition_mgmt["then launch"]
+                self._race_condition_mgmt = {}
+                self.logger.debug(
+                    "race condition management ended; "
+                    "next workers released: {next_workers}".format(
+                        next_workers=next_workers
+                    )
+                )
+        except KeyError:
+            # No race condition management in effect
+            pass
         reply = Message(self.name, "ack").serialize()
         return reply, next_workers
 
