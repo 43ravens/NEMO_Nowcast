@@ -880,8 +880,7 @@ class TestSlackNotification:
         with patch.dict(os.environ, {"SLACK_URL": slack_url}):
             mgr._slack_notification(msg)
         m_post.assert_called_once_with(
-            slack_url,
-            json={"text": "test_worker: success\nLog: {}".format(website_log_url)},
+            slack_url, json={"text": f"test_worker: success\nLog: {website_log_url}"}
         )
 
     def test_notification_posted_with_checklist_url(self, m_post):
@@ -901,11 +900,7 @@ class TestSlackNotification:
             mgr._slack_notification(msg)
         m_post.assert_called_once_with(
             slack_url,
-            json={
-                "text": "test_worker: success\nChecklist: {}".format(
-                    website_checklist_url
-                )
-            },
+            json={"text": f"test_worker: success\nChecklist: {website_checklist_url}"},
         )
 
 

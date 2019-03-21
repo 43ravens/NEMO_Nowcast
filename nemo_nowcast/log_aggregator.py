@@ -63,10 +63,8 @@ def main():
     config = Config()
     config.load(parsed_args.config_file)
     _configure_logging(config)
-    logger.info(
-        "running in process {}".format(os.getpid()), extra={"logger_name": NAME}
-    )
-    logger.info("read config from {.file}".format(config), extra={"logger_name": NAME})
+    logger.info(f"running in process {os.getpid()}", extra={"logger_name": NAME})
+    logger.info(f"read config from {config.file}", extra={"logger_name": NAME})
     run(config)
 
 
@@ -112,13 +110,10 @@ def run(config):
             except AttributeError:
                 host = config["zmq"]["host"]
                 port = addr
-            socket.connect("tcp://{host}:{port}".format(host=host, port=port))
+            socket.connect(f"tcp://{host}:{port}")
             socket.setsockopt_string(zmq.SUBSCRIBE, "")
             logger.info(
-                "subscribed to {host} port {port} "
-                "for all messages from {publisher}".format(
-                    host=host, port=port, publisher=publisher
-                ),
+                f"subscribed to {host} port {port} for all messages from {publisher}",
                 extra={"logger_name": NAME},
             )
     _install_signal_handlers(socket)
@@ -138,7 +133,7 @@ def _process_messages(socket):
         except zmq.ZMQError as e:
             # Fatal ZeroMQ problem
             logger.critical(
-                "ZMQError:".format(e), exc_info=e, extra={"logger_name": NAME}
+                f"ZMQError: {e}", exc_info=True, extra={"logger_name": NAME}
             )
             logger.critical("shutting down", extra={"logger_name": NAME})
             break
@@ -147,7 +142,7 @@ def _process_messages(socket):
             break
         except Exception as e:
             logger.critical(
-                "unhandled exception:", exc_info=e, extra={"logger_name": NAME}
+                f"unhandled exception: {e}", exc_info=True, extra={"logger_name": NAME}
             )
             logger.critical("shutting down", extra={"logger_name": NAME})
             break

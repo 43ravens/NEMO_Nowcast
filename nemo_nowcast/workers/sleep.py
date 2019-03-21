@@ -42,9 +42,7 @@ def main():
         "--sleep-time",
         type=int,
         help=(
-            "number of seconds to sleep for; defaults to {[sleep_time]}".format(
-                arg_defaults
-            )
+            f"number of seconds to sleep for; defaults to {arg_defaults['sleep_time']}"
         ),
     )
     worker.run(sleep, success, failure)
@@ -52,7 +50,7 @@ def main():
 
 def success(parsed_args):
     logger.info(
-        "slept for {.sleep_time} seconds".format(parsed_args),
+        f"slept for {parsed_args.sleep_time} seconds",
         extra={"sleep_time": parsed_args.sleep_time},
     )
     msg_type = "success"
@@ -61,7 +59,7 @@ def success(parsed_args):
 
 def failure(parsed_args):
     logger.critical(
-        "failed to sleep for {.sleep_time} seconds".format(parsed_args),
+        f"failed to sleep for {parsed_args.sleep_time} seconds",
         extra={"sleep_time": parsed_args.sleep_time},
     )
     msg_type = "failure"

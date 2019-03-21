@@ -61,8 +61,8 @@ def main():
     config = Config()
     config.load(parsed_args.config_file)
     msg = _configure_logging(config)
-    logger.info("running in process {}".format(os.getpid()))
-    logger.info("read config from {.file}".format(config))
+    logger.info(f"running in process {os.getpid()}")
+    logger.info(f"read config from {config.file}")
     logger.info(msg)
     _install_signal_handlers()
     run(config)
@@ -80,7 +80,7 @@ def _configure_logging(config):
         logging_config["handlers"]["zmq_pub"]["context"] = context
         host = config["zmq"]["host"]
         port = config["zmq"]["ports"]["logging"][NAME]
-        addr = "tcp://*:{port}".format(port=port)
+        addr = f"tcp://*:{port}"
         logging_config["handlers"]["zmq_pub"]["interface_or_socket"] = addr
         logging.config.dictConfig(logging_config)
         for handler in logger.root.handlers:
@@ -96,7 +96,7 @@ def _configure_logging(config):
         # Not sure why, but we need a brief pause before we start logging
         # messages
         time.sleep(0.25)
-        msg = "publishing logging messages to {addr}".format(addr=addr)
+        msg = f"publishing logging messages to {addr}"
     else:
         # Write log messages to local file system
         #

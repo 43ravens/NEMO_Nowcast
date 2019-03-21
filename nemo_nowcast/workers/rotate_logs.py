@@ -95,15 +95,12 @@ def rotate_logs(parsed_args, config, *args):
                 # Probably a StreamHandler
                 continue
             logger.info(
-                "log file rotated: {.baseFilename}".format(handler),
-                extra={"logger_name": NAME},
+                f"log file rotated: {handler.baseFilename}", extra={"logger_name": NAME}
             )
             p = Path(handler.baseFilename)
             p.chmod(FilePerms(user="rw", group="rw", other="r"))
             logger.debug(
-                "new {.baseFilename} log file permissions set to rw-rw-r--".format(
-                    handler
-                ),
+                f"new {handler.baseFilename} log file permissions set to rw-rw-r--",
                 extra={"logger_name": NAME},
             )
             checklist["log files"].append(handler.baseFilename)

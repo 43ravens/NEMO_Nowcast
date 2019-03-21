@@ -62,8 +62,8 @@ def main():
     config = Config()
     config.load(parsed_args.config_file)
     msg = _configure_logging(config)
-    logger.info("running in process {}".format(os.getpid()))
-    logger.info("read config from {.file}".format(config))
+    logger.info(f"running in process {os.getpid()}")
+    logger.info(f"read config from {config.file}")
     logger.info(msg)
     run(config)
 
@@ -80,7 +80,7 @@ def _configure_logging(config):
         logging_config["handlers"]["zmq_pub"]["context"] = context
         host = config["zmq"]["host"]
         port = config["zmq"]["ports"]["logging"][NAME]
-        addr = "tcp://*:{port}".format(port=port)
+        addr = f"tcp://*:{port}"
         logging_config["handlers"]["zmq_pub"]["interface_or_socket"] = addr
         logging.config.dictConfig(logging_config)
         for handler in logger.root.handlers:
@@ -96,7 +96,7 @@ def _configure_logging(config):
         # Not sure why, but we need a brief pause before we start logging
         # messages
         time.sleep(0.25)
-        msg = "publishing logging messages to {addr}".format(addr=addr)
+        msg = f"publishing logging messages to {addr}"
     else:
         # Write log messages to local file system
         #
@@ -134,7 +134,7 @@ def run(config):
         zmq.device(zmq.QUEUE, workers_socket, manager_socket)
     except zmq.ZMQError as e:
         # Fatal ZeroMQ problem
-        logger.critical("ZMQError: {}".format(e), exc_info=True)
+        logger.critical(f"ZMQError: {e}", exc_info=True)
         logger.critical("shutting down")
     except SystemExit:
         # Termination by signal
@@ -153,11 +153,11 @@ def _bind_zmq_sockets(config):
     workers_socket = context.socket(zmq.ROUTER)
     manager_socket = context.socket(zmq.DEALER)
     workers_port = config["zmq"]["ports"]["workers"]
-    workers_socket.bind("tcp://*:{}".format(workers_port))
-    logger.info("worker socket bound to port {}".format(workers_port))
+    workers_socket.bind(f"tcp://*:{workers_port}")
+    logger.info(f"worker socket bound to port {workers_port}")
     manager_port = config["zmq"]["ports"]["manager"]
-    manager_socket.bind("tcp://*:{}".format(manager_port))
-    logger.info("manager socket bound to port {}".format(manager_port))
+    manager_socket.bind(f"tcp://*:{manager_port}")
+    logger.info(f"manager socket bound to port {manager_port}")
     return workers_socket, manager_socket
 
 

@@ -57,7 +57,7 @@ class CommandLineInterface:
         self.parser = argparse.ArgumentParser(
             description=self.description, add_help=add_help
         )
-        self.parser.prog = "python -m {}.{}".format(self.package, self.module_name)
+        self.parser.prog = f"python -m {self.package}.{self.module_name}"
         self.parser.add_argument(
             "config_file", help="Path/name of YAML configuration file for NEMO nowcast."
         )
@@ -100,9 +100,7 @@ class CommandLineInterface:
             type=self._arrow_date,
             default=default,
             help=(
-                "{help} Use YYYY-MM-DD format. Defaults to {default}.".format(
-                    help=help, default=default.format("YYYY-MM-DD")
-                )
+                f"{help} Use YYYY-MM-DD format. Defaults to {default.format('YYYY-MM-DD')}."
             ),
         )
 
@@ -122,5 +120,5 @@ class CommandLineInterface:
         try:
             return arrow.get(string, "YYYY-MM-DD")
         except arrow.parser.ParserError:
-            msg = "unrecognized date format: {} - please use YYYY-MM-DD".format(string)
+            msg = f"unrecognized date format: {string} - please use YYYY-MM-DD"
             raise argparse.ArgumentTypeError(msg)
