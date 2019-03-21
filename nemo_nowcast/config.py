@@ -90,4 +90,4 @@ class Config:
         try:
             return os.environ[var.group(1)]
         except KeyError:
-            raise KeyError("environment variable not set: {}".format(var.group(1)))
+            raise KeyError(f"environment variable not set: {var.group(1)}")

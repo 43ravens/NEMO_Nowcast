@@ -110,8 +110,8 @@ class NowcastManager:
         self.config.load(self._parsed_args.config_file)
         self._msg_registry = self.config["message registry"]
         msg = self._configure_logging()
-        self.logger.info("running in process {}".format(os.getpid()))
-        self.logger.info("read config from {.file}".format(self.config))
+        self.logger.info(f"running in process {os.getpid()}")
+        self.logger.info(f"read config from {self.config.file}")
         self.logger.info(msg)
         try:
             self._next_workers_module = importlib.import_module(
@@ -119,16 +119,12 @@ class NowcastManager:
             )
         except ImportError:
             self.logger.critical(
-                "could not find next workers module: {[next workers module]}".format(
-                    self._msg_registry
-                ),
+                f"could not find next workers module: {self._msg_registry['next workers module']}",
                 exc_info=True,
             )
             raise
         self.logger.info(
-            "next workers module loaded from {[next workers module]}".format(
-                self._msg_registry
-            )
+            f"next workers module loaded from {self._msg_registry['next workers module']}"
         )
 
     def _cli(self, args=None):
@@ -163,7 +159,7 @@ class NowcastManager:
             logging_config = self.config["logging"]["publisher"]
             logging_config["handlers"]["zmq_pub"]["context"] = self._context
             port = self.config["zmq"]["ports"]["logging"][self.name]
-            addr = "tcp://*:{port}".format(port=port)
+            addr = f"tcp://*:{port}"
             logging_config["handlers"]["zmq_pub"]["interface_or_socket"] = addr
             logging.config.dictConfig(logging_config)
             for handler in self.logger.root.handlers:
@@ -179,7 +175,7 @@ class NowcastManager:
             # Not sure why, but we need a brief pause before we start logging
             # messages
             time.sleep(1)
-            msg = "publishing logging messages to {addr}".format(addr=addr)
+            msg = f"publishing logging messages to {addr}"
         else:
             # Write log messages to local file system
             #
@@ -209,10 +205,8 @@ class NowcastManager:
         self._socket = self._context.socket(zmq.REP)
         zmq_host = self.config["zmq"]["host"]
         zmq_port = self.config["zmq"]["ports"]["manager"]
-        self._socket.connect("tcp://{host}:{port}".format(host=zmq_host, port=zmq_port))
-        self.logger.info(
-            "connected to {host} port {port}".format(host=zmq_host, port=zmq_port)
-        )
+        self._socket.connect(f"tcp://{zmq_host}:{zmq_port}")
+        self.logger.info(f"connected to {zmq_host} port {zmq_port}")
         self._install_signal_handlers(zmq_host, zmq_port)
         if not self._parsed_args.ignore_checklist:
             self._load_checklist()
@@ -224,9 +218,7 @@ class NowcastManager:
 
         def sighup_handler(signal, frame):
             self.logger.info("hangup signal (SIGHUP) received; reloading configuration")
-            self._socket.disconnect(
-                "tcp://{host}:{port}".format(host=zmq_host, port=zmq_port)
-            )
+            self._socket.disconnect(f"tcp://{zmq_host}:{zmq_port}")
             self.setup()
             self.run()
 
@@ -256,10 +248,8 @@ class NowcastManager:
         try:
             with open(checklist_file, "rt") as f:
                 self.checklist = yaml.safe_load(f)
-                self.logger.info("checklist read from {}".format(checklist_file))
-                self.logger.info(
-                    "checklist:\n{}".format(pprint.pformat(self.checklist))
-                )
+                self.logger.info(f"checklist read from {checklist_file}")
+                self.logger.info(f"checklist:\n{pprint.pformat(self.checklist)}")
         except FileNotFoundError:
             self.logger.warning("checklist load failed:", exc_info=True)
             self.logger.warning("running with empty checklist")
@@ -320,7 +310,7 @@ class NowcastManager:
         that is not included in the message registry.
         """
         self.logger.error(
-            "message received from unregistered worker: {.source}".format(msg),
+            f"message received from unregistered worker: {msg.source}",
             extra={"worker_msg": msg},
         )
         reply = Message(self.name, "unregistered worker").serialize()
@@ -331,8 +321,7 @@ class NowcastManager:
         that is not included in the message registry.
         """
         self.logger.error(
-            "unregistered message type received from "
-            "{0.source} worker: {0.type}".format(msg),
+            f"unregistered message type received from {msg.source} worker: {msg.type}",
             extra={"worker_msg": msg},
         )
         reply = Message(self.name, "unregistered message type").serialize()
@@ -341,10 +330,9 @@ class NowcastManager:
     def _log_received_msg(self, msg):
         """Emit debug message about message received from worker.
         """
+        msg_words = self._msg_registry["workers"][msg.source][msg.type]
         self.logger.debug(
-            "received message from {0.source}: ({0.type}) {msg_words}".format(
-                msg, msg_words=self._msg_registry["workers"][msg.source][msg.type]
-            ),
+            f"received message from {msg.source}: ({msg.type}) {msg_words}",
             extra={"worker_msg": msg},
         )
 
@@ -364,16 +352,12 @@ class NowcastManager:
             self._update_checklist(msg)
         self._slack_notification(msg)
         importlib.reload(self._next_workers_module)
+        worker = msg.source
         try:
-            after_func = getattr(
-                self._next_workers_module, "after_{worker}".format(worker=msg.source)
-            )
+            after_func = getattr(self._next_workers_module, f"after_{worker}")
         except AttributeError:
             self.logger.critical(
-                "could not find after_{worker} in {next_workers} module".format(
-                    worker=msg.source,
-                    next_workers=self._msg_registry["next workers module"],
-                ),
+                f"could not find after_{worker} in {self._msg_registry['next workers module']} module",
                 exc_info=True,
             )
             reply = Message(self.name, "no after_worker function").serialize()
@@ -383,18 +367,14 @@ class NowcastManager:
             next_workers, self._race_condition_mgmt["must finish"] = next_workers
             self._race_condition_mgmt["then launch"] = []
             self.logger.debug(
-                "race condition management activated: {._race_condition_mgmt}".format(
-                    self
-                )
+                f"race condition management activated: {self._race_condition_mgmt}"
             )
         try:
-            self._race_condition_mgmt["must finish"].remove(msg.source)
+            self._race_condition_mgmt["must finish"].remove(worker)
             self._race_condition_mgmt["then launch"].extend(next_workers)
             next_workers.clear()
             self.logger.debug(
-                "{worker} finished and race condition management updated: {race_condition_mgmt}".format(
-                    worker=msg.source, race_condition_mgmt=self._race_condition_mgmt
-                )
+                f"{worker} finished and race condition management updated: {self._race_condition_mgmt}"
             )
         except (KeyError, ValueError):
             # No race condition management in effect, or worker not in "must finish" list
@@ -404,10 +384,7 @@ class NowcastManager:
                 next_workers = self._race_condition_mgmt["then launch"]
                 self._race_condition_mgmt = {}
                 self.logger.debug(
-                    "race condition management ended; "
-                    "next workers released: {next_workers}".format(
-                        next_workers=next_workers
-                    )
+                    f"race condition management ended; next workers released: {next_workers}"
                 )
         except KeyError:
             # No race condition management in effect
@@ -428,15 +405,13 @@ class NowcastManager:
         try:
             key = self._msg_registry["workers"][msg.source]["checklist key"]
         except KeyError:
-            raise KeyError("checklist key not found for {.source} worker".format(msg))
+            raise KeyError(f"checklist key not found for {msg.source} worker")
         try:
             self.checklist[key].update(msg.payload)
         except (KeyError, AttributeError):
             self.checklist[key] = msg.payload
         self.logger.info(
-            "checklist updated with [{0}] items from {1.source} worker".format(
-                key, msg
-            ),
+            f"checklist updated with [{key}] items from {msg.source} worker",
             extra={"worker_msg": msg},
         )
         self._write_checklist_to_disk()
@@ -454,15 +429,10 @@ class NowcastManager:
         except KeyError:
             # No slack notification section in config, and that's okay!
             return
-        slack_msg = {
-            "text": "{worker}: {msg_type}".format(worker=msg.source, msg_type=msg.type)
-        }
+        slack_msg = {"text": f"{msg.source}: {msg.type}"}
         try:
             slack_msg["text"] = "\n".join(
-                (
-                    slack_msg["text"],
-                    "Log: {}".format(slack_notifications["website log url"]),
-                )
+                (slack_msg["text"], f"Log: {slack_notifications['website log url']}")
             )
         except KeyError:
             # Not everyone publishes their logs and/or checklist to the web...
@@ -471,9 +441,7 @@ class NowcastManager:
             slack_msg["text"] = "\n".join(
                 (
                     slack_msg["text"],
-                    "Checklist: {}".format(
-                        slack_notifications["website checklist url"]
-                    ),
+                    f"Checklist: {slack_notifications['website checklist url']}",
                 )
             )
         except KeyError:
@@ -488,9 +456,7 @@ class NowcastManager:
             except KeyError:
                 # No value found in environment
                 self.logger.debug(
-                    "slack notification environment variable not found: {}".format(
-                        slack_url_envvar
-                    )
+                    f"slack notification environment variable not found: {slack_url_envvar}"
                 )
                 continue
             if msg.source in workers:
@@ -510,8 +476,7 @@ class NowcastManager:
             self.logger.info("writing checklist to log file")
             for handler in checklist_logger.handlers:
                 checklist_logger.log(
-                    handler.level,
-                    "checklist:\n{}".format(pprint.pformat(self.checklist)),
+                    handler.level, f"checklist:\n{pprint.pformat(self.checklist)}"
                 )
                 handler.close()
         self.checklist.clear()

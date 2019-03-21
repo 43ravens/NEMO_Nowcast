@@ -89,8 +89,8 @@ class NextWorker:
         cmd.extend([self.module, config_file])
         if self.args:
             cmd.extend(self.args)
-        logger.info("launching {}".format(self), extra={"worker": self})
-        logger.debug("cmd = {}".format(cmd), extra={"cmd": cmd})
+        logger.info(f"launching {self}", extra={"worker": self})
+        logger.debug(f"cmd = {cmd}", extra={"cmd": cmd})
         subprocess.Popen(cmd)
 
 
@@ -253,8 +253,8 @@ class NowcastWorker:
         self._parsed_args = self.cli.parser.parse_args()
         self.config.load(self._parsed_args.config_file)
         msg = self._configure_logging()
-        self.logger.info("running in process {}".format(os.getpid()))
-        self.logger.info("read config from {.file}".format(self.config))
+        self.logger.info(f"running in process {os.getpid()}")
+        self.logger.info(f"read config from {self.config.file}")
         if not self._parsed_args.debug:
             self.logger.info(msg)
         self._install_signal_handlers()
@@ -283,8 +283,8 @@ class NowcastWorker:
                         port = addr
                     if ports and port not in ports:
                         raise WorkerError(
-                            "workers on difference hosts must use the same "
-                            "port number: {0.name}: {addrs}".format(self, addrs=addrs)
+                            f"workers on difference hosts must use the same port number: "
+                            f"{self.name}: {addrs}"
                         )
                     else:
                         ports.add(port)
@@ -292,7 +292,7 @@ class NowcastWorker:
                 ports = self.config["zmq"]["ports"]["logging"]["workers"]
             for port in ports:
                 try:
-                    addr = "tcp://*:{port}".format(port=port)
+                    addr = f"tcp://*:{port}"
                     zmq_pub_config["interface_or_socket"] = addr
                     logging.config.dictConfig(logging_config)
                     break
@@ -313,7 +313,7 @@ class NowcastWorker:
             # Not sure why, but we need a brief pause before we start logging
             # messages
             time.sleep(0.25)
-            msg = "publishing log messages to {addr}".format(addr=addr)
+            msg = f"publishing log messages to {addr}"
         else:
             # Write log messages to local file system
             logging_config = self.config["logging"]
@@ -370,10 +370,8 @@ class NowcastWorker:
         zmq_port = self.config["zmq"]["ports"]["workers"]
         self._socket.setsockopt(zmq.TCP_KEEPALIVE, 1)
         self._socket.setsockopt(zmq.TCP_KEEPALIVE_IDLE, 900)
-        self._socket.connect("tcp://{host}:{port}".format(host=zmq_host, port=zmq_port))
-        self.logger.info(
-            "connected to {host} port {port}".format(host=zmq_host, port=zmq_port)
-        )
+        self._socket.connect(f"tcp://{zmq_host}:{zmq_port}")
+        self.logger.info(f"connected to {zmq_host} port {zmq_port}")
 
     def _do_work(self):
         """Execute the worker function, communicate its success or failure to
@@ -418,35 +416,25 @@ class NowcastWorker:
             worker_msgs = self.config["message registry"]["workers"][self.name]
         except (KeyError, TypeError):
             raise WorkerError(
-                "worker not found in {config_file} message registry: {name}".format(
-                    config_file=self.config.file, name=self.name
-                )
+                f"worker not found in {self.config.file} message registry: {self.name}"
             )
         try:
             msg_words = worker_msgs[msg_type]
         except (KeyError, TypeError):
             raise WorkerError(
-                "message type not found for {.name} worker in {config_file} "
-                "message registry: {msg_type}".format(
-                    self, config_file=self.config.file, msg_type=msg_type
-                )
+                f"message type not found for {self.name} worker in {self.config.file} "
+                f"message registry: {msg_type}"
             )
         if self._parsed_args.debug:
             self.logger.debug(
-                "**debug mode** "
-                "message that would have been sent to manager: "
-                "({msg_type} {msg_words})".format(
-                    msg_type=msg_type, msg_words=msg_words
-                )
+                f"**debug mode** message that would have been sent to manager: ({msg_type} {msg_words})"
             )
             return
         # Send message to nowcast manager
         message = Message(self.name, msg_type, payload).serialize()
         self._socket.send_string(message)
         self.logger.debug(
-            "sent message: ({msg_type}) {msg_words}".format(
-                msg_type=msg_type, msg_words=worker_msgs[msg_type]
-            ),
+            f"sent message: ({msg_type}) {worker_msgs[msg_type]}",
             extra={"logger_name": self.name},
         )
         # Wait for and process response
@@ -457,15 +445,10 @@ class NowcastWorker:
             msg_words = mgr_msgs[message.type]
         except KeyError:
             raise WorkerError(
-                "message type not found for manager in {config_file} "
-                "message registry: {msg_type}".format(
-                    self, config_file=self.config.file, msg_type=message.type
-                )
+                f"message type not found for manager in {self.config.file} message registry: {message.type}"
             )
         self.logger.debug(
-            "received message from {msg.source}: ({msg.type}) {msg_words}".format(
-                msg=message, msg_words=msg_words
-            ),
+            f"received message from {message.source}: ({message.type}) {msg_words}",
             extra={"logger_name": self.name},
         )
         return message
@@ -574,7 +557,7 @@ def get_web_data(
             requests.exceptions.HTTPError,
             socket.error,
         ) as e:
-            logger.debug("received {msg} from {url}".format(msg=e, url=file_url))
+            logger.debug(f"received {e} from {file_url}")
             raise e
 
     try:
@@ -585,11 +568,7 @@ def get_web_data(
         retries = 0
         while total_seconds < wait_exponential_max:
             sleep_seconds = min(wait_seconds, wait_retry_max)
-            logger.debug(
-                "waiting {s} seconds until retry {n}".format(
-                    s=sleep_seconds, n=retries + 1
-                )
-            )
+            logger.debug(f"waiting {sleep_seconds} seconds until retry {retries + 1}")
             time.sleep(sleep_seconds)
             try:
                 return _get_data()
@@ -601,9 +580,5 @@ def get_web_data(
                 wait_seconds *= wait_exponential_multiplier
                 total_seconds += sleep_seconds
                 retries += 1
-        logger.error(
-            "giving up; download from {url} failed {fail_count} times".format(
-                url=file_url, fail_count=retries + 1
-            )
-        )
+        logger.error(f"giving up; download from {file_url} failed {retries + 1} times")
         raise WorkerError
