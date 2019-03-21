@@ -660,11 +660,16 @@ class TestHandleContinueMsg:
             ),
         )
         msg = Message(source="test_worker", type="success")
-        mgr._handle_continue_msg(msg)
+        _, next_workers = mgr._handle_continue_msg(msg)
         assert mgr._race_condition_mgmt == {
             "must finish": {"grib_to_netcdf", "make_live_ocean_files"},
             "then launch": [],
         }
+        assert next_workers == [
+            NextWorker("get_NeahBay_ssh"),
+            NextWorker("grib_to_netcdf"),
+            NextWorker("download_live_ocean"),
+        ]
 
     def test_one_next_worker_no_race_condition_mgmt(self, m_importlib):
         mgr = manager.NowcastManager()
