@@ -444,7 +444,21 @@ class TestConfigureLogging:
         "logging": {"publisher": {"handlers": {"zmq_pub": {}}}},
         "zmq": {"ports": {"logging": {"remote_worker": "salish:4347"}}},
     }
-    zmq_logging_config_remote_workers_different_ports = {
+    zmq_logging_config_different_hosts_same_port = {
+        "logging": {"publisher": {"handlers": {"zmq_pub": {}}}},
+        "zmq": {
+            "ports": {"logging": {"remote_worker": ["salish:4347", "west.cloud:4347"]}}
+        },
+    }
+    zmq_logging_config_remote_worker_2_ports = {
+        "logging": {"publisher": {"handlers": {"zmq_pub": {}}}},
+        "zmq": {
+            "ports": {
+                "logging": {"remote_worker": ["west.cloud:4347", "west.cloud:4348"]}
+            }
+        },
+    }
+    zmq_logging_config_different_hosts_different_ports = {
         "logging": {"publisher": {"handlers": {"zmq_pub": {}}}},
         "zmq": {
             "ports": {"logging": {"remote_worker": ["salish:4347", "west.cloud:4348"]}}
@@ -471,6 +485,16 @@ class TestConfigureLogging:
             ),
             (
                 zmq_logging_config_remote_worker,
+                "remote_worker",
+                "publishing log messages to tcp://*:4347",
+            ),
+            (
+                zmq_logging_config_different_hosts_same_port,
+                "remote_worker",
+                "publishing log messages to tcp://*:4347",
+            ),
+            (
+                zmq_logging_config_remote_worker_2_ports,
                 "remote_worker",
                 "publishing log messages to tcp://*:4347",
             ),
@@ -506,6 +530,16 @@ class TestConfigureLogging:
                 "remote_worker",
                 "publishing log messages to tcp://*:4347",
             ),
+            (
+                zmq_logging_config_different_hosts_same_port,
+                "remote_worker",
+                "publishing log messages to tcp://*:4347",
+            ),
+            (
+                zmq_logging_config_remote_worker_2_ports,
+                "remote_worker",
+                "publishing log messages to tcp://*:4347",
+            ),
         ],
     )
     def test_msg_debug_mode(self, m_logging_config, config, worker_name, exp_msg):
@@ -522,6 +556,8 @@ class TestConfigureLogging:
             (zmq_logging_config_ports_list, "test_worker"),
             (zmq_logging_config_specific_port, "test_worker"),
             (zmq_logging_config_remote_worker, "remote_worker"),
+            (zmq_logging_config_different_hosts_same_port, "remote_worker"),
+            (zmq_logging_config_remote_worker_2_ports, "remote_worker"),
         ],
     )
     def test_logger_name(self, m_logging_config, config, worker_name):
@@ -538,6 +574,8 @@ class TestConfigureLogging:
             (zmq_logging_config_ports_list, "test_worker"),
             (zmq_logging_config_specific_port, "test_worker"),
             (zmq_logging_config_remote_worker, "remote_worker"),
+            (zmq_logging_config_different_hosts_same_port, "remote_worker"),
+            (zmq_logging_config_remote_worker_2_ports, "remote_worker"),
         ],
     )
     def test_logging_dictConfig(self, m_logging_config, config, worker_name):
@@ -555,20 +593,68 @@ class TestConfigureLogging:
             )
 
     @patch("nemo_nowcast.worker.logging")
-    def test_remote_workers_different_ports(self, m_logging, m_logging_config):
+    def test_different_hosts_different_ports(self, m_logging, m_logging_config):
         worker = NowcastWorker("remote_worker", "description")
-        worker.config._dict = self.zmq_logging_config_remote_workers_different_ports
+        worker.config._dict = self.zmq_logging_config_different_hosts_different_ports
         worker._parsed_args = SimpleNamespace(debug=False)
         m_handler = Mock(name="m_zmq_handler", spec=zmq.log.handlers.PUBHandler)
         m_logging.getLogger.return_value = Mock(root=Mock(handlers=[m_handler]))
         with pytest.raises(WorkerError):
             worker._configure_logging()
 
-    @pytest.mark.parametrize("exception", [zmq.ZMQError, ValueError])
-    def test_all_ports_in_use(self, m_logging_config, exception):
-        worker = NowcastWorker("test_worker", "description")
+    @pytest.mark.parametrize(
+        "config, worker_name, exception, exp_msg",
+        [
+            (
+                zmq_logging_config_ports_list,
+                "test_worker",
+                zmq.ZMQError,
+                "publishing log messages to tcp://*:4346",
+            ),
+            (
+                zmq_logging_config_ports_list,
+                "test_worker",
+                ValueError,
+                "publishing log messages to tcp://*:4346",
+            ),
+            (
+                zmq_logging_config_remote_worker_2_ports,
+                "remote_worker",
+                zmq.ZMQError,
+                "publishing log messages to tcp://*:4348",
+            ),
+            (
+                zmq_logging_config_remote_worker_2_ports,
+                "remote_worker",
+                ValueError,
+                "publishing log messages to tcp://*:4348",
+            ),
+        ],
+    )
+    def test_port_in_use(
+        self, m_logging_config, config, worker_name, exception, exp_msg
+    ):
+        worker = NowcastWorker(worker_name, "description")
         worker._socket = Mock(name="zmq_socket")
-        worker.config._dict = self.zmq_logging_config_ports_list
+        worker.config._dict = config
+        worker._parsed_args = SimpleNamespace(debug=False)
+        m_logging_config.dictConfig.side_effect = (exception, None)
+        msg = worker._configure_logging()
+        assert msg == exp_msg
+
+    @pytest.mark.parametrize(
+        "config, worker_name, exception",
+        [
+            (zmq_logging_config_ports_list, "test_worker", zmq.ZMQError),
+            (zmq_logging_config_ports_list, "test_worker", ValueError),
+            (zmq_logging_config_remote_worker_2_ports, "remote_worker", zmq.ZMQError),
+            (zmq_logging_config_remote_worker_2_ports, "remote_worker", ValueError),
+        ],
+    )
+    def test_all_ports_in_use(self, m_logging_config, config, worker_name, exception):
+        worker = NowcastWorker(worker_name, "description")
+        worker._socket = Mock(name="zmq_socket")
+        worker.config._dict = config
         worker._parsed_args = SimpleNamespace(debug=False)
         m_logging_config.dictConfig.side_effect = exception
         with pytest.raises(WorkerError):
