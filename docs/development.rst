@@ -92,7 +92,7 @@ or
 
 if you don't have `ssh key authentication`_ set up on Bitbucket.
 
-.. _ssh key authentication: https://confluence.atlassian.com/bitbucket/set-up-ssh-for-mercurial-728138122.html
+.. _ssh key authentication: https://confluence.atlassian.com/bitbucket/set-up-an-ssh-key-728138079.html
 
 
 .. _NEMO_NowcastDevelopmentEnvironment:
