@@ -19,9 +19,9 @@ channels:
 dependencies:
   - arrow
   - attrs
-  - circus
+  - circus=0.15
   - pip
-  - python=3
+  - python=3.6
   - PyYAML
   - pyzmq
   - requests

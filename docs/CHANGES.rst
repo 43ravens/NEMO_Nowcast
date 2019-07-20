@@ -5,6 +5,12 @@ Change Log
 v19.2.dev0 (unreleased)
 =======================
 
+* Pin Python version at 3.6 and `circus`_ package version at 0.15 to ensure consistent
+  conda environments due to dependency version pins in `circus`_.
+
+* Allow remote workers to have a list of logging ports on each host to facilitate
+  concurrent remote worker instances.
+
 * Drop support for Python 3.5.
 
 * Add worker race condition management.

@@ -20,8 +20,7 @@ import __pkg_metadata__
 
 
 python_classifiers = [
-    f"Programming Language :: Python :: {py_version}"
-    for py_version in ("3", "3.6", "3.7")
+    f"Programming Language :: Python :: {py_version}" for py_version in ("3", "3.6")
 ]
 other_classifiers = [
     "Development Status :: " + __pkg_metadata__.DEV_STATUS,
@@ -44,7 +43,7 @@ install_requires = [
     # see requirements.txt for package versions used during recent development
     "arrow",
     "attrs",
-    "circus",
+    "circus==0.15",
     "PyYAML",
     "pyzmq",
     "requests",
