@@ -28,8 +28,8 @@ v19.2.dev0 (unreleased)
   .. _Slack incoming webhooks API: https://api.slack.com/incoming-webhooks
 
 
-v19.1
-=====
+v19.1 (2019-01-17)
+==================
 
 * Change to `CalVer`_ versioning convention.
   Version identifier format is now ``yy.n[.devn]``,
@@ -55,8 +55,8 @@ v19.1
   config.
 
 
-v1.4
-====
+v1.4 (2017-05-11)
+=================
 
 * Fix a bug whereby ``checklist.log`` file was neither being written nor being
   rotated.
@@ -72,8 +72,8 @@ v1.4
   changed to use distributed logging.
 
 
-v1.3
-====
+v1.3 (2017-01-18)
+=================
 
 * Added option to set max retry waiting time to ``worker.get_web_data()``.
   See `issue #3`_
@@ -105,8 +105,8 @@ v1.3
   .. _issue #7: https://bitbucket.org/43ravens/nemo_nowcast/issues/7
 
 
-v1.2
-====
+v1.2 (2016-10-19)
+=================
 
 * Add the ability to handle ``need`` and ``log`` message types to the
   manager.
@@ -161,8 +161,8 @@ v1.2
 * Fixed bug in worker.get_web_data() function that caused an infinite loop to
   start after a waited-for file was finally downloaded.
 
-v1.1
-====
+v1.1 (2016-09-22)
+=================
 
 * Eliminated lib module by refactoring command-line argument parsing
   functions into attr.s-decorated nemo_nowcast.cli.CommandLineInterface
@@ -186,8 +186,8 @@ v1.1
 * Fix bugs that arise when scheduled workers config is missing or empty.
 
 
-v1.0
-====
+v1.0 (2016-08-18)
+=================
 
 * Add worker launch scheduler module.
 * Add clear_checklist built-in worker.
@@ -199,14 +199,14 @@ v1.0
 * Add sleep & awaken example nowcast worker modules.
 
 
-v0.3
-====
+v0.3 (2016-06-25)
+=================
 
 * Add nowcast worker module.
 
 
-v0.2
-====
+v0.2 (2016-06-23)
+=================
 
 * Start API docs.
 * Add nowcast manager module.
