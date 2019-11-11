@@ -2,8 +2,8 @@
 Change Log
 **********
 
-v19.2.dev0 (unreleased)
-=======================
+v19.2 (2019-11-11)
+==================
 
 * Pin Python version at 3.6 and `circus`_ package version at 0.15 to ensure consistent
   conda environments due to dependency version pins in `circus`_.
