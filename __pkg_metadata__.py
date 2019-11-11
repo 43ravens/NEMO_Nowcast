@@ -16,5 +16,5 @@
 """
 PROJECT = "NEMO_Nowcast"
 DESCRIPTION = "NEMO ocean model nowcast framework"
-VERSION = "19.2"
+VERSION = "19.3.dev0"
 DEV_STATUS = "5 - Production/Stable"
