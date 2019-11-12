@@ -7,7 +7,7 @@
 #    $ cd NEMO_NOwcast
 #    $ conda env create -f environment-dev.yaml
 #    $ source activate nemo-nowcast
-#    $ pip install --editable .
+#    (nemo-nowcast)$ python3 -m pip install --editable .
 
 name: nemo-nowcast
 
