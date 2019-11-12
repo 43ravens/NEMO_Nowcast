@@ -5,12 +5,23 @@ Change Log
 v19.3.dev0 (unreleased)
 =======================
 
+* Change process manager from `circus`_ to `supervisor`_ because ``circus`` has
+  dependency version pins that prevent moving to newer versions of Python and 0mq
+  (and probably other packages).
+  ``cirucs`` does not appear to be being actively maintained any more.
+  ``supervisor`` has fewer dependencies, provides all of the functionality that we
+  need, and is being actively maintained.
+
+  .. _supervisor: http://supervisord.org/
+
 
 v19.2 (2019-11-11)
 ==================
 
 * Pin Python version at 3.6 and `circus`_ package version at 0.15 to ensure consistent
   conda environments due to dependency version pins in `circus`_.
+
+  .. _circus: https://circus.readthedocs.io/en/latest/
 
 * Allow remote workers to have a list of logging ports on each host to facilitate
   concurrent remote worker instances.

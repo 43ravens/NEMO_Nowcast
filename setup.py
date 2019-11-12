@@ -43,11 +43,11 @@ install_requires = [
     # see requirements.txt for package versions used during recent development
     "arrow",
     "attrs",
-    "circus==0.15",
     "PyYAML",
     "pyzmq",
     "requests",
     "schedule",
+    "supervisor",
 ]
 tests_require = ["coverage", "pytest"]
 extras_require = {"docs": ["sphinx"]}
