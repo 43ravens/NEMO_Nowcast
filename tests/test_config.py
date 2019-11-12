@@ -35,6 +35,21 @@ class TestConfig:
         with pytest.raises(KeyError):
             config["foo"]
 
+    def test_contains(self):
+        m_open = mock_open(
+            read_data=(
+                "foo: bar\n"
+                "checklist file: nowcast_checklist.yaml\n"
+                "python: python\n"
+                "logging:\n"
+                "  handlers: []"
+            )
+        )
+        config = Config()
+        with patch("nemo_nowcast.config.open", m_open):
+            config.load("nowcast.yaml")
+        assert "foo" in config
+
     def test_getitem(self):
         m_open = mock_open(
             read_data=(
@@ -50,7 +65,7 @@ class TestConfig:
             config.load("nowcast.yaml")
         assert config["foo"] == "bar"
 
-    def test_contains(self):
+    def test_setitem(self):
         m_open = mock_open(
             read_data=(
                 "foo: bar\n"
@@ -63,7 +78,53 @@ class TestConfig:
         config = Config()
         with patch("nemo_nowcast.config.open", m_open):
             config.load("nowcast.yaml")
-        assert "foo" in config
+        config["foo"] = "baz"
+        assert config["foo"] == "baz"
+
+    def test_set_key_exists(self):
+        m_open = mock_open(
+            read_data=(
+                "foo: bar\n"
+                "checklist file: nowcast_checklist.yaml\n"
+                "python: python\n"
+                "logging:\n"
+                "  handlers: []"
+            )
+        )
+        config = Config()
+        with patch("nemo_nowcast.config.open", m_open):
+            config.load("nowcast.yaml")
+        assert config.get("foo") == "bar"
+
+    def test_set_no_key_default_none(self):
+        m_open = mock_open(
+            read_data=(
+                "foo: bar\n"
+                "checklist file: nowcast_checklist.yaml\n"
+                "python: python\n"
+                "logging:\n"
+                "  handlers: []"
+            )
+        )
+        config = Config()
+        with patch("nemo_nowcast.config.open", m_open):
+            config.load("nowcast.yaml")
+        assert config.get("bar") is None
+
+    def test_set_no_key_default_value(self):
+        m_open = mock_open(
+            read_data=(
+                "foo: bar\n"
+                "checklist file: nowcast_checklist.yaml\n"
+                "python: python\n"
+                "logging:\n"
+                "  handlers: []"
+            )
+        )
+        config = Config()
+        with patch("nemo_nowcast.config.open", m_open):
+            config.load("nowcast.yaml")
+        assert config.get("bar", default="baz") == "baz"
 
 
 class TestConfigLoad:

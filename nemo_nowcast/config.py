@@ -38,11 +38,20 @@ class Config:
     #: :py:meth:`~nemo_nowcast.config.Config.load` method.
     _dict = attr.ib(init=False, repr=False, default=attr.Factory(dict))
 
+    def __contains__(self, item):
+        return item in self._dict
+
     def __getitem__(self, item):
         return self._dict[item]
 
-    def __contains__(self, item):
-        return item in self._dict
+    def __setitem__(self, key, value):
+        self._dict[key] = value
+
+    def get(self, key, default=None):
+        try:
+            return self._dict[key]
+        except KeyError:
+            return default
 
     def load(self, config_file):
         """Load the YAML config_file.
