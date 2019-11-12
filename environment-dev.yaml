@@ -19,12 +19,12 @@ channels:
 dependencies:
   - arrow
   - attrs
-  - circus=0.15
   - pip
-  - python=3.6
+  - python>=3.6
   - PyYAML
   - pyzmq
   - requests
+  - supervisor
   - schedule
 
   # For coding style
