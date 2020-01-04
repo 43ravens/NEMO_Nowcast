@@ -2,7 +2,7 @@
 Change Log
 **********
 
-v19.3.dev0 (unreleased)
+v20.1.dev0 (unreleased)
 =======================
 
 * Change process manager from `circus`_ to `supervisor`_ because ``circus`` has
