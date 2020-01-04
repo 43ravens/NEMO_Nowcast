@@ -103,14 +103,14 @@ Licenses
     :target: https://opensource.org/licenses/BSD-3-Clause
     :alt: Licensed under the BSD-3-Clause License
 
-The NEMO_Nowcast framework code and documentation are copyright 2016-2019 by Doug Latornell, 43ravens.
+The NEMO_Nowcast framework code and documentation are copyright 2016-2020 by Doug Latornell, 43ravens.
 
 They are licensed under the Apache License, Version 2.0.
 http://www.apache.org/licenses/LICENSE-2.0
 Please see the LICENSE file for details of the license.
 
 The `fileutils`_ module from the `boltons`_ project is included in the NEMO_Nowcast package.
-It is copyright 2016-2019 by Mahmoud Hashemi and used under the terms of the `boltons BSD license`_.
+It is copyright 2016 by Mahmoud Hashemi and used under the terms of the `boltons BSD license`_.
 
 .. _fileutils: https://boltons.readthedocs.io/en/latest/fileutils.html
 .. _boltons: https://pypi.python.org/pypi/boltons
