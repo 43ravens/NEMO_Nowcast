@@ -12,6 +12,11 @@ jobs:
   test-coverage:
     name: pytest & coverage report
     runs-on: 'ubuntu-latest'
+    strategy:
+      matrix:
+        fail-fast: false
+        python-version: ['3.6']
+
     steps:
       - uses: actions/checkout@v2
       - uses: goanpeca/setup-miniconda@v1
@@ -19,7 +24,7 @@ jobs:
            auto-update-conda: true
            activate-environment: nemo-nowcast
            environment-file: environment-dev.yaml
-           python-version: 3.6
+           python-version: ${{ matrix.python-version }}
            auto-activate-base: false
 
       - name: Install package
