@@ -15,7 +15,6 @@ dependencies:
   - arrow
   - attrs
   - pip
-  - python>=3.6
   - PyYAML
   - pyzmq
   - requests
@@ -25,6 +24,3 @@ dependencies:
   # For unit tests
   - coverage
   - pytest
-
-  - pip:
-      - python-hglib
