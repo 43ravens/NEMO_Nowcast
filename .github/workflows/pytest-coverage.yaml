@@ -22,10 +22,10 @@ jobs:
       - uses: goanpeca/setup-miniconda@v1
         with:
            auto-update-conda: true
-           activate-environment: nemo-nowcast
+           auto-activate-base: false
            environment-file: environment-test.yaml
            python-version: ${{ matrix.python-version }}
-           auto-activate-base: false
+           activate-environment: nemo-nowcast-test
 
       - name: Install package
         shell: bash -l {0}
