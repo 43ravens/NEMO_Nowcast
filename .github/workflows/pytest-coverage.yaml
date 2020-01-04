@@ -13,8 +13,8 @@ jobs:
     name: pytest & coverage report
     runs-on: 'ubuntu-latest'
     strategy:
+      fail-fast: false
       matrix:
-        fail-fast: false
         python-version: ['3.6']
 
     steps:
