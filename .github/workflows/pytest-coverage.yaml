@@ -19,6 +19,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - uses: goanpeca/setup-miniconda@v1
         with:
            auto-update-conda: true
@@ -34,6 +35,13 @@ jobs:
       - name: pytest package with coverage
         shell: bash -l {0}
         run: coverage run -m pytest --junitxml=./test-reports/junit.xml
+
+      - uses: pioug/le-slack-message@v1.0.0
+        with:
+          ACTION_NAME: ${{ github.repository }} pytest suite
+          JOB: ${{ toJson(job) }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()
 
       - name: coverage report
         shell: bash -l {0}
