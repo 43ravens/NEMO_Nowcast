@@ -79,7 +79,7 @@ class CommandLineInterface:
         This is a thin wrapper around
         :py:meth:`argparse.ArgumentParser.add_argument` that sets the
         type of the option to
-        :py:meth:`nemo_nowcast.cli.CommandLineInterface._arrow_date`,
+        :py:meth:`nemo_nowcast.cli.CommandLineInterface.arrow_date`,
         and append information about the option's format and default value
         to the *help* message.
 
@@ -97,7 +97,7 @@ class CommandLineInterface:
         """
         self.parser.add_argument(
             name,
-            type=self._arrow_date,
+            type=self.arrow_date,
             default=default,
             help=(
                 f"{help} Use YYYY-MM-DD format. Defaults to {default.format('YYYY-MM-DD')}."
@@ -105,7 +105,7 @@ class CommandLineInterface:
         )
 
     @staticmethod
-    def _arrow_date(string):
+    def arrow_date(string):
         """Convert a YYYY-MM-DD string to a UTC arrow object or raise
         :py:exc:`argparse.ArgumentTypeError`.
 

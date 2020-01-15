@@ -115,7 +115,7 @@ class TestAddDateOption:
         cli = CommandLineInterface("test")
         cli.build_parser()
         cli.add_date_option("--test-date", arrow.get("2016-09-22"), "help")
-        assert cli.parser._actions[2].type == cli._arrow_date
+        assert cli.parser._actions[2].type == cli.arrow_date
 
     def test_default(self):
         cli = CommandLineInterface("test")
@@ -132,16 +132,16 @@ class TestAddDateOption:
 
 
 class TestArrowDate:
-    """Unit tests for nemo_nowcast.cli.CommandLineInterface._arrow_date method.
+    """Unit tests for nemo_nowcast.cli.CommandLineInterface.arrow_date method.
     """
 
     def test_arrow_date(self):
         cli = CommandLineInterface("test")
-        arw = cli._arrow_date("2016-09-22")
+        arw = cli.arrow_date("2016-09-22")
         expected = arrow.get(datetime(2016, 9, 22, 0, 0, 0), "utc")
         assert arw == expected
 
     def test_arrow_date_parse_erroe(self):
         cli = CommandLineInterface("test")
         with pytest.raises(argparse.ArgumentTypeError):
-            cli._arrow_date("205-7-261")
+            cli.arrow_date("205-7-261")

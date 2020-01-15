@@ -5,6 +5,9 @@ Change Log
 v20.1.dev0 (unreleased)
 =======================
 
+* Expose ``nemo_nowcast.cli.arrow_date()`` function for use by packages like
+  SalishSeaNowcast that use NEMO_Nowcast CLI elements.
+
 * Change process manager from `circus`_ to `supervisor`_ because ``circus`` has
   dependency version pins that prevent moving to newer versions of Python and 0mq
   (and probably other packages).
