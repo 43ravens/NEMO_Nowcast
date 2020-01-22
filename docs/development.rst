@@ -22,23 +22,26 @@
 .. image:: https://img.shields.io/badge/license-Apache%202-cb2533.svg
     :target: https://www.apache.org/licenses/LICENSE-2.0
     :alt: Licensed under the Apache License, Version 2.0
-.. image:: https://img.shields.io/badge/License-BSD%203--Clause-orange.svg
+.. image:: https://img.shields.io/badge/license-BSD%203--Clause-orange.svg
     :target: https://opensource.org/licenses/BSD-3-Clause
     :alt: Licensed under the BSD-3-Clause License
 .. image:: https://img.shields.io/badge/python-3.6+-blue.svg
-    :target: https://docs.python.org/3.7/
+    :target: https://docs.python.org/3.8/
     :alt: Python Version
-.. image:: https://img.shields.io/badge/version%20control-hg-blue.svg
-    :target: https://bitbucket.org/43ravens/nemo_nowcast/
-    :alt: Mercurial on Bitbucket
+.. image:: https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
+    :target: https://github.com/43ravens/NEMO_Nowcast
+    :alt: Git on GitHub
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://black.readthedocs.io/en/stable/
     :alt: The uncompromising Python code formatter
 .. image:: https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest
     :target: https://nemo-nowcast.readthedocs.io/en/latest/
     :alt: Documentation Status
-.. image:: https://img.shields.io/bitbucket/issues/43ravens/nemo_nowcast.svg
-    :target: https://bitbucket.org/43ravens/nemo_nowcast/issues?status=new&status=open
+.. image:: https://img.shields.io/github/workflow/status/43ravens/NEMO_Nowcast/CI?logo=github
+    :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3ACI
+    :alt: GitHub Workflow Status
+.. image:: https://img.shields.io/github/issues/43ravens/NEMO_Nowcast?logo=github
+    :target: https://github.com/43ravens/NEMO_Nowcast/issues
     :alt: Issue Tracker
 .. image:: https://anaconda.org/gomss-nowcast/nemo_nowcast/badges/installer/conda.svg
     :target: https://conda.anaconda.org/gomss-nowcast
@@ -72,27 +75,27 @@ in particular:
 Getting the Code
 ================
 
-.. image:: https://img.shields.io/badge/version%20control-hg-blue.svg
-    :target: https://bitbucket.org/43ravens/nemo_nowcast/
-    :alt: Mercurial on Bitbucket
+.. image:: https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
+    :target: https://github.com/43ravens/NEMO_Nowcast
+    :alt: Git on GitHub
 
-Clone the code and documentation `repository`_ from Bitbucket with:
+Clone the code and documentation `repository`_ from GitHub with:
 
-.. _repository: https://bitbucket.org/43ravens/nemo_nowcast
+.. _repository: https://github.com/43ravens/NEMO_Nowcast
 
 .. code-block:: bash
 
-    $ hg clone ssh://hg@bitbucket.org/43ravens/nemo_nowcast NEMO_Nowcast
+    $ git clone git@github.com:43ravens/NEMO_Nowcast.git
 
 or
 
 .. code-block:: bash
 
-    $ hg clone https://your_userid@bitbucket.org/43ravens/nemo_nowcast NEMO_Nowcast
+    $ git clone https://github.com/43ravens/NEMO_Nowcast.git
 
-if you don't have `ssh key authentication`_ set up on Bitbucket.
+if you don't have `ssh key authentication`_ set up on GitHub.
 
-.. _ssh key authentication: https://confluence.atlassian.com/bitbucket/set-up-an-ssh-key-728138079.html
+.. _ssh key authentication: https://help.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh
 
 
 .. _NEMO_NowcastDevelopmentEnvironment:
@@ -220,7 +223,7 @@ If you have write access to the `repository`_ on Bitbucket,
 whenever you push changes to Bitbucket the documentation is automatically re-built and rendered at http://nemo-nowcast.readthedocs.io/en/latest/.
 
 
-.. _NEMO_NowcastRuningTheUnitTests:
+.. _NEMO_NowcastRunningTheUnitTests:
 
 Running the Unit Tests
 ======================
@@ -232,8 +235,6 @@ The `pytest`_ tool is used for test parametrization and as the test runner for t
 
 With your :kbd:`nemo-nowcast` development environment activated,
 use:
-
-.. _Mercurial: https://www.mercurial-scm.org/
 
 .. code-block:: bash
 
@@ -291,32 +292,27 @@ or
 to produce an HTML report that you can view in your browser by opening :file:`NEMO_Nowcast/htmlcov/index.html`.
 
 
+.. _NEMO_NowcastContinuousIntegration:
+
 Continuous Integration
 ----------------------
 
-The :kbd:`NEMO_Nowcast` package unit test suite is run and a coverage report is generated whenever changes are pushed to Bitbucket.
-The results are visible on the `repo pipelines page`_,
-from the :guilabel:`Builds` column on the `repo commits page`_,
-or from a link in the build status area on the right side of the `repo summary page`_ .
+.. image:: https://img.shields.io/github/workflow/status/43ravens/NEMO_Nowcast/CI?logo=github
+    :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3ACI
+    :alt: GitHub Workflow Status
 
-.. _repo pipelines page: https://bitbucket.org/43ravnes/nemo_nowcast/addon/pipelines/home
-.. _repo commits page: https://bitbucket.org/43ravnes/nemo_nowcast/commits/all
-.. _repo summary page: https://bitbucket.org/43ravnes/nemo_nowcast/
+The :kbd:`NEMO_Nowcast` package unit test suite is run and a coverage report is generated whenever changes are pushed to GitHub.
+The results are visible on the `repo actions page`_,
+from the green checkmarks beside commits on the `repo commits page`_,
+or from the green checkmark to the left of the "Latest commit" message on the `repo code overview page`_ .
 
+.. _repo actions page: https://github.com/43ravens/NEMO_Nowcast/actions
+.. _repo commits page: https://github.com/43ravens/NEMO_Nowcast/commits/master
+.. _repo code overview page: https://github.com/43ravens/NEMO_Nowcast
 
-Pipelines Container Image
-^^^^^^^^^^^^^^^^^^^^^^^^^
+The `GitHub Actions`_ workflow configuration that defines the continuous integration tasks is in the :file:`.github/workflows/pytest-coverage.yaml` file.
 
-The Bitbucket pipelines configuration in :file:`bitbucket-pipelines.yml` uses a custom image that includes a :command:`conda` environment for running the test suite with coverage analysis.
-The image is defined and maintained using the :file:`Dockerfile` and :file:`environment-test.yaml` files in the :file:`pipelines-test-env/` directory.
-
-To build or update the image and push it to Docker Hub use:
-
-.. code-block:: bash
-
-    docker build -t nemo-nowcast-test pipelines-test-env/
-    docker tag nemo-nowcast-test:latest douglatornell/salishsea:nemo-nowcast-test
-    docker push douglatornell/salishsea:nemo-nowcast-test
+.. _GitHub Actions: https://help.github.com/en/actions
 
 
 .. _NEMO_NowcastVersionControlRepository:
@@ -324,11 +320,13 @@ To build or update the image and push it to Docker Hub use:
 Version Control Repository
 ==========================
 
-.. image:: https://img.shields.io/badge/version%20control-hg-blue.svg
-    :target: https://bitbucket.org/43ravens/nemo_nowcast/
-    :alt: Mercurial on Bitbucket
+.. image:: https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
+    :target: https://github.com/43ravens/NEMO_Nowcast
+    :alt: Git on GitHub
 
-The :kbd:`NEMO_Nowcast` package code and documentation source files are available as a `Mercurial`_ repository at https://bitbucket.org/43ravens/nemo_nowcast.
+The :kbd:`NEMO_Nowcast` package code and documentation source files are available as a `Git`_ repository at https://github.com/43ravens/NEMO_Nowcast.
+
+.. _Git: https://git-scm.com/
 
 
 .. _NEMO_NowcastIssueTracker:
@@ -336,13 +334,13 @@ The :kbd:`NEMO_Nowcast` package code and documentation source files are availabl
 Issue Tracker
 =============
 
-.. image:: https://img.shields.io/bitbucket/issues/43ravens/nemo_nowcast.svg
-    :target: https://bitbucket.org/43ravens/nemo_nowcast/issues?status=new&status=open
+.. image:: https://img.shields.io/github/issues/43ravens/NEMO_Nowcast?logo=github
+    :target: https://github.com/43ravens/NEMO_Nowcast/issues
     :alt: Issue Tracker
 
 Development tasks,
 bug reports,
-and enhancement ideas are recorded and managed in the issue tracker at https://bitbucket.org/43ravens/nemo_nowcast/issues.
+and enhancement ideas are recorded and managed in the issue tracker at https://github.com/43ravens/NEMO_Nowcast/issues
 
 
 .. _NEMO_NowcastReleasePackages:
@@ -373,7 +371,7 @@ Licenses
 .. image:: https://img.shields.io/badge/license-Apache%202-cb2533.svg
     :target: https://www.apache.org/licenses/LICENSE-2.0
     :alt: Licensed under the Apache License, Version 2.0
-.. image:: https://img.shields.io/badge/License-BSD%203--Clause-orange.svg
+.. image:: https://img.shields.io/badge/license-BSD%203--Clause-orange.svg
     :target: https://opensource.org/licenses/BSD-3-Clause
     :alt: Licensed under the BSD-3-Clause License
 

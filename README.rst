@@ -4,24 +4,27 @@ NEMO Ocean Model Nowcast Framework
 
 .. image:: https://img.shields.io/badge/license-Apache%202-cb2533.svg
     :target: https://www.apache.org/licenses/LICENSE-2.0
-    :alt: Licensed under the Apache License, Version 2.0
+    :alt: Licensed under the Apache license, Version 2.0
 .. image:: https://img.shields.io/badge/License-BSD%203--Clause-orange.svg
     :target: https://opensource.org/licenses/BSD-3-Clause
     :alt: Licensed under the BSD-3-Clause License
 .. image:: https://img.shields.io/badge/python-3.6+-blue.svg
-    :target: https://docs.python.org/3.7/
+    :target: https://docs.python.org/3.8/
     :alt: Python Version
-.. image:: https://img.shields.io/badge/version%20control-hg-blue.svg
-    :target: https://bitbucket.org/43ravens/nemo_nowcast/
-    :alt: Mercurial on Bitbucket
+.. image:: https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
+    :target: https://github.com/43ravens/NEMO_Nowcast
+    :alt: Git on GitHub
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://black.readthedocs.io/en/stable/
     :alt: The uncompromising Python code formatter
 .. image:: https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest
     :target: https://nemo-nowcast.readthedocs.io/en/latest/
     :alt: Documentation Status
-.. image:: https://img.shields.io/bitbucket/issues/43ravens/nemo_nowcast.svg
-    :target: https://bitbucket.org/43ravens/nemo_nowcast/issues?status=new&status=open
+.. image:: https://img.shields.io/github/workflow/status/43ravens/NEMO_Nowcast/CI?logo=github
+    :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3ACI
+    :alt: GitHub Workflow Status
+.. image:: https://img.shields.io/github/issues/43ravens/NEMO_Nowcast?logo=github
+    :target: https://github.com/43ravens/NEMO_Nowcast/issues
     :alt: Issue Tracker
 .. image:: https://anaconda.org/gomss-nowcast/nemo_nowcast/badges/installer/conda.svg
     :target: https://conda.anaconda.org/gomss-nowcast
@@ -99,7 +102,7 @@ Licenses
 .. image:: https://img.shields.io/badge/license-Apache%202-cb2533.svg
     :target: https://www.apache.org/licenses/LICENSE-2.0
     :alt: Licensed under the Apache License, Version 2.0
-.. image:: https://img.shields.io/badge/License-BSD%203--Clause-orange.svg
+.. image:: https://img.shields.io/badge/license-BSD%203--Clause-orange.svg
     :target: https://opensource.org/licenses/BSD-3-Clause
     :alt: Licensed under the BSD-3-Clause License
 
