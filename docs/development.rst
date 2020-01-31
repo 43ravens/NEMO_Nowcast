@@ -242,7 +242,7 @@ use:
 .. code-block:: bash
 
     (nemo-nowcast)$ cd NEMO_Nowcast/
-    (nemo-nowcast)$ py.test
+    (nemo-nowcast)$ pytest
 
 to run the test suite.
 The output looks something like::
@@ -270,27 +270,24 @@ The output looks something like::
 
   ========================= 300 passed in 16.77 seconds =========================
 
-You can monitor what lines of code the test suite exercises using the `coverage.py`_ tool with the command:
+You can monitor what lines of code the test suite exercises using the `coverage.py`_and `pytest-cov`_ tools with the commands:
 
 .. _coverage.py: https://coverage.readthedocs.io/en/latest/
+-- _pytest-cov: https://pytest-cov.readthedocs.io/en/latest/
 
 .. code-block:: bash
 
     (nemo-nowcast)$ cd NEMO_Nowcast/
-    (nemo-nowcast)$ coverage run -m py.test
+    (nemo-nowcast)$ pytest --cov=./
 
-and generate a test coverage report with:
+The test coverage report will be displayed below the test suite run output.
 
-.. code-block:: bash
-
-    (nemo-nowcast)$ coverage report
-
-to produce a plain text report,
-or
+Alternatively,
+you can use
 
 .. code-block:: bash
 
-    (nemo-nowcast)$ coverage html
+    (nemo-nowcast)$ pytest --cov=./ --cov-report html
 
 to produce an HTML report that you can view in your browser by opening :file:`NEMO_Nowcast/htmlcov/index.html`.
 
