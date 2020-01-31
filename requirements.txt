@@ -34,7 +34,8 @@ Pygments==2.5.2
 pyOpenSSL==19.1.0
 pyparsing==2.4.6
 PySocks==1.7.1
-pytest==5.3.4
+pytest==5.3.5
+pytest-cov==2.8.1
 python-dateutil==2.8.1
 pytz==2019.3
 PyYAML==5.3
