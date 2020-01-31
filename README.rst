@@ -23,6 +23,9 @@ NEMO Ocean Model Nowcast Framework
 .. image:: https://img.shields.io/github/workflow/status/43ravens/NEMO_Nowcast/CI?logo=github
     :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3ACI
     :alt: GitHub Workflow Status
+.. image:: https://img.shields.io/codecov/c/github/43ravens/NEMO_Nowcast?logo=codecov
+    :target: https://codecov.io/gh/43ravens/NEMO_Nowcast
+    :alt: Codecov Testing Coverage Report
 .. image:: https://img.shields.io/github/issues/43ravens/NEMO_Nowcast?logo=github
     :target: https://github.com/43ravens/NEMO_Nowcast/issues
     :alt: Issue Tracker

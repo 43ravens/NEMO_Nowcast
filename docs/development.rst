@@ -40,6 +40,9 @@
 .. image:: https://img.shields.io/github/workflow/status/43ravens/NEMO_Nowcast/CI?logo=github
     :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3ACI
     :alt: GitHub Workflow Status
+.. image:: https://img.shields.io/codecov/c/github/43ravens/NEMO_Nowcast?logo=codecov
+    :target: https://codecov.io/gh/43ravens/NEMO_Nowcast
+    :alt: Codecov Testing Coverage Report
 .. image:: https://img.shields.io/github/issues/43ravens/NEMO_Nowcast?logo=github
     :target: https://github.com/43ravens/NEMO_Nowcast/issues
     :alt: Issue Tracker
@@ -300,15 +303,20 @@ Continuous Integration
 .. image:: https://img.shields.io/github/workflow/status/43ravens/NEMO_Nowcast/CI?logo=github
     :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3ACI
     :alt: GitHub Workflow Status
+.. image:: https://img.shields.io/codecov/c/github/43ravens/NEMO_Nowcast?logo=codecov
+    :target: https://codecov.io/gh/43ravens/NEMO_Nowcast
+    :alt: Codecov Testing Coverage Report
 
 The :kbd:`NEMO_Nowcast` package unit test suite is run and a coverage report is generated whenever changes are pushed to GitHub.
 The results are visible on the `repo actions page`_,
 from the green checkmarks beside commits on the `repo commits page`_,
 or from the green checkmark to the left of the "Latest commit" message on the `repo code overview page`_ .
+The testing coverage report is uploaded to `codecov.io`_
 
 .. _repo actions page: https://github.com/43ravens/NEMO_Nowcast/actions
 .. _repo commits page: https://github.com/43ravens/NEMO_Nowcast/commits/master
 .. _repo code overview page: https://github.com/43ravens/NEMO_Nowcast
+.. _codecov.io: https://codecov.io/gh/43ravens/NEMO_Nowcast
 
 The `GitHub Actions`_ workflow configuration that defines the continuous integration tasks is in the :file:`.github/workflows/pytest-coverage.yaml` file.
 
