@@ -34,7 +34,7 @@ jobs:
 
       - name: pytest package with coverage
         shell: bash -l {0}
-        run: coverage run -m pytest --junitxml=./test-reports/junit.xml
+        run: pytest --cov=./ --cov-report=xml
 
       - uses: pioug/le-slack-message@v1.0.0
         with:
@@ -43,6 +43,9 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         if: always()
 
-      - name: coverage report
-        shell: bash -l {0}
-        run: coverage report
+      - name: Upload coverage report to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+          flags: unittests

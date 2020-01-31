@@ -2,7 +2,7 @@
 #
 # Creates a conda environment in which the NEMO_Nowcast package unit tests and
 # coverage analysis can be run.
-# Primarily intended for creation of a docker image for use by bitbucket-pipelines.yml.
+# Primarily intended for creation of a conda env for use in a GitHub Actions workflow.
 
 name: nemo-nowcast-test
 
@@ -22,5 +22,5 @@ dependencies:
   - supervisor
 
   # For unit tests
-  - coverage
   - pytest
+  - pytest-cov
