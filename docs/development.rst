@@ -37,7 +37,7 @@
 .. image:: https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest
     :target: https://nemo-nowcast.readthedocs.io/en/latest/
     :alt: Documentation Status
-.. image:: https://img.shields.io/github/workflow/status/43ravens/NEMO_Nowcast/CI?logo=github
+.. image:: https://github.com/43ravens/NEMO_Nowcast/workflows/CI/badge.svg
     :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3ACI
     :alt: GitHub Workflow Status
 .. image:: https://codecov.io/gh/43ravens/NEMO_Nowcast/branch/master/graph/badge.svg
@@ -297,7 +297,7 @@ to produce an HTML report that you can view in your browser by opening :file:`NE
 Continuous Integration
 ----------------------
 
-.. image:: https://img.shields.io/github/workflow/status/43ravens/NEMO_Nowcast/CI?logo=github
+.. image:: https://github.com/43ravens/NEMO_Nowcast/workflows/CI/badge.svg
     :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3ACI
     :alt: GitHub Workflow Status
 .. image:: https://codecov.io/gh/43ravens/NEMO_Nowcast/branch/master/graph/badge.svg
