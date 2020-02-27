@@ -282,7 +282,7 @@ that is,
 we're saying that the manager should not launch another worker.
 Also note that the 3 keys in the :py:obj:`next_workers` dict correspond to the 3 message types registered for the :py:mod:`sleep` worker in our :file:`nowcast.yaml` file.
 
-.. _NEMO_Nowcast repository: https://bitbucket.org/43ravens/nemo_nowcast
+.. _NEMO_Nowcast repository: https://github.com/43ravens/NEMO_Nowcast
 
 
 Running the Nowcast System
