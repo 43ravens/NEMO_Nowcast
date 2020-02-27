@@ -270,7 +270,7 @@ The output looks something like::
 
   ========================= 300 passed in 16.77 seconds =========================
 
-You can monitor what lines of code the test suite exercises using the `coverage.py`_and `pytest-cov`_ tools with the commands:
+You can monitor what lines of code the test suite exercises using the `coverage.py`_ and `pytest-cov`_ tools with the commands:
 
 .. _coverage.py: https://coverage.readthedocs.io/en/latest/
 -- _pytest-cov: https://pytest-cov.readthedocs.io/en/latest/
