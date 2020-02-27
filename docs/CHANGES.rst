@@ -88,7 +88,7 @@ v1.4 (2017-05-11)
   rotated.
   See `issue #9`_
 
-  .. _issue #9: https://bitbucket.org/43ravens/nemo_nowcast/issues/9
+  .. _issue #9: https://github.com/43ravens/NEMO_Nowcast/issues/9
 
 * Added option to use ZeroMQ PUB/SUB sockets for distributed logging.
   See https://nemo-nowcast.readthedocs.io/en/latest/architecture/log_aggregator.html
@@ -104,7 +104,7 @@ v1.3 (2017-01-18)
 * Added option to set max retry waiting time to ``worker.get_web_data()``.
   See `issue #3`_
 
-  .. _issue #3: https://bitbucket.org/43ravens/nemo_nowcast/issues/3
+  .. _issue #3: https://github.com/43ravens/NEMO_Nowcast/issues/3
 
 * ``rotate_logs`` worker sets permissions on newly created log files to
   ``rw-rw-r--``.
@@ -121,14 +121,14 @@ v1.3 (2017-01-18)
   notice when log files are rotated and switch to writing to the new ones.
   See `issue #8`_
 
-  .. _issue #8: https://bitbucket.org/43ravens/nemo_nowcast/issues/8
+  .. _issue #8: https://github.com/43ravens/NEMO_Nowcast/issues/8
 
 * Pass system state checklist dict into ``next_workers.after_*()`` calls so that
   ``after_*()`` functions can access it to define what workers to launch next
   and/or their order.
   See `issue #7`_
 
-  .. _issue #7: https://bitbucket.org/43ravens/nemo_nowcast/issues/7
+  .. _issue #7: https://github.com/43ravens/NEMO_Nowcast/issues/7
 
 
 v1.2 (2016-10-19)
@@ -167,21 +167,21 @@ v1.2 (2016-10-19)
   when ``--debug`` option is used instead of logging only to console.
   See `issue #2`_
 
-  .. _issue #2: https://bitbucket.org/43ravens/nemo_nowcast/issues/2
+  .. _issue #2: https://github.com/43ravens/NEMO_Nowcast/issues/2
 
 * Pass system config dict into ``next_workers.after_*()`` calls so that
   ``after_*()`` functions can access it to define what workers to launch next
   and/or their order.
   See `issue #5`_
 
-  .. _issue #5: https://bitbucket.org/43ravens/nemo_nowcast/issues/5
+  .. _issue #5: https://github.com/43ravens/NEMO_Nowcast/issues/5
 
 * Moved nemo_nowcast.NowcastWorker.add_argument() method to
   nemo_nowcast.CommandLineInterface class to make addition of arguments and
   options to worker CLIs consistently operate on worker.cli.
   See `issue #4`_
 
-  .. _issue #4: https://bitbucket.org/43ravens/nemo_nowcast/issues/4
+  .. _issue #4: https://github.com/43ravens/NEMO_Nowcast/issues/4
 
 * Added this change log to the docs.
 * Fixed bug in worker.get_web_data() function that caused an infinite loop to
