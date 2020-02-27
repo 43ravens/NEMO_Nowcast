@@ -5,6 +5,14 @@ Change Log
 v20.1.dev0 (unreleased)
 =======================
 
+* Change continuous integration from Bitbucket pipeline to GitHub Actions workflow.
+  CI reports are at https://github.com/43ravens/NEMO_Nowcast/actions
+  Unit test coverage report visualization is at https://codecov.io/gh/43ravens/NEMO_Nowcast
+
+* Migrate from Mercurial on Bitbucket to Git on GitHub due to Bitbucket's decision
+  to terminate support for Mercurial.
+  Repository is now at https://github.com/43ravens/NEMO_Nowcast
+
 * Expose ``nemo_nowcast.cli.arrow_date()`` function for use by packages like
   SalishSeaNowcast that use NEMO_Nowcast CLI elements.
 
