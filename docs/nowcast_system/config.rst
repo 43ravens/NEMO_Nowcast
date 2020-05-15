@@ -155,7 +155,7 @@ Important things to note in the :kbd:`aggregator` section:
 
 * The use of :kbd:`$(NOWCAST.ENV.NOWCAST_LOGS)` in the log :kbd:`filename` paths.
   Doing so allows the directory in which the log files are stored to be defined in the :envvar:`NOWCAST_LOGS` environment variable.
-  That avoids having to hard code the log files directory path in multiple places in both the :ref:`NowcastConfigFile` and the :program:`circus` configuration file
+  That avoids having to hard code the log files directory path in multiple places in both the :ref:`NowcastConfigFile` and the :program:`supervisord` configuration file
   (see :ref:`NowcastProcessMgmt`)
   and risking the two getting out of sync.
 
@@ -209,7 +209,6 @@ a :py:exc:`nemo_nowcast.worker.WorkerError` exception will be raised if all of t
   It is necessary to ensure that the appropriate firewall rules are in place to allow traffic to pass between the machines on which remote workers are running and the machine that hosts the log aggregator via the logging port(s).
 
   Since manager/worker communication,
-  the Circus process manager,
   and distributed logging all use ZeroMQ ports,
   it is crucial to ensure that all port numbers used are unique.
 

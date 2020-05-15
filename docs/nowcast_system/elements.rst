@@ -29,7 +29,7 @@ Elements of a Nowcast System
 * nowcast system configuration
 * workers
 * next_workers module
-* process management with circus
+* process management with supervisor
 * distribute releases via an anaconda.org channel or conda-forge
 
 

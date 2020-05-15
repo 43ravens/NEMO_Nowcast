@@ -34,7 +34,7 @@ The default sleep period is 60 seconds.
     The first choice for launching workers should be by the manager process in response to system state events
     (via the :ref:`NextWorkersModule`).
 
-The recommended way to launch the scheduler is to put it under the control of a process manager like `Circus`_.
+The recommended way to launch the scheduler is to put it under the control of a process manager like `Supervisor`_.
 Please see :ref:`NowcastProcessMgmt` for details.
 
-.. _Circus: https://circus.readthedocs.io/en/latest/
+.. _Supervisor: http://supervisord.org/

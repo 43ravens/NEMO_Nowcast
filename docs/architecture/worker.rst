@@ -52,7 +52,7 @@ The framework provides:
 * :ref:`ExampleWorkers`,
   an :ref:`ExampleNextWorkersModule`,
   and example configuration files
-  (:ref:`ExampleNowcastConfigFile` and :ref:`ExampleCircusConfigFile`)
+  (:ref:`ExampleNowcastConfigFile` and :ref:`ExampleSupervisorConfigFile`)
   sufficient to create a :ref:`ToyExample` that demonstrates how the workers,
   manager,
   and message broker processes interact

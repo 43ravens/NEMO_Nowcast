@@ -101,7 +101,7 @@ To accomplish that a :kbd:`need` message must be registered for the worker.
 When the worker sends a :kbd:`need` message to the manager with a checklist key as the payload the manager replies by sending the value stored at that key in the checklist back to the worker as the payload of and :kbd:`ack` message,
 and resumes listening for messages from workers.
 
-The recommended way to launch the manager is to put it under the control of a process manager like `Circus`_.
+The recommended way to launch the manager is to put it under the control of a process manager like `Supervisor`_.
 Please see :ref:`NowcastProcessMgmt` for details.
 
-.. _Circus: https://circus.readthedocs.io/en/latest/
+.. _Supervisor: http://supervisord.org/

@@ -54,13 +54,12 @@ and signal handling for the :kbd:`QUEUE` device.
 .. _ZeroMQ: http://zeromq.org/
 .. _ZeroMQ QUEUE device: http://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/devices/queue.html
 
-The recommended way to launch the message broker is to put it under the control of a process manager like `Circus`_.
+The recommended way to launch the message broker is to put it under the control of a process manager like `Supervisor`_.
 Please see :ref:`NowcastProcessMgmt` for details.
 
-.. _Circus: https://circus.readthedocs.io/en/latest/
+.. _Supervisor: http://supervisord.org/
 
 .. note::
   Since manager/worker communication,
-  the Circus process manager,
   and distributed logging all use ZeroMQ ports,
   it is crucial to ensure that all port numbers used are unique.

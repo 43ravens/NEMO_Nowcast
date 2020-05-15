@@ -34,15 +34,14 @@ The log aggregator subscribes to those sockets and processes the log messages as
 
 The logging configuration for a nowcast system that uses the log aggregator is described under :ref:`DistributedLogging` in the :ref:`NowcastConfigFile` section.
 
-The recommended way to launch the log aggregator is to put it under the control of a process manager like `Circus`_.
+The recommended way to launch the log aggregator is to put it under the control of a process manager like `Supervisor`_.
 Please see :ref:`NowcastProcessMgmt` for details.
 
-.. _Circus: https://circus.readthedocs.io/en/latest/
+.. _Supervisor: http://supervisord.org/
 
 .. note::
   It is necessary to ensure that the appropriate firewall rules are in place to allow traffic to pass between the machines on which remote workers are running and the machine that hosts the log aggregator via the logging port(s).
 
   Since manager/worker communication,
-  the Circus process manager,
   and distributed logging all use ZeroMQ ports,
   it is crucial to ensure that all port numbers used are unique.

@@ -22,12 +22,12 @@ Nowcast Process Management
 **TODO**
 
 
-.. _ExampleCircusConfigFile:
+.. _ExampleSupervisorConfigFile:
 
-Example Circus Configuration File
-=================================
+Example Supervisor Configuration File
+=====================================
 
-Here is the complete example circus configuration INI file that is discussed in the sections above:
+Here is the complete example :command:`supervisord` configuration INI file that is discussed in the sections above:
 
-.. literalinclude:: example_circus.ini
+.. literalinclude:: example_supervisord.ini
     :language: ini

@@ -181,50 +181,59 @@ they are comments):
 The contents of the configuration file are described in detail in the :ref:`NowcastConfigFile` section of these docs.
 
 
-:kbd:`circus` Process Manager Configuration File
-================================================
+:kbd:`supervisord` Process Manager Configuration File
+=====================================================
 
 It is recommended to run the various long-running nowcast system processes under a process manager.
 Doing so ensures that the processes will be restarted if they crash,
 and provides a centralized interface for monitoring and controlling the processes.
-We'll use `Circus`_ which was installed when you created your :ref:`CondaEnvironment`.
+We'll use `Supervisor`_ which was installed when you created your :ref:`CondaEnvironment`.
 
-.. _Circus: https://circus.readthedocs.io/en/latest/
+.. _Supervisor: http://supervisord.org/
 
-:kbd:`circus` uses its own configuration file,
+:kbd:`supervisord` uses its own configuration file,
 written using `INI`_ syntax.
-Create a file called :file:`circus.ini` in your :file:`toy-nowcast/` directory with the following contents:
+Create a file called :file:`supervisord.ini` in your :file:`toy-nowcast/` directory with the following contents:
 
 .. _INI: https://en.wikipedia.org/wiki/INI_file
 
 .. code-block:: ini
 
-    # Example circus process manager configuration file
+    # Example supervisord process manager configuration file
     # for a NEMO_Nowcast framework system
 
-    [watcher:message_broker]
-    copy_env = True
-    cmd = $(CIRCUS.ENV.NOWCAST_ENV)/bin/python
-    args = -m nemo_nowcast.message_broker $(CIRCUS.ENV.NOWCAST_YAML)
-    singleton = True
-    send_hup = True
-    use_sockets = False
+    # Supervisor daemon and its interfaces
+    [supervisord]
+    logfile = %(ENV_NOWCAST_LOGS)s/supervisor.log
+    pidfile = %(ENV_NOWCAST_LOGS)s/supervisor.pid
+    childlogdir = %(ENV_NOWCAST_LOGS)s
 
-    [watcher:manager]
-    copy_env = True
-    cmd = $(CIRCUS.ENV.NOWCAST_ENV)/bin/python
-    args = -m nemo_nowcast.manager $(CIRCUS.ENV.NOWCAST_YAML)
-    singleton = True
-    send_hup = True
-    use_sockets = False
+    [rpcinterface:supervisor]
+    supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 
-    [watcher:scheduler]
-    copy_env = True
-    cmd = $(CIRCUS.ENV.NOWCAST_ENV)/bin/python
-    args = -m nemo_nowcast.scheduler $(CIRCUS.ENV.NOWCAST_YAML)
-    singleton = True
-    send_hup = True
-    use_sockets = False
+    [inet_http_server]
+    # This value must match that used in [supervisorctl]serverurl below
+    port = localhost:9001
+
+
+    # Supervisor interactive shell tool
+    [supervisorctl]
+    # Host and port values here must match those used in [inet_http_server]port above
+    serverurl = http://localhost:9001
+    prompt = nowcast-supervisor
+
+
+    # Long-running processes that supervisor manages
+    # Priority values define process startup order
+    [program:message_broker]
+    command = %(ENV_NOWCAST_ENV)s/bin/python3 -m nemo_nowcast.message_broker %(ENV_NOWCAST_YAML)s
+    priority = 0
+    autorestart = true
+
+    [program:manager]
+    command = %(ENV_NOWCAST_ENV)s/bin/python3 -m nemo_nowcast.manager %(ENV_NOWCAST_YAML)s
+    priority = 1
+    autorestart = true
 
 
 :py:mod:`next_workers` Module
@@ -293,55 +302,72 @@ Start the process manager with the command:
 
 .. code-block:: bash
 
-    (toy-nowcast) toy-nowcast$ circusd circus.ini
+    (toy-nowcast) toy-nowcast$ supervisord -c supervisord.ini
 
-and you should see output link::
+We have configured :command:`supervisord` to send its logging messages,
+and those from the processes it is managing to files in the directory pointed to by the envvar:`NOWCAST_LOGS` environment variable.
+That is :file:`$HOME/toy-nowcast/` if you followed the instructions in the :ref:`EnvironmentVariables` section above.
+The :file:`supervisor.log` file tells us about what :command:`supervisord` is doing.
+If you use :command:`less` or :command:`cat` to look at it,
+you should see something like ::
 
-  2017-05-25 16:46:36 circus[9160] [INFO] Starting master on pid 9160
-  2017-05-25 16:46:36 circus[9160] [INFO] Arbiter now waiting for commands
-  2017-05-25 16:46:36 circus[9160] [INFO] manager started
-  2017-05-25 16:46:36 circus[9160] [INFO] message_broker started
-  2017-05-25 16:46:36 circus[9160] [INFO] scheduler started
-  2017-05-25 16:46:36,914 INFO [scheduler] running in process 9202
-  2017-05-25 16:46:36,914 INFO [scheduler] read config from /media/doug/warehouse/43ravens/projects/gomss-nowcast/toy-nowcast/nowcast.yaml
-  2017-05-25 16:46:36,914 INFO [scheduler] writing logging messages to local file system
-  2017-05-25 16:46:36,933 INFO [message_broker] running in process 9201
-  2017-05-25 16:46:36,933 INFO [message_broker] read config from /media/doug/warehouse/43ravens/projects/gomss-nowcast/toy-nowcast/nowcast.yaml
-  2017-05-25 16:46:36,933 INFO [message_broker] writing logging messages to local file system
-  2017-05-25 16:46:36,934 INFO [message_broker] worker socket bound to port 4344
-  2017-05-25 16:46:36,934 INFO [message_broker] manager socket bound to port 4343
-  2017-05-25 16:46:36,951 INFO [manager] running in process 9200
-  2017-05-25 16:46:36,951 INFO [manager] read config from /media/doug/warehouse/43ravens/projects/gomss-nowcast/toy-nowcast/nowcast.yaml
-  2017-05-25 16:46:36,951 INFO [manager] writing logging messages to local file system
-  2017-05-25 16:46:36,952 INFO [manager] next workers module loaded from next_workers
-  2017-05-25 16:46:36,952 INFO [manager] connected to localhost port 4343
-  2017-05-25 16:46:36,952 WARNING [manager] checklist load failed:
+  2020-05-15 12:12:54,544 INFO RPC interface 'supervisor' initialized
+  2020-05-15 12:12:54,544 CRIT Server 'inet_http_server' running without any HTTP authentication checking
+  2020-05-15 12:12:54,545 INFO daemonizing the supervisord process
+  2020-05-15 12:12:54,545 INFO supervisord started with pid 15937
+  2020-05-15 12:12:55,548 INFO spawned: 'message_broker' with pid 15974
+  2020-05-15 12:12:55,550 INFO spawned: 'manager' with pid 15975
+  2020-05-15 12:12:56,773 INFO success: message_broker entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+  2020-05-15 12:12:56,773 INFO success: manager entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+
+This shows :command:`supervisord` itself starting up,
+then it spawning processes for our nowcast system's :ref:`MessageBroker` and :ref:`SystemManager` processes,
+and confirming that those processes are running.
+
+The logging messages from the :ref:`MessageBroker` and :ref:`SystemManager` processes.
+Those files have names like:
+
+* :file:`message_broker-stdout---supervisor-1_p3jss7.log`
+* :file:`manager-stdout---supervisor-5x6e5ryj.log`
+
+The 8 characters between :kbd:`---supervisor` and :kbd:`.log` are randomly generated each time :command:`supervisord` is started.
+At this point,
+those files contain the startup messages from those processes::
+
+  2020-05-15 12:12:55,769 INFO [message_broker] running in process 15974
+  2020-05-15 12:12:55,769 INFO [message_broker] read config from /home/doug/toy-nowcast/nowcast.yaml
+  2020-05-15 12:12:55,769 INFO [message_broker] writing logging messages to local file system
+  2020-05-15 12:12:55,769 INFO [message_broker] worker socket bound to port 4344
+  2020-05-15 12:12:55,769 INFO [message_broker] manager socket bound to port 4343
+
+from the :py:mod:`message_broker`,
+and::
+
+  2020-05-15 12:12:55,770 INFO [manager] running in process 15975
+  2020-05-15 12:12:55,770 INFO [manager] read config from /home/doug/toy-nowcast/nowcast.yaml
+  2020-05-15 12:12:55,770 INFO [manager] writing logging messages to local file system
+  2020-05-15 12:12:55,771 INFO [manager] next workers module loaded from next_workers
+  2020-05-15 12:12:55,771 INFO [manager] connected to localhost port 4343
+  2020-05-15 12:12:55,771 WARNING [manager] checklist load failed:
   Traceback (most recent call last):
-    File "/home/doug/warehouse/conda_envs/toy-nowcast/lib/python3.5/site-packages/nemo_nowcast/manager.py", line 244, in _load_checklist
-      with open(checklist_file, 'rt') as f:
-  FileNotFoundError: [Errno 2] No such file or directory: '/media/doug/warehouse/43ravens/projects/gomss-nowcast/toy-nowcast/nowcast_checklist.yaml'
-  2017-05-25 16:46:36,953 WARNING [manager] running with empty checklist
-  2017-05-25 16:46:36,953 DEBUG [manager] listening...
+    File "/home/doug/NEMO_Nowcast/nemo_nowcast/manager.py", line 253, in _load_checklist
+      with open(checklist_file, "rt") as f:
+  FileNotFoundError: [Errno 2] No such file or directory: '/home/doug/toy-nowcast/nowcast_checklist.yaml'
+  2020-05-15 12:12:55,772 WARNING [manager] running with empty checklist
+  2020-05-15 12:12:55,772 DEBUG [manager] listening...
 
-We have configured out toy system to send all of its logging messages to the screen so that we can easily see what is going on.
-In a production system the logging messages would be configured to go to files and the circus manager would be run as a daemon so that the system would operate without being attached to a terminal session.
-
-The first group of messages,
-identified with :kbd:`circus[9160]`,
-are from the process manager.
-They tell us that it is running,
-and that it has started our nowcast system's :ref:`SystemManager`,
-:ref:`MessageBroker`,
-and :ref:`Scheduler` processes.
-
-Next come startup messages from each of those processes.
-The :py:mod:`manager` tries to initialize the state of the system by reading from the :file:`nowcast_checklist.yaml` file and warns use that it can't find that file;
+from the :py:mod:`manager`.
+The latter tries to initialize the state of the system by reading from the :file:`nowcast_checklist.yaml` file and warns use that it can't find that file;
 not surprising since this it the first time the system has been launched.
-
 Finally,
-the :py:mod:`manager` tells us that it has gone into its default state of listening for messages from workers.
+it tells us that it has gone into its default state of listening for messages from workers.
 
-You can shut the system down with a :kbd:`Ctrl-C` in this terminal session,
+You can shut the system down with the command
+
+.. code-block:: bash
+
+    (toy-nowcast)$ supervisorctl -c supervisord.ini shutdown
+
 but leave it running so that we can play with the :py:mod:`sleep` worker.
 
 
@@ -364,31 +390,38 @@ Now you can run the :py:mod:`sleep` worker with:
 
 .. code-block:: bash
 
-    (toy-nowcast)$ python -m nemo_nowcast.workers.sleep $NOWCAST_YAML
+    (toy-nowcast)$ python3 -m nemo_nowcast.workers.sleep $NOWCAST_YAML
 
 You should see logging messages that look like::
 
-  2017-05-25 17:19:47,143 INFO [sleep] running in process 17464
-  2017-05-25 17:19:47,143 INFO [sleep] read config from /media/doug/warehouse/43ravens/projects/gomss-nowcast/toy-nowcast/nowcast.yaml
-  2017-05-25 17:19:47,143 INFO [sleep] writing log messages to local file system
-  2017-05-25 17:19:47,144 INFO [sleep] connected to localhost port 4344
-  2017-05-25 17:19:52,148 INFO [sleep] slept for 5 seconds
-  2017-05-25 17:19:52,149 DEBUG [sleep] sent message: (success) sleep worker slept well
-  2017-05-25 17:19:52,155 DEBUG [sleep] received message from manager: (ack) message acknowledged
-  2017-05-25 17:19:52,155 DEBUG [sleep] shutting down
+  2020-05-15 15:21:24,532 INFO [sleep] running in process 10011
+  2020-05-15 15:21:24,532 INFO [sleep] read config from /home/doug/toy-nowcast/nowcast.yaml
+  2020-05-15 15:21:24,532 INFO [sleep] writing log messages to local file system
+  2020-05-15 15:21:24,532 INFO [sleep] connected to localhost port 4344
+  2020-05-15 15:21:29,538 INFO [sleep] slept for 5 seconds
+  2020-05-15 15:21:29,539 DEBUG [sleep] sent message: (success) sleep worker slept well
+  2020-05-15 15:21:29,547 DEBUG [sleep] received message from manager: (ack) message acknowledged
+  2020-05-15 15:21:29,547 DEBUG [sleep] shutting down
 
 with a 5 second long pause in the middle.
 
-In the 1st terminal session
-(where you launched :program:`circusd`)
-you should see logging messages that look like::
+If you look at the :kbd:`manager` log file again you should see additional logging messages that look like::
 
+  2020-05-15 15:21:29,541 DEBUG [manager] received message from sleep: (success) sleep worker slept well
+  2020-05-15 15:21:29,542 INFO [manager] checklist updated with [sleepyhead] items from sleep worker
+  2020-05-15 15:21:29,550 DEBUG [manager] listening...
 
+You can use :command:`tail`
+(perhaps with its :kbd:`-f` option)
+to see the end of the log files,
+or you can use :command:`supervisorctl` for find and show you the tail of the log file for any of the processes it is managing:
+
+.. code-block:: bash
+
+    (toy-nowcast)$ supervisorctl -c supervisord.ini tail manager
 
 
 **TODO**:
-
-* run :command:`python -m nemo_nowcast.workers.sleep nowcast.yaml` in a 2nd terminal session
 
 * exercises:
 
