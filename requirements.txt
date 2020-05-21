@@ -1,7 +1,7 @@
 # Python packages and version used in development environment
 #
 # Create/update this file with:
-#   (nemo-nowcast)$ python3 -m pip freeze --path $CONDA_PREFIX/lib/python3*/site-packages >> requirements.txt
+#   (nemo-nowcast)$ python3 -m pip list --format=freeze >> requirements.txt
 
 alabaster==0.7.12
 appdirs==1.4.3
