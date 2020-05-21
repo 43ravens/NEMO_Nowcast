@@ -24,6 +24,7 @@ import time
 
 import attr
 import requests
+import sentry_sdk
 import zmq
 import zmq.log.handlers
 
@@ -264,6 +265,9 @@ class NowcastWorker:
     def _configure_logging(self):
         """Configure the worker's logging system interface.
         """
+        # Initialize exception logging to Sentry with client DSN URL from SENTRY_DSN envvar;
+        # does nothing if SENTRY_DSN does not exist, is empty, or is not recognized by Sentry
+        sentry_sdk.init()
         self.logger = logging.getLogger(self.name)
         if "publisher" in self.config["logging"]:
             # Publish log messages to distributed logging aggregator

@@ -12,6 +12,7 @@ dependencies:
   - python=3.6
   - pyyaml
   - pyzmq
+  - sentry-sdk
 
   # RTD packages
   - mock

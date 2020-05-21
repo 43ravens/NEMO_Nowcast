@@ -19,6 +19,7 @@ dependencies:
   - pyzmq
   - requests
   - schedule
+  - sentry-sdk
   - supervisor
 
   # For unit tests

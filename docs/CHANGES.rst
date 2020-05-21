@@ -5,6 +5,10 @@ Change Log
 v20.1.dev0 (unreleased)
 =======================
 
+* Add support for exception logging to Sentry (https://sentry.io) with client DSN URL
+  from SENTRY_DSN environment variable; does nothing if SENTRY_DSN does not exist,
+  is empty, or is not recognized by Sentry.
+
 * Change continuous integration from Bitbucket pipeline to GitHub Actions workflow.
   CI reports are at https://github.com/43ravens/NEMO_Nowcast/actions
   Unit test coverage report visualization is at https://codecov.io/gh/43ravens/NEMO_Nowcast

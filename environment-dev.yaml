@@ -24,6 +24,7 @@ dependencies:
   - PyYAML
   - pyzmq
   - requests
+  - sentry-sdk
   - supervisor
   - schedule
 

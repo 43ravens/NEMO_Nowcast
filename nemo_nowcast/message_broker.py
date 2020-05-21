@@ -23,11 +23,11 @@ import os
 import signal
 import time
 
+import sentry_sdk
 import zmq
 import zmq.log.handlers
 
 from nemo_nowcast import CommandLineInterface, Config
-
 
 NAME = "message_broker"
 logger = logging.getLogger(NAME)
@@ -74,6 +74,9 @@ def _configure_logging(config):
     :param config: Nowcast system configuration.
     :type config: :py:class:`nemo_nowcast.config.Config`
     """
+    # Initialize exception logging to Sentry with client DSN URL from SENTRY_DSN envvar;
+    # does nothing if SENTRY_DSN does not exist, is empty, or is not recognized by Sentry
+    sentry_sdk.init()
     if "publisher" in config["logging"]:
         # Publish log messages to distributed logging aggregator
         logging_config = config["logging"]["publisher"]
