@@ -4,12 +4,13 @@
 name: sphinx-build
 
 channels:
+  - conda-forge
   - defaults
 
 dependencies:
   - arrow
   - attrs
-  - python=3.6
+  - python>=3.6
   - pyyaml
   - pyzmq
   - sentry-sdk
