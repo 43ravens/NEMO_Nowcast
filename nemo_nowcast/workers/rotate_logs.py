@@ -31,7 +31,6 @@ from pathlib import Path
 from nemo_nowcast import NowcastWorker
 from nemo_nowcast.fileutils import FilePerms
 
-
 NAME = "rotate_logs"
 logger = logging.getLogger(NAME)
 
@@ -98,7 +97,7 @@ def rotate_logs(parsed_args, config, *args):
                 f"log file rotated: {handler.baseFilename}", extra={"logger_name": NAME}
             )
             p = Path(handler.baseFilename)
-            p.chmod(FilePerms(user="rw", group="rw", other="r"))
+            p.chmod(int(FilePerms(user="rw", group="rw", other="r")))
             logger.debug(
                 f"new {handler.baseFilename} log file permissions set to rw-rw-r--",
                 extra={"logger_name": NAME},
