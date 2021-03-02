@@ -267,7 +267,8 @@ class NowcastWorker:
         """
         # Initialize exception logging to Sentry with client DSN URL from SENTRY_DSN envvar;
         # does nothing if SENTRY_DSN does not exist, is empty, or is not recognized by Sentry
-        sentry_sdk.init()
+        if not self._parsed_args.debug:
+            sentry_sdk.init()
         self.logger = logging.getLogger(self.name)
         if "publisher" in self.config["logging"]:
             # Publish log messages to distributed logging aggregator
