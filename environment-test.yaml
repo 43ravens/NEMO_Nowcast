@@ -8,8 +8,6 @@ name: nemo-nowcast-test
 
 channels:
   - conda-forge
-  - defaults
-  - gomss-nowcast
 
 dependencies:
   - arrow

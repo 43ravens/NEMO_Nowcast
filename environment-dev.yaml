@@ -4,7 +4,7 @@
 # Create a conda environment for development, testing, and documentation
 # of the NEMO Nowcast framework with:
 #
-#    $ cd NEMO_NOwcast
+#    $ cd NEMO_Nowcast
 #    $ conda env create -f environment-dev.yaml
 #    $ source activate nemo-nowcast
 #    (nemo-nowcast)$ python3 -m pip install --editable .
@@ -13,8 +13,6 @@ name: nemo-nowcast
 
 channels:
   - conda-forge
-  - defaults
-  - gomss-nowcast
 
 dependencies:
   - arrow

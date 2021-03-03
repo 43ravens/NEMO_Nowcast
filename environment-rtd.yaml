@@ -4,7 +4,6 @@
 name: sphinx-build
 
 channels:
-  - conda-forge
   - defaults
 
 dependencies:
