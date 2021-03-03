@@ -2,7 +2,7 @@
 Change Log
 **********
 
-v20.1.dev0 (unreleased)
+v21.1.dev0 (unreleased)
 =======================
 
 * Add support for exception logging to Sentry (https://sentry.io) with client DSN URL
