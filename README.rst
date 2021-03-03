@@ -109,7 +109,7 @@ Licenses
     :target: https://opensource.org/licenses/BSD-3-Clause
     :alt: Licensed under the BSD-3-Clause License
 
-The NEMO_Nowcast framework code and documentation are copyright 2016-2020 by Doug Latornell, 43ravens.
+The NEMO_Nowcast framework code and documentation are copyright 2016-2021 by Doug Latornell, 43ravens.
 
 They are licensed under the Apache License, Version 2.0.
 http://www.apache.org/licenses/LICENSE-2.0
