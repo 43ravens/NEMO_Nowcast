@@ -168,11 +168,10 @@ class TestCreateScheduledJob:
         job = scheduler._create_scheduled_job(
             "nemo_nowcast.workers.sleep", params, config
         )
-        expected = (
-            "Every 1 day at 15:43:00 do launch("
-            "{'scheduled workers': {'nemo_nowcast.workers.sleep': {"
-        )
-        assert str(job).startswith(expected)
+        assert job.interval == 1
+        assert job.unit == "days"
+        assert job.job_func.args == (config, 'scheduler')
+
 
     def test_worker_cmd_line_opts(self):
         params = {"every": "day", "at": "15:43", "cmd line opts": "--sleep-time 2"}
@@ -180,11 +179,9 @@ class TestCreateScheduledJob:
         job = scheduler._create_scheduled_job(
             "nemo_nowcast.workers.sleep", params, config
         )
-        expected = (
-            "Every 1 day at 15:43:00 do launch("
-            "{'scheduled workers': {'nemo_nowcast.workers.sleep': {"
-        )
-        assert str(job).startswith(expected)
+        assert job.interval == 1
+        assert job.unit == "days"
+        assert job.job_func.args == (config, 'scheduler')
 
 
 @pytest.mark.parametrize(
