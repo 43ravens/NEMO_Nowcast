@@ -18,7 +18,6 @@ from setuptools import find_packages, setup
 
 import __pkg_metadata__
 
-
 python_classifiers = [
     f"Programming Language :: Python :: {py_version}"
     for py_version in ("3", "3.6", "3.7", "3.8")
@@ -48,6 +47,7 @@ install_requires = [
     "pyzmq",
     "requests",
     "schedule",
+    "sentry-sdk",
     "supervisor",
 ]
 tests_require = ["coverage", "pytest"]
