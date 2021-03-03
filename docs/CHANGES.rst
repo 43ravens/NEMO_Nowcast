@@ -2,8 +2,13 @@
 Change Log
 **********
 
-v21.1.dev0 (unreleased)
-=======================
+v21.1 (2021-03-03)
+==================
+
+* End package releases on anaconda.org GoMSS-Nowcast channel.
+  Final release there was v19.2
+
+* Change name of Git repository default branch from ``master`` to ``main``.
 
 * Add support for exception logging to Sentry (https://sentry.io) with client DSN URL
   from SENTRY_DSN environment variable; does nothing if SENTRY_DSN does not exist,
