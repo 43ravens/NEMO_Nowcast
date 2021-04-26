@@ -59,8 +59,8 @@ class Config:
         The value of config_file is stored on the
         :py:attr:`nemo_nowcast.config.Config.file` attribute.
 
-        :arg str config_file: Path/name of YAML configuration file for
-                              the NEMO nowcast system.
+        :arg config_file: Path/name of YAML configuration file for the NEMO nowcast system.
+        :type config_file: :py:class:`pathlib.Path` or str
         """
         self.file = config_file
         with open(config_file, "rt") as f:
