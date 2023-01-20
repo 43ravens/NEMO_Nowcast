@@ -26,7 +26,7 @@
     :target: https://opensource.org/licenses/BSD-3-Clause
     :alt: Licensed under the BSD-3-Clause License
 .. image:: https://img.shields.io/badge/Python-3.10%20%7C%203.11-blue?logo=python&label=Python&logoColor=gold
-    :target: https://docs.python.org/3.8/
+    :target: https://docs.python.org/3.11/
     :alt: Python Version
 .. image:: https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
     :target: https://github.com/43ravens/NEMO_Nowcast
@@ -67,16 +67,11 @@ Python Versions
 
 
 The :kbd:`SalishSeaNowcast` package is developed and tested using `Python`_ 3.11.
-The package uses some Python language features that are not available in versions prior to 3.6,
-in particular:
-
-* `formatted string literals`_
-  (aka *f-strings*)
-* the `file system path protocol`_
+The minimum supported Python version is 3.10.
+The :ref:`NEMO_NowcastContinuousIntegration` workflow on GitHub ensures that the package
+is tested for all versions of Python>=3.10.
 
 .. _Python: https://www.python.org/
-.. _formatted string literals: https://docs.python.org/3/reference/lexical_analysis.html#f-strings
-.. _file system path protocol: https://docs.python.org/3/whatsnew/3.6.html#whatsnew36-pep519
 
 
 .. _NEMO_NowcastGettingTheCode:
@@ -297,7 +292,7 @@ The output looks something like:
     (     development: line  392) ok        https://boltons.readthedocs.io/en/latest/fileutils.html
     (     development: line   20) ok        https://codecov.io/gh/43ravens/NEMO_Nowcast/branch/main/graph/badge.svg
     (         CHANGES: line  130) ok        https://boltons.readthedocs.io/en/latest/
-    (     development: line   20) ok        https://docs.python.org/3.8/
+    (     development: line   20) ok        https://docs.python.org/3.11/
     (             api: line    1) ok        https://docs.python.org/3/library/argparse.html#argparse.ArgumentParser
     (             api: line    3) ok        https://docs.python.org/3/library/argparse.html#argparse.ArgumentParser.add_argument
     (         CHANGES: line   37) ok        https://circus.readthedocs.io/en/latest/
