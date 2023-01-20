@@ -1,0 +1,22 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ '*' ]
+  schedule:
+    - cron: '34 19 * * 1'
+
+jobs:
+  analyze:
+    name: Analyze
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'python' ]
+    uses: UBC-MOAD/gha-workflows/.github/workflows/codeql-analysis.yaml@73cd061e7d3c3cabc39cda291cb7bc9b95b7ab35
+    with:
+      language: ${{ matrix.language }}
