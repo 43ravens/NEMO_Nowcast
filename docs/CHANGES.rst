@@ -5,6 +5,9 @@ Change Log
 v22.1 (unreleased)
 ==================
 
+* Drop support for Python 3.6, 3.7, 3.8, and 3.9.
+  Minimum supported Python version is now 3.10.
+
 * Add GitHub Actions `Sphinx linkcheck workflow`_ to monitor documentation for broken
   and redirected external links.
 
