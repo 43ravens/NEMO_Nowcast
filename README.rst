@@ -20,6 +20,9 @@ NEMO Ocean Model Nowcast Framework
 .. image:: https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest
     :target: https://nemo-nowcast.readthedocs.io/en/latest/
     :alt: Documentation Status
+.. image:: https://github.com/43ravens/NEMO_Nowcast/workflows/sphinx-linkcheck/badge.svg
+    :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3Asphinx-linkcheck
+    :alt: Sphinx linkcheck
 .. image:: https://github.com/43ravens/NEMO_Nowcast/workflows/CI/badge.svg
     :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3ACI
     :alt: GitHub Workflow Status
@@ -27,7 +30,7 @@ NEMO Ocean Model Nowcast Framework
     :target: https://codecov.io/gh/43ravens/NEMO_Nowcast
     :alt: Codecov Testing Coverage Report
 .. image:: https://github.com/43ravens/NEMO_Nowcast/actions/workflows/codeql-analysis.yaml/badge.svg
-      :target: https://github.com/SalishSeaCast/SalishSeaCmd/actions?query=workflow%3Acodeql-analysis
+      :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3Acodeql-analysis
       :alt: CodeQL analysis
 .. image:: https://img.shields.io/github/issues/43ravens/NEMO_Nowcast?logo=github
     :target: https://github.com/43ravens/NEMO_Nowcast/issues

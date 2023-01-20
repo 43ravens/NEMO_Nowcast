@@ -1,0 +1,23 @@
+name: sphinx-linkcheck
+
+on:
+  push:
+    branches: [ '*' ]
+  schedule:
+    - cron: 43 12 15 * *  # 12:43 UTC on the 15th day of each month
+
+jobs:
+  sphinx-linkcheck:
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        # Need to specify Python version here because we use test env which gets its
+        # Python version via matrix
+        python-version: [ '3.11' ]
+    uses: UBC-MOAD/gha-workflows/.github/workflows/sphinx-linkcheck.yaml@a34def527ceee8686a208588e899f9837085215c
+    with:
+      python-version: ${{ matrix.python-version }}
+      conda-env-file: environment-test.yaml
+      conda-env-name: nemo-nowcast-test
