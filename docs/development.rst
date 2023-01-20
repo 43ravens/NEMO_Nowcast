@@ -25,7 +25,7 @@
 .. image:: https://img.shields.io/badge/license-BSD%203--Clause-orange.svg
     :target: https://opensource.org/licenses/BSD-3-Clause
     :alt: Licensed under the BSD-3-Clause License
-.. image:: https://img.shields.io/badge/python-3.6+-blue.svg
+.. image:: https://img.shields.io/badge/Python-3.10%20%7C%203.11-blue?logo=python&label=Python&logoColor=gold
     :target: https://docs.python.org/3.8/
     :alt: Python Version
 .. image:: https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
@@ -61,12 +61,12 @@
 Python Versions
 ===============
 
-.. image:: https://img.shields.io/badge/python-3.6+-blue.svg
-    :target: https://docs.python.org/3.8/
+.. image:: https://img.shields.io/badge/Python-3.10%20%7C%203.11-blue?logo=python&label=Python&logoColor=gold
+    :target: https://docs.python.org/3.11/
     :alt: Python Version
 
 
-The :kbd:`SalishSeaNowcast` package is developed and tested using `Python`_ 3.8 or later.
+The :kbd:`SalishSeaNowcast` package is developed and tested using `Python`_ 3.11.
 The package uses some Python language features that are not available in versions prior to 3.6,
 in particular:
 
@@ -350,7 +350,7 @@ The output looks something like:
     (     development: line   20) ok        https://img.shields.io/badge/code%20style-black-000000.svg
     (     development: line   20) ok        https://img.shields.io/badge/license-Apache%202-cb2533.svg
     (     development: line   20) ok        https://img.shields.io/badge/license-BSD%203--Clause-orange.svg
-    (     development: line   20) ok        https://img.shields.io/badge/python-3.6+-blue.svg
+    (     development: line   20) ok        https://img.shields.io/badge/Python-3.10%20%7C%203.11-blue?logo=python&label=Python&logoColor=gold
     (     development: line   20) ok        https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
     (     development: line   20) ok        https://nemo-nowcast.readthedocs.io/en/latest/
     (     development: line   20) ok        https://img.shields.io/github/issues/43ravens/NEMO_Nowcast?logo=github
