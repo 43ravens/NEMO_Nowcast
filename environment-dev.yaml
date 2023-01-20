@@ -13,6 +13,7 @@ name: nemo-nowcast
 
 channels:
   - conda-forge
+  - nodefaults
 
 dependencies:
   - arrow
@@ -35,4 +36,4 @@ dependencies:
 
   # For documentation
   - sphinx
-  - sphinx_rtd_theme
+  - sphinx_rtd_theme=1.1.1
