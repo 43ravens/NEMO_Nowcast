@@ -4,10 +4,8 @@
 # Create a conda environment for development, testing, and documentation
 # of the NEMO Nowcast framework with:
 #
-#    $ cd NEMO_Nowcast
-#    $ conda env create -f environment-dev.yaml
+#    $ conda env create -f NEMO_Nowcast/environment-dev.yaml
 #    $ source activate nemo-nowcast
-#    (nemo-nowcast)$ python3 -m pip install --editable .
 
 name: nemo-nowcast
 
@@ -38,3 +36,7 @@ dependencies:
   # For documentation
   - sphinx
   - sphinx_rtd_theme=1.1.1
+
+  - pip:
+    # install of NEMO_Nowcast package in editable mode
+    - --editable ./
