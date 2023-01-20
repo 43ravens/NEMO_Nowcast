@@ -32,7 +32,7 @@ v21.1 (2021-03-03)
 * Change process manager from `circus`_ to `supervisor`_ because ``circus`` has
   dependency version pins that prevent moving to newer versions of Python and 0mq
   (and probably other packages).
-  ``cirucs`` does not appear to be being actively maintained any more.
+  ``circus`` does not appear to be being actively maintained any more.
   ``supervisor`` has fewer dependencies, provides all of the functionality that we
   need, and is being actively maintained.
 
