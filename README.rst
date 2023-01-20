@@ -8,9 +8,9 @@ NEMO Ocean Model Nowcast Framework
 .. image:: https://img.shields.io/badge/License-BSD%203--Clause-orange.svg
     :target: https://opensource.org/licenses/BSD-3-Clause
     :alt: Licensed under the BSD-3-Clause License
-.. image:: https://img.shields.io/badge/python-3.6+-blue.svg
-    :target: https://docs.python.org/3.8/
-    :alt: Python Version
+.. image:: https://img.shields.io/badge/Python-3.10%20%7C%203.11-blue?logo=python&label=Python&logoColor=gold
+    :target: https://docs.python.org/3.11/
+    :alt: Python Versions
 .. image:: https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
     :target: https://github.com/43ravens/NEMO_Nowcast
     :alt: Git on GitHub

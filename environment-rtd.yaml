@@ -10,7 +10,7 @@ channels:
 dependencies:
   - arrow
   - attrs
-  - python>=3.6
+  - python=3.11
   - pyyaml
   - pyzmq
   - sentry-sdk
