@@ -25,3 +25,7 @@ dependencies:
   - pytest
   - pytest-cov
   - pytest-randomly
+
+  - pip:
+    # install of NEMO_Nowcast package in editable mode
+    - --editable ./
