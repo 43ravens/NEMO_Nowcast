@@ -5,6 +5,11 @@ Change Log
 v22.1 (unreleased)
 ==================
 
+* Add GitHub Actions `Sphinx linkcheck workflow`_ to monitor documentation for broken
+  and redirected external links.
+
+  .. _Sphinx linkcheck workflow: https://github.com/SalishSeaCast/SalishSeaCmd/actions?query=workflow%3Acodeql-analysis
+
 * Add GitHub Actions `CodeQL analysis workflow`_ to monitor codebase for security
   vulnerabilities.
 
