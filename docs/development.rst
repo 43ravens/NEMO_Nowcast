@@ -43,6 +43,9 @@
 .. image:: https://codecov.io/gh/43ravens/NEMO_Nowcast/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/43ravens/NEMO_Nowcast
     :alt: Codecov Testing Coverage Report
+.. image:: https://github.com/43ravens/NEMO_Nowcast/actions/workflows/codeql-analysis.yaml/badge.svg
+      :target: https://github.com/SalishSeaCast/SalishSeaCmd/actions?query=workflow%3Acodeql-analysis
+      :alt: CodeQL analysis
 .. image:: https://img.shields.io/github/issues/43ravens/NEMO_Nowcast?logo=github
     :target: https://github.com/43ravens/NEMO_Nowcast/issues
     :alt: Issue Tracker

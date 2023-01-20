@@ -5,6 +5,11 @@ Change Log
 v22.1 (unreleased)
 ==================
 
+* Add GitHub Actions `CodeQL analysis workflow`_ to monitor codebase for security
+  vulnerabilities.
+
+  .. _CodeQL analysis workflow: https://github.com/SalishSeaCast/SalishSeaCmd/actions?query=workflow%3Acodeql-analysis
+
 
 v21.1 (2021-03-03)
 ==================
