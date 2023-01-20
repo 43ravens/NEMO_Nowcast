@@ -193,32 +193,36 @@ use:
     (nemo-nowcast)$ (cd docs && make clean html)
 
 to do a clean build of the documentation.
-The output looks something like::
+The output looks something like:
 
-  rm -rf _build/*
-  sphinx-build -b html -d _build/doctrees   . _build/html
-  Running Sphinx v1.4.1
-  making output directory...
-  loading pickled environment... not yet created
-  loading intersphinx inventory from https://docs.python.org/objects.inv...
-  building [mo]: targets for 0 po files that are out of date
-  building [html]: targets for 2 source files that are out of date
-  updating environment: 2 added, 0 changed, 0 removed
-  reading sources... [100%] index
-  looking for now-outdated files... none found
-  pickling environment... done
-  checking consistency... done
-  preparing documents... done
-  writing output... [100%] index
-  generating indices... genindex
-  writing additional pages... search
-  copying static files... done
-  copying extra files... done
-  dumping search index in English (code: en) ... done
-  dumping object inventory... done
-  build succeeded.
+.. code-block:: text
 
-  Build finished. The HTML pages are in _build/html.
+    Removing everything under '_build'...
+    Running Sphinx v5.3.0
+    making output directory... done
+    loading intersphinx inventory from https://docs.python.org/3/objects.inv...
+    loading intersphinx inventory from https://gomss-nowcast-system.readthedocs.io/en/latest/objects.inv...
+    loading intersphinx inventory from https://salishsea-nowcast.readthedocs.io/en/latest/objects.inv...
+    building [mo]: targets for 0 po files that are out of date
+    building [html]: targets for 18 source files that are out of date
+    updating environment: [new config] 18 added, 0 changed, 0 removed
+    reading sources... [100%] nowcast_system/workers
+    looking for now-outdated files... none found
+    pickling environment... done
+    checking consistency... done
+    preparing documents... done
+    writing output... [100%] nowcast_system/workers
+    generating indices... genindex py-modindex done
+    highlighting module code... [100%] nemo_nowcast.workers.sleep
+    writing additional pages... search done
+    copying images... [100%] architecture/MessageBroker.png
+    copying static files... done
+    copying extra files... done
+    dumping search index in English (code: en)... done
+    dumping object inventory... done
+    build succeeded.
+
+    The HTML pages are in _build/html.
 
 The HTML rendering of the docs ends up in :file:`docs/_build/html/`.
 You can open the :file:`index.html` file in that directory tree in your browser to preview the results of the build.
