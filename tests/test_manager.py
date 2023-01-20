@@ -796,6 +796,16 @@ class TestUpdateChecklist:
         mgr._update_checklist(msg)
         assert mgr.checklist["foo"] == "baz"
 
+    def test_update_existing_dict_value(self):
+        mgr = manager.NowcastManager()
+        mgr.logger = Mock(name="logger")
+        mgr.checklist = {"results splitting": {"2022-11-24 day biology": "SalishSea_1d_20221124_20221124_biol_T.nc"}}
+        mgr._write_checklist_to_disk = Mock(name="_write_checklist_to_disk")
+        mgr._msg_registry = {"workers": {"test_worker": {"checklist key": "results splitting"}}}
+        msg = Message(source="test_worker", type="success", payload={"2022-11-24 day chemistry": "SalishSea_1d_20221124_20221124_chem_T.nc"})
+        mgr._update_checklist(msg)
+        assert mgr.checklist["results splitting"] == {"2022-11-24 day biology": "SalishSea_1d_20221124_20221124_biol_T.nc", "2022-11-24 day chemistry": "SalishSea_1d_20221124_20221124_chem_T.nc"}
+
     def test_keyerror_adds_key_and_value(self):
         mgr = manager.NowcastManager()
         mgr.logger = Mock(name="logger")
