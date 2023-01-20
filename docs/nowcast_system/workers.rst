@@ -334,7 +334,7 @@ A simple example of a :py:data:`checklist` from the :ref:`GoMSS Nowcast package 
         .format(date=date=parsed_args.forecast_date.format('YYYY-MM-DD'))): True}
 
 which indicates that the particular forecast download was successful.
-A more sophisticated :py:data:`checklist` such as the one produced by the :ref:`SalishSeaNowcast package get_NeahBay_ssh <salishseanowcast:GetNeahBaySshWorker>` worker contains multiple keys and lists of filenames.
+A more sophisticated :py:data:`checklist` such as the one produced by the :ref:`SalishSeaNowcast package get_NeahBay_ssh <salishseanowcast:MakeSshFilesWorker>` worker contains multiple keys and lists of filenames.
 
 The function whose name is passed as the 1st argument to the :py:meth:`worker.run` method can be a driver function that calls other functions in the worker module to subdivide the worker task into smaller,
 more readable,
@@ -380,26 +380,30 @@ Generic Arguments
 -----------------
 
 If you need to add a command-line argument to a worker you can do so by calling the :py:meth:`worker.cli.add_argument` method.
-Here is an example from the :ref:`SalishSeaNowcast package get_NeahBay_ssh <salishseanowcast:GetNeahBaySshWorker>` worker:
+Here is an example from the :ref:`SalishSeaNowcast package get_NeahBay_ssh <salishseanowcast:WatchNEMO-Worker>` worker:
 
 .. code-block:: python
 
     def main():
-        """Set up and run the worker.
+        """For command-line usage see:
 
-        For command-line usage see:
-
-        :command:`python -m nowcast.workers.get_NeahBay_ssh --help`
+        :command:`python -m nowcast.workers.watch_NEMO --help`
         """
         worker = NowcastWorker(NAME, description=__doc__)
         worker.init_cli()
+        worker.cli.add_argument("host_name", help="Name of the host to monitor the run on")
         worker.cli.add_argument(
-            'run_type', choices={'nowcast', 'forecast', 'forecast2'},
+            "run_type",
+            choices={"nowcast", "nowcast-green", "nowcast-dev", "forecast", "forecast2"},
             help="""
-            Type of run to prepare open boundary sea surface height file for.
+            Type of run to monitor:
+            'nowcast' means nowcast physics run,
+            'nowcast-green' means nowcast green ocean run,
+            'forecast' means updated forecast run,
+            'forecast2' means preliminary forecast run,
             """,
         )
-        worker.run(get_NeahBay_ssh, success, failure)
+        worker.run(watch_NEMO, success, failure)
 
 The :py:meth:`worker.cli.add_argument` method is documented at :py:meth:`nemo_nowcast.cli.CommandLineInterface.add_argument`.
 It takes the same arguments as the Python standard library :py:meth:`argparse.ArgumentParser.add_argument` method.
