@@ -40,10 +40,10 @@
 .. image:: https://github.com/43ravens/NEMO_Nowcast/workflows/sphinx-linkcheck/badge.svg
     :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3Asphinx-linkcheck
     :alt: Sphinx linkcheck
-.. image:: https://github.com/43ravens/NEMO_Nowcast/workflows/CI/badge.svg
-    :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3ACI
-    :alt: GitHub Workflow Status
-.. image:: https://codecov.io/gh/43ravens/NEMO_Nowcast/branch/master/graph/badge.svg
+.. image:: https://github.com/43ravens/NEMO_Nowcast/workflows/pytest-with-coverage/badge.svg
+    :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3Apytest-with-coverage
+    :alt: Pytest with Coverage Status
+.. image:: https://codecov.io/gh/43ravens/NEMO_Nowcast/branch/main/graph/badge.svg
     :target: https://codecov.io/gh/43ravens/NEMO_Nowcast
     :alt: Codecov Testing Coverage Report
 .. image:: https://github.com/43ravens/NEMO_Nowcast/actions/workflows/codeql-analysis.yaml/badge.svg
@@ -295,7 +295,7 @@ The output looks something like:
     (nowcast_system/elements: line   24) broken    https://bitbucket.org/gomss-nowcast/gomss_nowcast - 404 Client Error: Not Found for url: https://bitbucket.org/gomss-nowcast/gomss_nowcast
     (         CHANGES: line   78) ok        https://calver.org/
     (     development: line  392) ok        https://boltons.readthedocs.io/en/latest/fileutils.html
-    (     development: line   20) ok        https://codecov.io/gh/43ravens/NEMO_Nowcast/branch/master/graph/badge.svg
+    (     development: line   20) ok        https://codecov.io/gh/43ravens/NEMO_Nowcast/branch/main/graph/badge.svg
     (         CHANGES: line  130) ok        https://boltons.readthedocs.io/en/latest/
     (     development: line   20) ok        https://docs.python.org/3.8/
     (             api: line    1) ok        https://docs.python.org/3/library/argparse.html#argparse.ArgumentParser
@@ -332,7 +332,7 @@ The output looks something like:
     (         CHANGES: line   30) ok        https://github.com/43ravens/NEMO_Nowcast
     (     development: line   20) ok        https://github.com/43ravens/NEMO_Nowcast/actions/workflows/codeql-analysis.yaml/badge.svg
     (         CHANGES: line   26) ok        https://github.com/43ravens/NEMO_Nowcast/actions
-    (     development: line  310) broken    https://github.com/43ravens/NEMO_Nowcast/commits/master - 404 Client Error: Not Found for url: https://github.com/43ravens/NEMO_Nowcast/commits/master
+    (     development: line  310) ok        https://github.com/43ravens/NEMO_Nowcast/commits/main
     (     development: line   20) ok        https://github.com/43ravens/NEMO_Nowcast/issues
     (         CHANGES: line  184) ok        https://github.com/43ravens/NEMO_Nowcast/issues/2
     (     development: line   20) ok        https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3ACI
@@ -460,11 +460,11 @@ to produce an HTML report that you can view in your browser by opening :file:`NE
 Continuous Integration
 ----------------------
 
-.. image:: https://github.com/43ravens/NEMO_Nowcast/workflows/CI/badge.svg
-    :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3ACI
-    :alt: GitHub Workflow Status
-.. image:: https://codecov.io/gh/43ravens/NEMO_Nowcast/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/43ravens/NEMO_Nowcast
+.. image:: https://github.com/43ravens/NEMO_Nowcast/workflows/pytest-with-coverage/badge.svg
+    :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3Apytest-with-coverage
+    :alt: Pytest with Coverage Status
+.. image:: https://codecov.io/gh/43ravens/NEMO_Nowcast/branch/main/graph/badge.svg
+    :target: https://app.codecov.io/gh/43ravens/NEMO_Nowcast
     :alt: Codecov Testing Coverage Report
 
 The :kbd:`NEMO_Nowcast` package unit test suite is run and a coverage report is generated whenever changes are pushed to GitHub.
@@ -474,11 +474,11 @@ or from the green checkmark to the left of the "Latest commit" message on the `r
 The testing coverage report is uploaded to `codecov.io`_
 
 .. _repo actions page: https://github.com/43ravens/NEMO_Nowcast/actions
-.. _repo commits page: https://github.com/43ravens/NEMO_Nowcast/commits/master
+.. _repo commits page: https://github.com/43ravens/NEMO_Nowcast/commits/main
 .. _repo code overview page: https://github.com/43ravens/NEMO_Nowcast
-.. _codecov.io: https://codecov.io/gh/43ravens/NEMO_Nowcast
+.. _codecov.io: https://app.codecov.io/gh/43ravens/NEMO_Nowcast
 
-The `GitHub Actions`_ workflow configuration that defines the continuous integration tasks is in the :file:`.github/workflows/pytest-coverage.yaml` file.
+The `GitHub Actions`_ workflow configuration that defines the continuous integration tasks is in the :file:`.github/workflows/pytest-with-coverage.yaml` file.
 
 .. _GitHub Actions: https://help.github.com/en/actions
 

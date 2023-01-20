@@ -1,0 +1,20 @@
+name: pytest-with-coverage
+
+on:
+  push:
+    branches: [ '*' ]
+
+jobs:
+  pytest-with-coverage:
+    permissions:
+      contents: read
+      pull-requests: write
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ '3.6', '3.7', '3.8', '3.9', '3.10', '3.11' ]
+    uses: UBC-MOAD/gha-workflows/.github/workflows/pytest-with-coverage.yaml@
+    with:
+      python-version: ${{ matrix.python-version }}
+      conda-env-file: environment-test.yaml
+      conda-env-name: nemo-nowcast-test
