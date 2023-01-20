@@ -33,6 +33,7 @@ dependencies:
   # For unit tests
   - pytest
   - pytest-cov
+  - pytest-randomly
 
   # For documentation
   - sphinx
