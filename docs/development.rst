@@ -108,29 +108,32 @@ Development Environment
 =======================
 
 Setting up an isolated development environment using `Conda`_ is recommended.
-Assuming that you have `Anaconda Python Distribution`_ or `Miniconda3`_ installed,
-you can create and activate an environment called :kbd:`nemo-nowcast` that will have all of the Python packages necessary for development,
+Assuming that you have `Miniconda3`_ installed,
+you can create and activate an environment called ``nemo-nowcast`` that will have all of the Python packages necessary for development,
 testing,
 and building the documentation with the commands:
 
 .. _Conda: http://conda.pydata.org/docs/
-.. _Anaconda Python Distribution: https://www.continuum.io/downloads
 .. _Miniconda3: http://conda.pydata.org/docs/install/quick.html
 
 .. code-block:: bash
 
     $ cd  NEMO_Nowcast
     $ conda env create -f environment-dev.yaml
-    $ source activate nemo-nowcast
-    (nemo-nowcast)$ pip install --editable nemo_nowcast
+    $ conda activate nemo-nowcast
 
-The :kbd:`--editable` option in the :command:`pip install` command above installs the :kbd:`NEMO_Nowcast` package from the cloned repo via symlinks so that the installed :kbd:`nemo-nowcast` package will be automatically updated as the repo evolves.
+The ``NEMO_Nowcast`` is installed in `editable install mode`_ as part of the conda environment
+creation process.
+That means that the package is installed from the cloned repo in such a way that
+it call be updated as the repo evolves with a simple :command:`git pull`.
+
+.. _editable install mode: https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs
 
 To deactivate the environment use:
 
 .. code-block:: bash
 
-    (nemo-nowcast)$ source deactivate
+    (nemo-nowcast)$ conda deactivate
 
 
 .. _NEMO_NowcastCodingStyle:
