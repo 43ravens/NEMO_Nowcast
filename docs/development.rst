@@ -52,9 +52,6 @@
 .. image:: https://img.shields.io/github/issues/43ravens/NEMO_Nowcast?logo=github
     :target: https://github.com/43ravens/NEMO_Nowcast/issues
     :alt: Issue Tracker
-.. image:: https://anaconda.org/gomss-nowcast/nemo_nowcast/badges/installer/conda.svg
-    :target: https://conda.anaconda.org/gomss-nowcast
-    :alt: Install with conda
 
 .. _NEMO_NowcastPythonVersions:
 
@@ -511,26 +508,6 @@ Issue Tracker
 Development tasks,
 bug reports,
 and enhancement ideas are recorded and managed in the issue tracker at https://github.com/43ravens/NEMO_Nowcast/issues
-
-
-.. _NEMO_NowcastReleasePackages:
-
-Release Packages
-================
-
-.. image:: https://anaconda.org/gomss-nowcast/nemo_nowcast/badges/installer/conda.svg
-    :target: https://conda.anaconda.org/gomss-nowcast
-    :alt: Install with conda
-
-Versioned releases of the :kbd:`NEMO_Nowcast` package are available as `Conda`_ packages on `Anaconda.org`_.
-
-.. _Anaconda.org: https://anaconda.org/gomss-nowcast
-
-The latest release package can be installed with:
-
-.. code-block:: bash
-
-    $ conda install -c gomss-nowcast nemo_nowcast
 
 
 .. _NEMO_NowcastLicenses:
