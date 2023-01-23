@@ -25,7 +25,7 @@ river run-off flows,
 and atmospheric forcing.
 
 .. _NEMO_Nowcast: https://github.com/43ravens/NEMO_Nowcast
-.. _NEMO ocean model: http://www.nemo-ocean.eu/
+.. _NEMO ocean model: https://www.nemo-ocean.eu/
 
 The runs are automated using an asynchronous,
 message-based architecture.
@@ -54,9 +54,9 @@ It:
 
 to produce daily nowcast runs that calculate the state of the Gulf of Maine and the Scotian Shelf on the east coast of Nova Scotia.
 
-.. _GoMSS Nowcast System: http://gomss-nowcast-system.readthedocs.io/en/latest/index.html
+.. _GoMSS Nowcast System: https://gomss-nowcast-system.readthedocs.io/en/latest/index.html
 
-Documentation for the framework is in the ``docs/`` directory and is rendered at http://nemo-nowcast.readthedocs.io/en/latest/.
+Documentation for the framework is in the ``docs/`` directory and is rendered at https://nemo-nowcast.readthedocs.io/en/latest/.
 
 
 Contents
@@ -85,12 +85,12 @@ Licenses
 The NEMO_Nowcast framework code and documentation are copyright 2016 by Doug Latornell, 43ravens.
 
 They are licensed under the Apache License, Version 2.0.
-http://www.apache.org/licenses/LICENSE-2.0
+https://www.apache.org/licenses/LICENSE-2.0
 Please see the LICENSE file for details of the license.
 
 The `fileutils`_ module from the `boltons`_ project is included in the NEMO_Nowcast package.
 It is copyright 2013-2016 by Mahmoud Hashemi and used under the terms of the `boltons BSD license`_.
 
 .. _fileutils: https://boltons.readthedocs.io/en/latest/fileutils.html
-.. _boltons: https://pypi.python.org/pypi/boltons
+.. _boltons: https://pypi.org/project/boltons/
 .. _boltons BSD license: https://github.com/mahmoud/boltons/blob/master/LICENSE

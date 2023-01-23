@@ -46,7 +46,7 @@ river run-off flows,
 and atmospheric forcing.
 
 .. _NEMO_Nowcast: https://anaconda.org/GoMSS-Nowcast/nemo_nowcast
-.. _NEMO ocean model: http://www.nemo-ocean.eu/
+.. _NEMO ocean model: https://www.nemo-ocean.eu/
 
 The runs are automated using an asynchronous,
 message-based architecture.
@@ -82,7 +82,7 @@ Documentation
 =============
 
 .. image:: https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest
-    :target: http://nemo-nowcast.readthedocs.io/en/latest/?badge=latest
+    :target: https://nemo-nowcast.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Build Status
 
 Documentation for the framework is in the ``docs/`` directory and is rendered at http://nemo-nowcast.readthedocs.io/en/latest/.

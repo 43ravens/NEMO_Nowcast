@@ -51,8 +51,8 @@ It provides configuration,
 logging,
 and signal handling for the :kbd:`QUEUE` device.
 
-.. _ZeroMQ: http://zeromq.org/
-.. _ZeroMQ QUEUE device: http://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/devices/queue.html
+.. _ZeroMQ: https://zeromq.org/
+.. _ZeroMQ QUEUE device: https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/devices/queue.html
 
 The recommended way to launch the message broker is to put it under the control of a process manager like `Supervisor`_.
 Please see :ref:`NowcastProcessMgmt` for details.

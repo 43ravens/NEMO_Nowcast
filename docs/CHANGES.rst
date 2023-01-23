@@ -27,13 +27,13 @@ v21.1 (2021-03-03)
 
 * Change name of Git repository default branch from ``master`` to ``main``.
 
-* Add support for exception logging to Sentry (https://sentry.io) with client DSN URL
+* Add support for exception logging to Sentry (https://sentry.io/welcome/) with client DSN URL
   from SENTRY_DSN environment variable; does nothing if SENTRY_DSN does not exist,
   is empty, or is not recognized by Sentry.
 
 * Change continuous integration from Bitbucket pipeline to GitHub Actions workflow.
   CI reports are at https://github.com/43ravens/NEMO_Nowcast/actions
-  Unit test coverage report visualization is at https://codecov.io/gh/43ravens/NEMO_Nowcast
+  Unit test coverage report visualization is at https://app.codecov.io/gh/43ravens/NEMO_Nowcast
 
 * Migrate from Mercurial on Bitbucket to Git on GitHub due to Bitbucket's decision
   to terminate support for Mercurial.
@@ -71,13 +71,13 @@ v19.2 (2019-11-11)
 * Add general and module indices to docs sidebar.
 
 * Add Bitbucket continuous integration pipeline to run unit tests and generate unit
-  tests coverage report; https://bitbucket.org/43ravens/nemo_nowcast/addon/pipelines/home.
+  tests coverage report.
 
 * Add ability to send worker completion messages to a Slack channel via the
   `Slack incoming webhooks API`_.
   Documentation coming soon...
 
-  .. _Slack incoming webhooks API: https://api.slack.com/incoming-webhooks
+  .. _Slack incoming webhooks API: https://api.slack.com/messaging/webhooks
 
 
 v19.1 (2019-01-17)

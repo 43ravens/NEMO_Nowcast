@@ -130,7 +130,7 @@ and the :ref:`SystemManager` they must be transformed into strings for transmiss
 That is a process that is known as "serialization".
 It is done by calling the :py:meth:`~nemo_nowcast.message.Message.serialize` method to transform the message object into a `YAML document`_:
 
-.. _YAML document: http://pyyaml.org/wiki/PyYAMLDocumentation#YAMLsyntax
+.. _YAML document: https://pyyaml.org/wiki/PyYAMLDocumentation
 
 .. code-block:: python
 
@@ -195,4 +195,4 @@ The nowcast messaging system is based on the `ZeroMQ`_ distributed messaging fra
 You probably don't need to delve into the details of ZeroMQ,
 but it is important to note that this is one of the situations where the nowcast system "stands on the shoulders of giants" rather than "re-inventing the wheel".
 
-.. _ZeroMQ: http://zeromq.org/
+.. _ZeroMQ: https://zeromq.org/
