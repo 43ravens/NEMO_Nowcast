@@ -2,7 +2,7 @@
 Change Log
 **********
 
-v22.1 (unreleased)
+v22.1 (2023-01-23)
 ==================
 
 * Drop support for Python 3.6, 3.7, 3.8, and 3.9.
