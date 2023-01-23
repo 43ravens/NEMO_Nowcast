@@ -21,9 +21,9 @@ Elements of a Nowcast System
 
 **TODO**:
 
-* Python package; e.g. `GoMSS_Nowcast`_
+* Python package; e.g. `SalishSeaNowcast`_
 
-  .. _GoMSS_Nowcast: https://bitbucket.org/gomss-nowcast/gomss_nowcast
+  .. _SalishSeaNowcast: https://github.com/SalishSeaCast/SalishSeaNowcast
 
 * version control is highly recommended
 * nowcast system configuration
