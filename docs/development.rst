@@ -88,16 +88,6 @@ Clone the code and documentation `repository`_ from GitHub with:
 
     $ git clone git@github.com:43ravens/NEMO_Nowcast.git
 
-or
-
-.. code-block:: bash
-
-    $ git clone https://github.com/43ravens/NEMO_Nowcast.git
-
-if you don't have `ssh key authentication`_ set up on GitHub.
-
-.. _ssh key authentication: https://help.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh
-
 
 .. _NEMO_NowcastDevelopmentEnvironment:
 
