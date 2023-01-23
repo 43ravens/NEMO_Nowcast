@@ -14,7 +14,9 @@ dependencies:
   - python=3.11
   - pyyaml
   - pyzmq
+  - schedule
   - sentry-sdk
+  - supervisor
 
   # RTD packages
   - mock
