@@ -31,11 +31,11 @@ Conda Environment
 
 We'll use a `Conda`_ environment to isolate Python package installation.
 `Miniconda3`_ provides the :command:`conda` package manager and environment management tools.
-Please follow the `Linux Miniconda Install`_ instructions to download and install Miniconda.
+Please follow the instructions on the Miniconda3`_  page to download and install it.
 
-.. _Conda: http://conda.pydata.org/docs/
-.. _Miniconda3: http://conda.pydata.org/docs/install/quick.html
-.. _Linux Miniconda Install: http://conda.pydata.org/docs/install/quick.html#linux-miniconda-install
+.. _Conda: https://docs.conda.io/en/latest/
+.. _Miniconda3: https://docs.conda.io/en/latest/miniconda.html
+.. _Linux Miniconda Install: https://docs.conda.io/en/latest/install/quick.html
 
 Once that is done,
 create a conda environment with the `NEMO_Nowcast`_ package and its dependencies installed in it with the command:
@@ -107,7 +107,7 @@ The configuration of a nowcast system is defined in a :ref:`NowcastConfigFile`.
 Configuration files are written in `YAML`_,
 the basic element of which is key-value pairs.
 
-.. _YAML: http://pyyaml.org/wiki/PyYAMLDocumentation
+.. _YAML: https://pyyaml.org/wiki/PyYAMLDocumentation
 
 Create a file called :file:`nowcast.yaml` in your :file:`toy-nowcast/` directory with the following contents.
 (you can omit the lines that start with :kbd:`#` if you wish,

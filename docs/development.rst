@@ -44,7 +44,7 @@
     :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3Apytest-with-coverage
     :alt: Pytest with Coverage Status
 .. image:: https://codecov.io/gh/43ravens/NEMO_Nowcast/branch/main/graph/badge.svg
-    :target: https://codecov.io/gh/43ravens/NEMO_Nowcast
+    :target: https://app.codecov.io/gh/43ravens/NEMO_Nowcast
     :alt: Codecov Testing Coverage Report
 .. image:: https://github.com/43ravens/NEMO_Nowcast/actions/workflows/codeql-analysis.yaml/badge.svg
       :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3Acodeql-analysis
@@ -113,8 +113,8 @@ you can create and activate an environment called ``nemo-nowcast`` that will hav
 testing,
 and building the documentation with the commands:
 
-.. _Conda: http://conda.pydata.org/docs/
-.. _Miniconda3: http://conda.pydata.org/docs/install/quick.html
+.. _Conda: https://docs.conda.io/en/latest/
+.. _Miniconda3: https://docs.conda.io/en/latest/miniconda.html
 
 .. code-block:: bash
 
@@ -148,7 +148,7 @@ Coding Style
 The :kbd:`NEMO_Nowcast` package uses the `black`_ code formatting tool to maintain a coding style that is very close to `PEP 8`_.
 
 .. _black: https://black.readthedocs.io/en/stable/
-.. _PEP 8: https://www.python.org/dev/peps/pep-0008/
+.. _PEP 8: https://peps.python.org/pep-0008/
 
 :command:`black` is installed as part of the :ref:`NEMO_NowcastDevelopmentEnvironment` setup.
 
@@ -188,8 +188,8 @@ Building the documentation is driven by the :file:`docs/Makefile`.
 With your :kbd:`nemo-nowcast` development environment activated,
 use:
 
-.. _reStructuredText: http://sphinx-doc.org/rest.html
-.. _Sphinx: http://sphinx-doc.org/
+.. _reStructuredText: https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html
+.. _Sphinx: https://www.sphinx-doc.org/en/master/
 
 .. code-block:: bash
 
@@ -231,7 +231,7 @@ The HTML rendering of the docs ends up in :file:`docs/_build/html/`.
 You can open the :file:`index.html` file in that directory tree in your browser to preview the results of the build.
 
 If you have write access to the `repository`_ on GitHub,
-whenever you push changes to GitHub the documentation is automatically re-built and rendered at http://nemo-nowcast.readthedocs.io/en/latest/.
+whenever you push changes to GitHub the documentation is automatically re-built and rendered at https://nemo-nowcast.readthedocs.io/en/latest/.
 
 
 .. _NEMO_NowcastLinkCheckingTheDocumentation:
@@ -399,7 +399,7 @@ Running the Unit Tests
 The test suite for the :kbd:`NEMO_Nowcast` package is in :file:`NEMO_Nowcast/tests/`.
 The `pytest`_ tool is used for test parametrization and as the test runner for the suite.
 
-.. _pytest: http://pytest.org/latest/
+.. _pytest: https://docs.pytest.org/en/latest/
 
 With your :kbd:`nemo-nowcast` development environment activated,
 use:
@@ -482,7 +482,7 @@ The testing coverage report is uploaded to `codecov.io`_
 
 The `GitHub Actions`_ workflow configuration that defines the continuous integration tasks is in the :file:`.github/workflows/pytest-with-coverage.yaml` file.
 
-.. _GitHub Actions: https://help.github.com/en/actions
+.. _GitHub Actions: https://docs.github.com/en/actions
 
 
 .. _NEMO_NowcastVersionControlRepository:
@@ -548,12 +548,12 @@ Licenses
 The NEMO_Nowcast framework code and documentation are copyright 2016-2021 by Doug Latornell, 43ravens.
 
 They are licensed under the Apache License, Version 2.0.
-http://www.apache.org/licenses/LICENSE-2.0
+https://www.apache.org/licenses/LICENSE-2.0
 Please see the LICENSE file for details of the license.
 
 The `fileutils`_ module from the `boltons`_ project is included in the NEMO_Nowcast package.
 It is copyright 2016 by Mahmoud Hashemi and used under the terms of the `boltons BSD license`_.
 
 .. _fileutils: https://boltons.readthedocs.io/en/latest/fileutils.html
-.. _boltons: https://pypi.python.org/pypi/boltons
+.. _boltons: https://pypi.org/project/boltons/
 .. _boltons BSD license: https://github.com/mahmoud/boltons/blob/master/LICENSE

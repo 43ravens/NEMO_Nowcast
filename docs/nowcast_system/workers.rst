@@ -446,7 +446,7 @@ Use YYYY-MM-DD format. Defaults to {default}.
 
 where :kbd:`{default}` is the value of :py:data:`default` passed into :py:meth:`worker.cli.add_date_option` formatted as YYYY-MM-DD.
 
-.. _Arrow: http://crsmithdev.com/arrow/
+.. _Arrow: https://arrow.readthedocs.io/en/latest/
 
 The :py:meth:`worker.cli.add_date_option` method is documented at :py:meth:`nemo_nowcast.cli.CommandLineInterface.add_date_option`.
 

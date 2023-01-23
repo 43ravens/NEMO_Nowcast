@@ -17,7 +17,7 @@
 This should be implemented as :py:mod:`nowcast.next_workers` in a nowcast
 system package the is built on top of the :kbd:`NEMO_Nowcast` package.
 Please see the documentation at
-http://nemo-nowcast.readthedocs.io/en/latest/nowcast_system/index.html.
+https://nemo-nowcast.readthedocs.io/en/latest/nowcast_system/index.html.
 
 Functions to calculate lists of workers to launch after previous workers
 end their work.
