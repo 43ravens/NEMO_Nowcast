@@ -35,9 +35,6 @@ NEMO Ocean Model Nowcast Framework
 .. image:: https://img.shields.io/github/issues/43ravens/NEMO_Nowcast?logo=github
     :target: https://github.com/43ravens/NEMO_Nowcast/issues
     :alt: Issue Tracker
-.. image:: https://anaconda.org/gomss-nowcast/nemo_nowcast/badges/installer/conda.svg
-    :target: https://conda.anaconda.org/gomss-nowcast
-    :alt: Install with conda
 
 The `NEMO_Nowcast`_ package is a collection of Python modules that can be used to build a software system to run the `NEMO ocean model`_ in a daily nowcast/forecast mode.
 Such a system typically uses as-recent-as-available
@@ -85,24 +82,7 @@ Documentation
     :target: https://nemo-nowcast.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Build Status
 
-Documentation for the framework is in the ``docs/`` directory and is rendered at http://nemo-nowcast.readthedocs.io/en/latest/.
-
-
-Release Packages
-================
-
-.. image:: https://anaconda.org/gomss-nowcast/nemo_nowcast/badges/installer/conda.svg
-    :target: https://anaconda.org/gomss-nowcast/repo
-    :alt: Install with Conda
-
-.. image:: https://anaconda.org/gomss-nowcast/nemo_nowcast/badges/downloads.svg
-    :target: https://anaconda.org/GoMSS-Nowcast/nemo_nowcast
-    :alt: Install latest release
-
-In addition to the `NEMO_Nowcast`_ code repository,
-release packages are available from the `gomss-nowcast channel`_ at anaconda.org.
-
-.. _gomss-nowcast channel: https://anaconda.org/GoMSS-Nowcast/repo
+Documentation for the framework is in the ``docs/`` directory and is rendered at https://nemo-nowcast.readthedocs.io/en/latest/.
 
 
 Licenses
