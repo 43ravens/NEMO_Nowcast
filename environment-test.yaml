@@ -28,7 +28,7 @@ dependencies:
 
   # For documentation link checking
   - sphinx
-  - sphinx_rtd_theme=1.1.1
+  - sphinx_rtd_theme=1.2
 
   - pip:
     # install of NEMO_Nowcast package in editable mode
