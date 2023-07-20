@@ -31,7 +31,7 @@ pip==23.0
 platformdirs==3.0.0
 pluggy==1.0.0
 pycparser==2.21
-Pygments==2.14.0
+Pygments==2.15.0
 pyOpenSSL==23.0.0
 PySocks==1.7.1
 pytest==7.2.1
