@@ -18,3 +18,5 @@ jobs:
       python-version: ${{ matrix.python-version }}
       conda-env-file: environment-test.yaml
       conda-env-name: nemo-nowcast-test
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
