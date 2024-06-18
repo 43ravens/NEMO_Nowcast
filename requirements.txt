@@ -60,6 +60,6 @@ supervisor==4.2.5
 toml==0.10.2
 tomli==2.0.1
 typing_extensions==4.4.0
-urllib3==1.26.18
+urllib3==1.26.19
 wheel==0.38.4
 zipp==3.13.0
