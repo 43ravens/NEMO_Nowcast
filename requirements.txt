@@ -44,7 +44,7 @@ pyzmq==25.0.0
 requests==2.32.0
 schedule==1.1.0
 sentry-sdk==1.15.0
-setuptools==67.3.2
+setuptools==70.0.0
 six==1.16.0
 snowballstemmer==2.2.0
 Sphinx==5.3.0
