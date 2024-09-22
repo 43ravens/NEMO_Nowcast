@@ -25,8 +25,8 @@
 .. image:: https://img.shields.io/badge/license-BSD%203--Clause-orange.svg
     :target: https://opensource.org/licenses/BSD-3-Clause
     :alt: Licensed under the BSD-3-Clause License
-.. image:: https://img.shields.io/badge/Python-3.10%20%7C%203.11-blue?logo=python&label=Python&logoColor=gold
-    :target: https://docs.python.org/3.11/
+.. image:: https://img.shields.io/badge/Python-3.12-blue?logo=python&label=Python&logoColor=gold
+    :target: https://docs.python.org/3.12/
     :alt: Python Version
 .. image:: https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
     :target: https://github.com/43ravens/NEMO_Nowcast
@@ -58,15 +58,12 @@
 Python Versions
 ===============
 
-.. image:: https://img.shields.io/badge/Python-3.10%20%7C%203.11-blue?logo=python&label=Python&logoColor=gold
-    :target: https://docs.python.org/3.11/
+.. image:: https://img.shields.io/badge/Python-3.12-blue?logo=python&label=Python&logoColor=gold
+    :target: https://docs.python.org/3.12/
     :alt: Python Version
 
 
-The :kbd:`SalishSeaNowcast` package is developed and tested using `Python`_ 3.11.
-The minimum supported Python version is 3.10.
-The :ref:`NEMO_NowcastContinuousIntegration` workflow on GitHub ensures that the package
-is tested for all versions of Python>=3.10.
+The :kbd:`SalishSeaNowcast` package is developed and tested using `Python`_ 3.12.
 
 .. _Python: https://www.python.org/
 
@@ -335,7 +332,7 @@ The output looks something like:
     (         CHANGES: line   11) ok        https://github.com/SalishSeaCast/SalishSeaCmd/actions?query=workflow%3Acodeql-analysis
     (nowcast_system/elements: line   24) ok        https://github.com/SalishSeaCast/SalishSeaNowcast
     (     development: line  520) ok        https://github.com/mahmoud/boltons/blob/master/LICENSE
-    (     development: line   20) ok        https://img.shields.io/badge/Python-3.10%20%7C%203.11-blue?logo=python&label=Python&logoColor=gold
+    (     development: line   20) ok        https://img.shields.io/badge/Python-3.12-blue?logo=python&label=Python&logoColor=gold
     (     development: line   20) ok        https://img.shields.io/badge/code%20style-black-000000.svg
     (architecture/message_broker: line   48) ok        https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/devices/queue.html
     (     development: line   20) ok        https://img.shields.io/badge/license-BSD%203--Clause-orange.svg

@@ -18,21 +18,6 @@ from setuptools import find_packages, setup
 
 import __pkg_metadata__
 
-classifiers = [
-    "Development Status :: " + __pkg_metadata__.DEV_STATUS,
-    "License :: OSI Approved :: Apache Software License",
-    "Programming Language :: Python :: Implementation :: CPython",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Operating System :: MacOS :: MacOS X",
-    "Operating System :: POSIX :: Linux",
-    "Operating System :: Unix",
-    "Environment :: Console",
-    "Intended Audience :: Science/Research",
-    "Intended Audience :: Education",
-    "Intended Audience :: Developers",
-]
 try:
     long_description = open("README.rst", "rt").read()
 except IOError:
@@ -61,7 +46,6 @@ setup(
     author_email="doug.latornell@43ravens.ca",
     url="https://nemo-nowcast.readthedocs.io/en/latest/NEMO_Nowcast/",
     license="Apache License, Version 2.0",
-    classifiers=classifiers,
     platforms=["Linux"],
     install_requires=install_requires,
     tests_require=tests_require,

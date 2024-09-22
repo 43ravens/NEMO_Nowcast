@@ -11,7 +11,7 @@ dependencies:
   - arrow
   - attrs
   - pip
-  - python=3.11
+  - python=3.12
   - pyyaml
   - pyzmq
   - schedule
