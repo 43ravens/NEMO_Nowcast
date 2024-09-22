@@ -64,9 +64,6 @@ Python Versions
 
 
 The :kbd:`SalishSeaNowcast` package is developed and tested using `Python`_ 3.11.
-The minimum supported Python version is 3.10.
-The :ref:`NEMO_NowcastContinuousIntegration` workflow on GitHub ensures that the package
-is tested for all versions of Python>=3.10.
 
 .. _Python: https://www.python.org/
 

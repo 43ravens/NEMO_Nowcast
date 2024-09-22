@@ -5,7 +5,8 @@ Change Log
 v24.1 (unreleased)
 ==================
 
-*
+* Drop support for Python 3.10, and 3.11.
+  Minimum supported Python version is now 3.12.
 
 
 v22.1 (2023-01-23)
