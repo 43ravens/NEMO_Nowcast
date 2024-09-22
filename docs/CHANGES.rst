@@ -2,7 +2,7 @@
 Change Log
 **********
 
-v23.1 (unreleased)
+v24.1 (unreleased)
 ==================
 
 *
