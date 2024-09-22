@@ -27,8 +27,8 @@ dependencies:
   - pytest-randomly
 
   # For documentation link checking
-  - sphinx
-  - sphinx_rtd_theme=1.2
+  - sphinx=7.2.6
+  - sphinx-rtd-theme=2.0.0
 
   - pip:
     # install of NEMO_Nowcast package in editable mode
