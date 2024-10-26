@@ -23,7 +23,7 @@
     :target: https://www.apache.org/licenses/LICENSE-2.0
     :alt: Licensed under the Apache License, Version 2.0
 .. image:: https://img.shields.io/badge/license-BSD%203--Clause-orange.svg
-    :target: https://opensource.org/licenses/BSD-3-Clause
+    :target: https://opensource.org/license/BSD-3-Clause
     :alt: Licensed under the BSD-3-Clause License
 .. image:: https://img.shields.io/badge/Python-3.12-blue?logo=python&label=Python&logoColor=gold
     :target: https://docs.python.org/3.12/
@@ -185,12 +185,15 @@ The output looks something like:
 .. code-block:: text
 
     Removing everything under '_build'...
-    Running Sphinx v5.3.0
+    Running Sphinx v8.1.3
+    loading translations [en]... done
     making output directory... done
-    loading intersphinx inventory from https://docs.python.org/3/objects.inv...
-    loading intersphinx inventory from https://gomss-nowcast-system.readthedocs.io/en/latest/objects.inv...
-    loading intersphinx inventory from https://salishsea-nowcast.readthedocs.io/en/latest/objects.inv...
+    Converting `source_suffix = '.rst'` to `source_suffix = {'.rst': 'restructuredtext'}`.
+    loading intersphinx inventory 'python' from https://docs.python.org/3/objects.inv ...
+    loading intersphinx inventory 'gomssnowcast' from https://gomss-nowcast-system.readthedocs.io/en/latest/objects.inv ...
+    loading intersphinx inventory 'salishseanowcast' from https://salishsea-nowcast.readthedocs.io/en/latest/objects.inv ...
     building [mo]: targets for 0 po files that are out of date
+    writing output...
     building [html]: targets for 18 source files that are out of date
     updating environment: [new config] 18 added, 0 changed, 0 removed
     reading sources... [100%] nowcast_system/workers
@@ -198,13 +201,21 @@ The output looks something like:
     pickling environment... done
     checking consistency... done
     preparing documents... done
+    copying assets...
+    copying static files...
+    Writing evaluated template result to /media/doug/warehouse/43ravens/projects/NEMO_Nowcast/docs/_build/html/_static/language_data.js
+    Writing evaluated template result to /media/doug/warehouse/43ravens/projects/NEMO_Nowcast/docs/_build/html/_static/basic.css
+    Writing evaluated template result to /media/doug/warehouse/43ravens/projects/NEMO_Nowcast/docs/_build/html/_static/documentation_options.js
+    Writing evaluated template result to /media/doug/warehouse/43ravens/projects/NEMO_Nowcast/docs/_build/html/_static/js/versions.js
+    copying static files: done
+    copying extra files...
+    copying extra files: done
+    copying assets: done
     writing output... [100%] nowcast_system/workers
     generating indices... genindex py-modindex done
     highlighting module code... [100%] nemo_nowcast.workers.sleep
     writing additional pages... search done
     copying images... [100%] architecture/MessageBroker.png
-    copying static files... done
-    copying extra files... done
     dumping search index in English (code: en)... done
     dumping object inventory... done
     build succeeded.
@@ -240,140 +251,137 @@ The output looks something like:
 
 .. code-block:: text
 
-    Running Sphinx v5.3.0
-    loading pickled environment... done
+    Removing everything under '_build'...
+    Running Sphinx v8.1.3
+    loading translations [en]... done
+    making output directory... done
+    Converting `source_suffix = '.rst'` to `source_suffix = {'.rst': 'restructuredtext'}`.
+    loading intersphinx inventory 'python' from https://docs.python.org/3/objects.inv ...
+    loading intersphinx inventory 'gomssnowcast' from https://gomss-nowcast-system.readthedocs.io/en/latest/objects.inv ...
+    loading intersphinx inventory 'salishseanowcast' from https://salishsea-nowcast.readthedocs.io/en/latest/objects.inv ...
     building [mo]: targets for 0 po files that are out of date
+    writing output...
     building [linkcheck]: targets for 18 source files that are out of date
-    updating environment: 0 added, 0 changed, 0 removed
+    updating environment: [new config] 18 added, 0 changed, 0 removed
+    reading sources... [100%] nowcast_system/workers
     looking for now-outdated files... none found
+    pickling environment... done
+    checking consistency... done
     preparing documents... done
-    writing output... [  5%] CHANGES
-    writing output... [ 11%] api
-    writing output... [ 16%] architecture/index
-    writing output... [ 22%] architecture/log_aggregator
-    writing output... [ 27%] architecture/manager
-    writing output... [ 33%] architecture/message_broker
-    writing output... [ 38%] architecture/messaging
-    writing output... [ 44%] architecture/scheduler
-    writing output... [ 50%] architecture/worker
-    writing output... [ 55%] development
-    writing output... [ 61%] index
-    writing output... [ 66%] nowcast_system/builtin-workers
-    writing output... [ 72%] nowcast_system/config
-    writing output... [ 77%] nowcast_system/elements
-    writing output... [ 83%] nowcast_system/index
-    writing output... [ 88%] nowcast_system/process_mgmt
-    writing output... [ 94%] nowcast_system/toy-example
+    copying assets...
+    copying assets: done
     writing output... [100%] nowcast_system/workers
 
-
     (nowcast_system/workers: line  439) ok        https://arrow.readthedocs.io/en/latest/
-    (         CHANGES: line   45) ok        http://supervisord.org/
-    (         CHANGES: line   99) ok        https://black.readthedocs.io/en/stable/
-    (         CHANGES: line  138) ok        https://boltons.readthedocs.io/en/latest/
-    (         CHANGES: line   34) ok        https://app.codecov.io/gh/43ravens/NEMO_Nowcast
-    (     development: line  520) ok        https://boltons.readthedocs.io/en/latest/fileutils.html
-    (         CHANGES: line   45) ok        https://circus.readthedocs.io/en/latest/
-    (     development: line  424) ok        https://coverage.readthedocs.io/en/latest/
-    (         CHANGES: line   76) ok        https://api.slack.com/messaging/webhooks
-    (     development: line   20) ok        https://codecov.io/gh/43ravens/NEMO_Nowcast/branch/main/graph/badge.svg
-    (     development: line  469) ok        https://docs.github.com/en/actions
-    (     development: line   97) ok        https://docs.conda.io/en/latest/
-    (         CHANGES: line   86) ok        https://calver.org/
-    (     development: line   97) ok        https://docs.conda.io/en/latest/miniconda.html
-    (     development: line  385) ok        https://docs.pytest.org/en/latest/
-    (     development: line   20) ok        https://docs.python.org/3.11/
-    (             api: line    1) ok        https://docs.python.org/3/library/argparse.html#argparse.ArgumentParser
-    (             api: line    3) ok        https://docs.python.org/3/library/argparse.html#argparse.ArgumentParser.add_argument
-    (             api: line    1) ok        https://docs.python.org/3/library/argparse.html#argparse.Namespace
-    (             api: line    1) ok        https://docs.python.org/3/library/collections.html#collections.namedtuple
+    (         CHANGES: line   52) ok        http://supervisord.org/
+    (         CHANGES: line   41) ok        https://app.codecov.io/gh/43ravens/NEMO_Nowcast
+    (         CHANGES: line  106) ok        https://black.readthedocs.io/en/stable/
+    (         CHANGES: line  145) ok        https://boltons.readthedocs.io/en/latest/
+    (     development: line  523) ok        https://boltons.readthedocs.io/en/latest/fileutils.html
+    (         CHANGES: line   83) ok        https://api.slack.com/messaging/webhooks
+    (         CHANGES: line   52) ok        https://circus.readthedocs.io/en/latest/
     (nowcast_system/toy-example: line   40) ok        https://anaconda.org/GoMSS-Nowcast/nemo_nowcast
-    (             api: line   22) ok        https://docs.python.org/3/library/constants.html#None
+    (     development: line  427) ok        https://coverage.readthedocs.io/en/latest/
+    (     development: line   94) ok        https://docs.conda.io/en/latest/miniconda.html
+    (     development: line   46) ok        https://codecov.io/gh/43ravens/NEMO_Nowcast/branch/main/graph/badge.svg
+    (     development: line   94) ok        https://docs.conda.io/en/latest/
+    (         CHANGES: line   93) ok        https://calver.org/
+    (     development: line  472) ok        https://docs.github.com/en/actions
+    (     development: line  388) ok        https://docs.pytest.org/en/latest/
+    (     development: line   20) ok        https://docs.python.org/3.12/
+    (             api: line   70) ok        https://docs.python.org/3/library/argparse.html#argparse.ArgumentParser
+    (             api: line    3) ok        https://docs.python.org/3/library/argparse.html#argparse.ArgumentParser.add_argument
     (architecture/messaging: line  146) ok        https://docs.python.org/3/library/constants.html#False
-    (architecture/messaging: line  146) ok        https://docs.python.org/3/library/constants.html#True
-    (             api: line    1) ok        https://docs.python.org/3/library/functions.html#float
-    (             api: line    1) ok        https://docs.python.org/3/library/functions.html#int
+    (             api: line  124) ok        https://docs.python.org/3/library/collections.html#collections.namedtuple
+    (             api: line    1) ok        https://docs.python.org/3/library/argparse.html#argparse.Namespace
+    (             api: line    1) ok        https://docs.python.org/3/library/argparse.html#argparse.ArgumentTypeError
+    (             api: line   22) ok        https://docs.python.org/3/library/constants.html#None
     (nowcast_system/config: line  138) ok        https://docs.python.org/3/library/logging.config.html#logging-config-dictschema
-    (             api: line    3) ok        https://docs.python.org/3/library/logging.handlers.html#logging.handlers.RotatingFileHandler
+    (architecture/messaging: line  146) ok        https://docs.python.org/3/library/constants.html#True
+    (             api: line   61) ok        https://docs.python.org/3/library/functions.html#int
+    (             api: line   61) ok        https://docs.python.org/3/library/functions.html#float
     (nowcast_system/config: line   58) ok        https://docs.python.org/3/library/logging.handlers.html#logging.handlers.WatchedFileHandler
-    (             api: line    1) ok        https://docs.python.org/3/library/logging.html#logging.Logger
-    (nowcast_system/elements: line   90) ok        https://docs.python.org/3/library/logging.html#logging.debug
+    (             api: line    3) ok        https://docs.python.org/3/library/logging.handlers.html#logging.handlers.RotatingFileHandler
+    (architecture/manager: line   89) ok        https://docs.python.org/3/library/logging.html#logging.CRITICAL
+    (             api: line   61) ok        https://docs.python.org/3/library/logging.html#logging.Logger
+    (architecture/manager: line   53) ok        https://docs.python.org/3/library/logging.html#logging.ERROR
     (nowcast_system/config: line  138) ok        https://docs.python.org/3/library/logging.html#module-logging
-    (             api: line    1) ok        https://docs.python.org/3/library/pathlib.html#pathlib.Path
-    (             api: line    1) ok        https://docs.python.org/3/library/stdtypes.html#bytes
-    (             api: line    1) ok        https://docs.python.org/3/library/stdtypes.html#list
+    (nowcast_system/elements: line   90) ok        https://docs.python.org/3/library/logging.html#logging.debug
+    (             api: line   25) ok        https://docs.python.org/3/library/pathlib.html#pathlib.Path
+    (             api: line   61) ok        https://docs.python.org/3/library/stdtypes.html#bytes
+    (             api: line  124) ok        https://docs.python.org/3/library/stdtypes.html#list
+    (             api: line   34) ok        https://docs.python.org/3/library/stdtypes.html#str
     (             api: line    3) ok        https://docs.python.org/3/library/stdtypes.html#dict
-    (             api: line    1) ok        https://docs.python.org/3/library/stdtypes.html#str
+    (nowcast_system/elements: line   73) ok        https://docs.python.org/3/library/stdtypes.html#set
+    (     development: line  486) ok        https://git-scm.com/
     (architecture/messaging: line  146) ok        https://docs.python.org/3/library/stdtypes.html#tuple
     (nowcast_system/toy-example: line  194) ok        https://en.wikipedia.org/wiki/INI_file
-    (nowcast_system/elements: line   73) ok        https://docs.python.org/3/library/stdtypes.html#set
-    (     development: line  483) ok        https://git-scm.com/
     (architecture/worker: line   29) ok        https://en.wikipedia.org/wiki/Idempotence
-    (     development: line   20) ok        https://github.com/43ravens/NEMO_Nowcast/actions/workflows/codeql-analysis.yaml/badge.svg
+    (     development: line   49) ok        https://github.com/43ravens/NEMO_Nowcast/actions/workflows/codeql-analysis.yaml/badge.svg
     (     development: line   20) ok        https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3Acodeql-analysis
-    (         CHANGES: line   38) ok        https://github.com/43ravens/NEMO_Nowcast
-    (     development: line   20) ok        https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3Apytest-with-coverage
-    (     development: line   20) ok        https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3Asphinx-linkcheck
+    (         CHANGES: line   45) ok        https://github.com/43ravens/NEMO_Nowcast
+    (         CHANGES: line   41) ok        https://github.com/43ravens/NEMO_Nowcast/actions
     (     development: line   20) ok        https://github.com/43ravens/NEMO_Nowcast/issues
-    (         CHANGES: line   34) ok        https://github.com/43ravens/NEMO_Nowcast/actions
-    (     development: line  458) ok        https://github.com/43ravens/NEMO_Nowcast/commits/main
-    (         CHANGES: line  192) ok        https://github.com/43ravens/NEMO_Nowcast/issues/2
-    (         CHANGES: line  205) ok        https://github.com/43ravens/NEMO_Nowcast/issues/4
-    (         CHANGES: line  130) ok        https://github.com/43ravens/NEMO_Nowcast/issues/3
-    (         CHANGES: line  198) ok        https://github.com/43ravens/NEMO_Nowcast/issues/5
-    (         CHANGES: line  152) ok        https://github.com/43ravens/NEMO_Nowcast/issues/7
-    (         CHANGES: line  145) ok        https://github.com/43ravens/NEMO_Nowcast/issues/8
-    (     development: line   20) ok        https://github.com/43ravens/NEMO_Nowcast/workflows/sphinx-linkcheck/badge.svg
-    (     development: line   20) ok        https://github.com/43ravens/NEMO_Nowcast/workflows/pytest-with-coverage/badge.svg
+    (         CHANGES: line  199) ok        https://github.com/43ravens/NEMO_Nowcast/issues/2
+    (     development: line   20) ok        https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3Apytest-with-coverage
+    (         CHANGES: line  137) ok        https://github.com/43ravens/NEMO_Nowcast/issues/3
+    (     development: line   20) ok        https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3Asphinx-linkcheck
+    (         CHANGES: line  205) ok        https://github.com/43ravens/NEMO_Nowcast/issues/5
+    (         CHANGES: line  159) ok        https://github.com/43ravens/NEMO_Nowcast/issues/7
+    (         CHANGES: line  212) ok        https://github.com/43ravens/NEMO_Nowcast/issues/4
+    (     development: line  461) ok        https://github.com/43ravens/NEMO_Nowcast/commits/main
+    (     development: line   40) ok        https://github.com/43ravens/NEMO_Nowcast/workflows/sphinx-linkcheck/badge.svg
+    (         CHANGES: line  152) ok        https://github.com/43ravens/NEMO_Nowcast/issues/8
+    (     development: line   43) ok        https://github.com/43ravens/NEMO_Nowcast/workflows/pytest-with-coverage/badge.svg
     (           index: line   48) ok        https://gomss-nowcast-system.readthedocs.io/en/latest/index.html
-    (nowcast_system/workers: line  246) ok        https://gomss-nowcast-system.readthedocs.io/en/latest/workers.html#downloadweatherworker
-    (         CHANGES: line  113) ok        https://github.com/43ravens/NEMO_Nowcast/issues/9
+    (         CHANGES: line  120) ok        https://github.com/43ravens/NEMO_Nowcast/issues/9
+    (         CHANGES: line   18) ok        https://github.com/SalishSeaCast/SalishSeaCmd/actions?query=workflow%3Acodeql-analysis
+    (nowcast_system/workers: line  245) ok        https://gomss-nowcast-system.readthedocs.io/en/latest/workers.html#downloadweatherworker
     (nowcast_system/workers: line   43) ok        https://gomss-nowcast-system.readthedocs.io/en/latest/workers.html#gomss-nowcastsystemworkers
-    (         CHANGES: line   11) ok        https://github.com/SalishSeaCast/SalishSeaCmd/actions?query=workflow%3Acodeql-analysis
+    (     development: line   34) ok        https://img.shields.io/badge/code%20style-black-000000.svg
+    (     development: line  523) ok        https://github.com/mahmoud/boltons/blob/master/LICENSE
+    (     development: line   28) ok        https://img.shields.io/badge/Python-3.12-blue?logo=python&label=Python&logoColor=gold
+    (     development: line   22) ok        https://img.shields.io/badge/license-Apache%202-cb2533.svg
+    (     development: line   31) ok        https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
     (nowcast_system/elements: line   24) ok        https://github.com/SalishSeaCast/SalishSeaNowcast
-    (     development: line  520) ok        https://github.com/mahmoud/boltons/blob/master/LICENSE
-    (     development: line   20) ok        https://img.shields.io/badge/Python-3.12-blue?logo=python&label=Python&logoColor=gold
-    (     development: line   20) ok        https://img.shields.io/badge/code%20style-black-000000.svg
     (architecture/message_broker: line   48) ok        https://learning-0mq-with-pyzmq.readthedocs.io/en/latest/pyzmq/devices/queue.html
-    (     development: line   20) ok        https://img.shields.io/badge/license-BSD%203--Clause-orange.svg
-    (     development: line   20) ok        https://img.shields.io/badge/license-Apache%202-cb2533.svg
+    (     development: line   25) ok        https://img.shields.io/badge/license-BSD%203--Clause-orange.svg
     (     development: line   20) ok        https://nemo-nowcast.readthedocs.io/en/latest/
-    (         CHANGES: line  119) ok        https://nemo-nowcast.readthedocs.io/en/latest/architecture/log_aggregator.html
-    (     development: line   20) ok        https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
-    (         CHANGES: line   68) ok        https://nemo-nowcast.readthedocs.io/en/latest/nowcast_system/elements.html#handling-worker-race-conditions
+    (         CHANGES: line  126) ok        https://nemo-nowcast.readthedocs.io/en/latest/architecture/log_aggregator.html
+    (     development: line   52) ok        https://img.shields.io/github/issues/43ravens/NEMO_Nowcast?logo=github
+    (     development: line  132) ok        https://peps.python.org/pep-0008/
+    (         CHANGES: line   75) ok        https://nemo-nowcast.readthedocs.io/en/latest/nowcast_system/elements.html#handling-worker-race-conditions
     (             api: line    3) ok        https://nemo-nowcast.readthedocs.io/en/latest/nowcast_system/index.html
-    (     development: line  112) ok        https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs
-    (     development: line  520) ok        https://pypi.org/project/boltons/
-    (     development: line   20) ok        https://opensource.org/licenses/BSD-3-Clause
-    (     development: line  424) ok        https://pytest-cov.readthedocs.io/en/latest/
-    (     development: line  135) ok        https://peps.python.org/pep-0008/
-    (     development: line   20) ok        https://img.shields.io/github/issues/43ravens/NEMO_Nowcast?logo=github
+    (     development: line  523) ok        https://pypi.org/project/boltons/
+    (     development: line   20) ok        https://opensource.org/license/BSD-3-Clause
+    (     development: line  427) ok        https://pytest-cov.readthedocs.io/en/latest/
     (architecture/messaging: line  127) ok        https://pyyaml.org/wiki/PyYAMLDocumentation
+    (     development: line  109) ok        https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs
     (           index: line   30) ok        https://salishsea-nowcast.readthedocs.io/en/latest/
     (nowcast_system/elements: line   67) ok        https://salishsea-nowcast.readthedocs.io/en/latest/workers.html#downloadliveoceanworker
     (nowcast_system/workers: line  354) ok        https://salishsea-nowcast.readthedocs.io/en/latest/workers.html#downloadweatherworker
+    (     development: line   37) ok        https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest
     (nowcast_system/elements: line   67) ok        https://salishsea-nowcast.readthedocs.io/en/latest/workers.html#gribtonetcdfworker
     (nowcast_system/elements: line   67) ok        https://salishsea-nowcast.readthedocs.io/en/latest/workers.html#makeliveoceanfilesworker
     (nowcast_system/workers: line  336) ok        https://salishsea-nowcast.readthedocs.io/en/latest/workers.html#makesshfilesworker
-    (     development: line   20) ok        https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest
-    (             api: line    3) ok        https://salishsea-nowcast.readthedocs.io/en/latest/workers.html#module-nowcast.next_workers
     (nowcast_system/elements: line   67) ok        https://salishsea-nowcast.readthedocs.io/en/latest/workers.html#process-flow
+    (architecture/messaging: line   47) ok        https://salishsea-nowcast.readthedocs.io/en/latest/workers.html#module-nowcast.workers.download_weather
     (nowcast_system/elements: line   67) ok        https://salishsea-nowcast.readthedocs.io/en/latest/workers.html#nowcast.next_workers.after_collect_weather
     (nowcast_system/workers: line   44) ok        https://salishsea-nowcast.readthedocs.io/en/latest/workers.html#salishseanowcastsystemworkers
-    (nowcast_system/elements: line   67) ok        https://salishsea-nowcast.readthedocs.io/en/latest/workers.html#uploadforcingworker
-    (nowcast_system/workers: line  322) ok        https://salishsea-nowcast.readthedocs.io/en/latest/workers.html#watchnemo-worker
+    (             api: line    3) ok        https://salishsea-nowcast.readthedocs.io/en/latest/workers.html#module-nowcast.next_workers
     (     development: line   20) ok        https://www.apache.org/licenses/LICENSE-2.0
+    (         CHANGES: line   37) ok        https://sentry.io/welcome/
+    (nowcast_system/elements: line   67) ok        https://salishsea-nowcast.readthedocs.io/en/latest/workers.html#uploadforcingworker
     (           index: line   43) ok        https://salishsea.eos.ubc.ca/nemo/results/index.html
-    (     development: line  172) ok        https://www.sphinx-doc.org/en/master/
+    (nowcast_system/workers: line  322) ok        https://salishsea-nowcast.readthedocs.io/en/latest/workers.html#watchnemo-worker
+    (     development: line  169) ok        https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html
     (     development: line   66) ok        https://www.python.org/
-    (architecture/messaging: line   47) ok        https://salishsea-nowcast.readthedocs.io/en/latest/workers.html#module-nowcast.workers.download_weather
-    (     development: line  172) ok        https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html
+    (     development: line  169) ok        https://www.sphinx-doc.org/en/master/
     (architecture/message_broker: line   48) ok        https://zeromq.org/
-    (         CHANGES: line   30) ok        https://sentry.io/welcome/
     (           index: line   21) ok        https://www.nemo-ocean.eu/
     build succeeded.
 
-    Look for any errors in the above output or in _build/html/output.txt
+    Look for any errors in the above output or in _build/linkcheck/output.txt
 
 :command:`make linkcheck` is run monthly via a `scheduled GitHub Actions workflow`_
 
@@ -399,30 +407,36 @@ use:
     (nemo-nowcast)$ pytest
 
 to run the test suite.
-The output looks something like::
+The output looks something like:
 
-  ============================ test session starts ============================
-  platform linux -- Python 3.6.7, pytest-4.0.1, py-1.7.0, pluggy-0.8.1
-  rootdir: /media/doug/warehouse/43ravens/projects/gomss-nowcast/NEMO_Nowcast, inifile:
-  collected 300 items
+.. code-block:: text
 
-  tests/test_cli.py .................                                                       [  5%]
-  tests/test_config.py .............                                                        [ 10%]
-  tests/test_log_aggregator.py .................                                            [ 15%]
-  tests/test_manager.py ...............................................................
-  ...................                                                                       [ 43%]
-  tests/test_message.py ......                                                              [ 45%]
-  tests/test_message_broker.py ...................                                          [ 51%]
-  tests/test_next_workers.py ......                                                         [ 53%]
-  tests/test_scheduler.py ...................                                               [ 59%]
-  tests/test_worker.py ................................................................
-  ..............                                                                            [ 85%]
-  tests/workers/test_awaken.py ........                                                     [ 88%]
-  tests/workers/test_clear_checklist.py .........                                           [ 91%]
-  tests/workers/test_rotate_logs.py .................                                       [ 97%]
-  tests/workers/test_sleep.py .........                                                     [100%]
+(/home/doug/conda_envs/nemo-nowcast) /media/doug/warehouse/43ravens/projects/NEMO_Nowcast git:[main]
+pytest
+================================== test session starts ===================================
+platform linux -- Python 3.12.7, pytest-8.3.3, pluggy-1.5.0
+Using --randomly-seed=202895674
+rootdir: /media/doug/warehouse/43ravens/projects/NEMO_Nowcast
+plugins: randomly-3.15.0, cov-5.0.0
+collected 319 items
 
-  ========================= 300 passed in 16.77 seconds =========================
+tests/test_worker.py ....................................................................
+........................                                                           [ 28%]
+tests/workers/test_clear_checklist.py .........                                    [ 31%]
+tests/test_scheduler.py ...................                                        [ 37%]
+tests/workers/test_awaken.py ........                                              [ 40%]
+tests/test_manager.py ...................................................................
+................                                                                   [ 66%]
+tests/test_cli.py .................                                                [ 71%]
+tests/test_log_aggregator.py .................                                     [ 76%]
+tests/test_next_workers.py ......                                                  [ 78%]
+tests/workers/test_sleep.py .........                                              [ 81%]
+tests/test_message.py ......                                                       [ 83%]
+tests/test_config.py .................                                             [ 88%]
+tests/test_message_broker.py ...................                                   [ 94%]
+tests/workers/test_rotate_logs.py .................                                [100%]
+
+================================== 319 passed in 18.69s ==================================
 
 You can monitor what lines of code the test suite exercises using the `coverage.py`_ and `pytest-cov`_ tools with the commands:
 
@@ -511,7 +525,7 @@ Licenses
     :target: https://www.apache.org/licenses/LICENSE-2.0
     :alt: Licensed under the Apache License, Version 2.0
 .. image:: https://img.shields.io/badge/license-BSD%203--Clause-orange.svg
-    :target: https://opensource.org/licenses/BSD-3-Clause
+    :target: https://opensource.org/license/BSD-3-Clause
     :alt: Licensed under the BSD-3-Clause License
 
 The NEMO_Nowcast framework code and documentation are copyright 2016-2021 by Doug Latornell, 43ravens.
