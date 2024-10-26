@@ -23,7 +23,7 @@
     :target: https://www.apache.org/licenses/LICENSE-2.0
     :alt: Licensed under the Apache License, Version 2.0
 .. image:: https://img.shields.io/badge/license-BSD%203--Clause-orange.svg
-    :target: https://opensource.org/licenses/BSD-3-Clause
+    :target: https://opensource.org/license/BSD-3-Clause
     :alt: Licensed under the BSD-3-Clause License
 .. image:: https://img.shields.io/badge/Python-3.12-blue?logo=python&label=Python&logoColor=gold
     :target: https://docs.python.org/3.12/
@@ -511,7 +511,7 @@ Licenses
     :target: https://www.apache.org/licenses/LICENSE-2.0
     :alt: Licensed under the Apache License, Version 2.0
 .. image:: https://img.shields.io/badge/license-BSD%203--Clause-orange.svg
-    :target: https://opensource.org/licenses/BSD-3-Clause
+    :target: https://opensource.org/license/BSD-3-Clause
     :alt: Licensed under the BSD-3-Clause License
 
 The NEMO_Nowcast framework code and documentation are copyright 2016-2021 by Doug Latornell, 43ravens.
