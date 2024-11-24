@@ -26,4 +26,4 @@ dependencies:
 
   - pip:
     # install of NEMO_Nowcast package in editable mode
-    - --editable ./
+    - --editable ../
