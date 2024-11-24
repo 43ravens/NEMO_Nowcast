@@ -16,9 +16,8 @@
 
 
 [build-system]
-requires = ["setuptools>=42", "wheel"]
-build-backend = "setuptools.build_meta"
-
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "NEMO_Nowcast"
@@ -27,8 +26,7 @@ version = "24.1.dev0"
 description = "Automation framework for NEMO and other ocean models"
 readme = "README.rst"
 requires-python = ">=3.12"
-license = {text = "Apache-2.0"}
-#license-files = { paths = ["LICENSE"] }
+license-files = { paths = ["LICENSE"] }
 authors = [
     {name = "Doug Latornell", email = "dlatornell@eoas.ubc.ca"}
 ]
@@ -66,5 +64,5 @@ source = ["nemo_nowcast", "tests"]
 show_missing = true
 
 
-[tool.setuptools.packages.find]
-where = ["."]
+[tool.hatch.build.targets.wheel]
+include = ["nemo_nowcast"]

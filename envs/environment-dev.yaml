@@ -25,8 +25,9 @@ dependencies:
   - supervisor
   - schedule
 
-  # For coding style and repo QA
+  # For coding style, repo QA, and package management
   - black
+  - hatch
   - pre-commit
 
   # For unit tests
