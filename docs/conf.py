@@ -22,14 +22,14 @@ sys.path.insert(0, os.path.abspath(".."))
 
 # -- Project information -----------------------------------------------------
 
-project = "NEMO Nowcast Framework"
+distribution_name = "NEMO_Nowcast"
 author = "Doug Latornell"
 pkg_creation_year = 2016
 copyright_years = f"{pkg_creation_year} – present"
 copyright = f"{copyright_years}, {author}"
 
 # The short X.Y version.
-version = importlib.metadata.version()
+version = importlib.metadata.version(distribution_name)
 # The full version, including alpha/beta/rc tags.
 release = version
 
