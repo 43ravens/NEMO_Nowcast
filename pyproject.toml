@@ -58,5 +58,13 @@ tests = ["coverage", "pytest"]
 docs = ["sphinx"]
 
 
+[tool.coverage.run]
+branch = true
+source = ["nemo_nowcast", "tests"]
+
+[tool.coverage.report]
+show_missing = true
+
+
 [tool.setuptools.packages.find]
 where = ["."]
