@@ -24,9 +24,8 @@ sys.path.insert(0, os.path.abspath(".."))
 
 project = "NEMO Nowcast Framework"
 author = "Doug Latornell"
-copyright_years = (
-    "2016" if datetime.date.today().year == 2016 else f"2016-{datetime.date.today():%Y}"
-)
+pkg_creation_year = 2016
+copyright_years = f"{pkg_creation_year} – present"
 copyright = f"{copyright_years}, {author}"
 
 # The short X.Y version.
