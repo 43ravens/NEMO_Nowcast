@@ -106,7 +106,7 @@ and building the documentation with the commands:
 .. code-block:: bash
 
     $ cd  NEMO_Nowcast
-    $ conda env create -f environment-dev.yaml
+    $ conda env create -f envs/environment-dev.yaml
     $ conda activate nemo-nowcast
 
 The :py:obj:`NEMO_Nowcast` package is installed in `editable install mode`_ as part of the conda environment

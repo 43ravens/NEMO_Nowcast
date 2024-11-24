@@ -1,7 +1,7 @@
 # conda environment description file for docs build environment
 # on readthedocs.org
 
-name: sphinx-build
+name: nemo-nowcast-docs
 
 channels:
   - conda-forge

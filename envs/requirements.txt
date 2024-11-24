@@ -1,7 +1,7 @@
 # Python packages and version used in development environment
 #
 # Create/update this file with:
-#   (nemo-nowcast)$ python -m pip list --format=freeze >> requirements.txt
+#   (nemo-nowcast)$ python -m pip list --format=freeze >> envs/requirements.txt
 
 alabaster==1.0.0
 arrow==1.3.0

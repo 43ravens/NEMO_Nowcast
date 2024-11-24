@@ -7,6 +7,12 @@ v24.1 (unreleased)
 
 * Add pre-commit to manage code style and repo QA.
 
+* Modernize packaging:
+
+  * Move conda environment description YAML files and :file:`requirements.txt` file from top
+    level directory into :file:`envs/` subdirectory
+  *
+
 * Drop support for Python 3.10, and 3.11.
   Minimum supported Python version is now 3.12.
 
