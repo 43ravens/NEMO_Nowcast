@@ -1,0 +1,62 @@
+# Copyright 2016 – present by Doug Latornell, 43ravens
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# SPDX-License-Identifier: Apache-2.0
+
+
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "NEMO_Nowcast"
+#dynamic = [ "version" ]
+version = "24.1.dev0"
+description = "Automation framework for NEMO and other ocean models"
+readme = "README.rst"
+requires-python = ">=3.12"
+license = {text = "Apache-2.0"}
+#license-files = { paths = ["LICENSE"] }
+authors = [
+    {name = "Doug Latornell", email = "dlatornell@eoas.ubc.ca"}
+]
+keywords = ["ocean model", "nowcast", "NEMO"]
+dependencies = [
+    # see envs/environment-dev.yaml for conda environment dev installation,
+    # see envs/requirements.txt for package versions used during recent development
+    # see envs/environment-rtd.yaml for conda environment used for readthedocs build
+    "arrow",
+    "attrs",
+    "PyYAML",
+    "pyzmq",
+    "requests",
+    "schedule",
+    "sentry-sdk",
+    "supervisor",
+]
+
+[project.urls]
+"Documentation" = "https://nemo-nowcast.readthedocs.io/en/latest/NEMO_Nowcast/"
+"Changelog" = "https://github.com/43ravens/NEMO_Nowcast/releases"
+"Issue Tracker" = "https://github.com/43ravens/NEMO_Nowcast/issues"
+"Source Code" = "https://github.com/43ravens/NEMO_Nowcast"
+
+[project.optional-dependencies]
+tests = ["coverage", "pytest"]
+docs = ["sphinx"]
+
+
+[tool.setuptools.packages.find]
+where = ["."]
