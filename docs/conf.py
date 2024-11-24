@@ -13,7 +13,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 
-import datetime
+import importlib.metadata
 import os
 import sys
 
@@ -30,9 +30,7 @@ copyright_years = (
 copyright = f"{copyright_years}, {author}"
 
 # The short X.Y version.
-from nemo_nowcast import __pkg_metadata__
-
-version = __pkg_metadata__.VERSION
+version = importlib.metadata.version()
 # The full version, including alpha/beta/rc tags.
 release = version
 
