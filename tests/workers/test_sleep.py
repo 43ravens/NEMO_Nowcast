@@ -21,8 +21,7 @@ from nemo_nowcast.workers import sleep
 
 @patch("nemo_nowcast.workers.sleep.NowcastWorker")
 class TestMain:
-    """Unit tests for main function.
-    """
+    """Unit tests for main function."""
 
     def test_instantiate_worker(self, m_worker):
         sleep.main()
@@ -52,8 +51,7 @@ class TestMain:
 
 
 class TestSuccess:
-    """Unit tests for success function.
-    """
+    """Unit tests for success function."""
 
     def test_success_log_info(self):
         parsed_args = Mock(sleep_time=5)
@@ -70,8 +68,7 @@ class TestSuccess:
 
 
 class TestFailure:
-    """Unit tests for failure function.
-    """
+    """Unit tests for failure function."""
 
     def test_failure_log_critical(self):
         parsed_args = Mock(sleep_time=5)
@@ -88,8 +85,7 @@ class TestFailure:
 
 
 class TestSleep:
-    """Unit tests for sleep function.
-    """
+    """Unit tests for sleep function."""
 
     @patch("nemo_nowcast.workers.sleep.time.sleep")
     def test_example(self, m_sleep):

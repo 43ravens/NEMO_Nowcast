@@ -47,8 +47,7 @@ def main():
 
 @attr.s
 class NowcastManager:
-    """Construct a :py:class:`nemo_nowcast.manager.NowcastManager` instance.
-    """
+    """Construct a :py:class:`nemo_nowcast.manager.NowcastManager` instance."""
 
     #: The name of the manager instance.
     #: Used in the nowcast messaging system and for logging.
@@ -152,8 +151,7 @@ class NowcastManager:
         return parser.parse_args(args)
 
     def _configure_logging(self):
-        """Configure the manager's logging system interface.
-        """
+        """Configure the manager's logging system interface."""
         # Initialize exception logging to Sentry with client DSN URL from SENTRY_DSN envvar;
         # does nothing if SENTRY_DSN does not exist, is empty, or is not recognized by Sentry
         sentry_sdk.init()
@@ -217,8 +215,7 @@ class NowcastManager:
         self._process_messages()
 
     def _install_signal_handlers(self, zmq_host, zmq_port):
-        """Set up hangup, interrupt, and kill signal handlers.
-        """
+        """Set up hangup, interrupt, and kill signal handlers."""
 
         def sighup_handler(signal, frame):
             self.logger.info("hangup signal (SIGHUP) received; reloading configuration")
@@ -259,8 +256,7 @@ class NowcastManager:
             self.logger.warning("running with empty checklist")
 
     def _process_messages(self):
-        """Process messages from workers.
-        """
+        """Process messages from workers."""
         while True:
             self.logger.debug("listening...")
             try:
@@ -290,8 +286,7 @@ class NowcastManager:
             worker.launch(self.config, self.name)
 
     def _message_handler(self, message):
-        """Handle message from worker.
-        """
+        """Handle message from worker."""
         msg = Message.deserialize(message)
         if msg.source not in self._msg_registry["workers"]:
             reply = self._handle_unregistered_worker_msg(msg)
@@ -332,8 +327,7 @@ class NowcastManager:
         return reply
 
     def _log_received_msg(self, msg):
-        """Emit debug message about message received from worker.
-        """
+        """Emit debug message about message received from worker."""
         msg_words = self._msg_registry["workers"][msg.source][msg.type]
         self.logger.debug(
             f"received message from {msg.source}: ({msg.type}) {msg_words}",
@@ -341,8 +335,7 @@ class NowcastManager:
         )
 
     def _handle_need_msg(self, msg):
-        """Handle request for checklist section message from worker.
-        """
+        """Handle request for checklist section message from worker."""
         reply = Message(
             self.name, "ack", payload=self.checklist[msg.payload]
         ).serialize()

@@ -25,8 +25,7 @@ from nemo_nowcast.workers import rotate_logs
 
 @patch("nemo_nowcast.workers.rotate_logs.NowcastWorker")
 class TestMain:
-    """Unit tests for main function.
-    """
+    """Unit tests for main function."""
 
     def test_instantiate_worker(self, m_worker):
         rotate_logs.main()
@@ -48,8 +47,7 @@ class TestMain:
 
 @patch("nemo_nowcast.workers.rotate_logs.logger")
 class TestSuccess:
-    """Unit tests for success function.
-    """
+    """Unit tests for success function."""
 
     def test_success_log_info(self, m_logger):
         parsed_args = SimpleNamespace()
@@ -64,8 +62,7 @@ class TestSuccess:
 
 @patch("nemo_nowcast.workers.rotate_logs.logger")
 class TestFailure:
-    """Unit tests for failure function.
-    """
+    """Unit tests for failure function."""
 
     def test_failure_log_critical(self, m_logger):
         parsed_args = SimpleNamespace()
@@ -85,8 +82,7 @@ class TestFailure:
 @patch("nemo_nowcast.workers.rotate_logs.logging.config.dictConfig")
 @patch("nemo_nowcast.workers.rotate_logs.logger")
 class TestRotateLogs:
-    """Unit tests for rotate_logs function.
-    """
+    """Unit tests for rotate_logs function."""
 
     def test_distributed_logging(self, m_logger, m_dictConfig, config):
         m_logger.root.handlers = []

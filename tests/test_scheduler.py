@@ -30,8 +30,7 @@ from nemo_nowcast import scheduler
 @patch("nemo_nowcast.scheduler._install_signal_handlers")
 @patch("nemo_nowcast.scheduler.run")
 class TestMain:
-    """Unit tests for scheduler.main function.
-    """
+    """Unit tests for scheduler.main function."""
 
     def test_commandline_interface(
         self, m_run, m_ish, m_logging, m_config_logging, m_config, m_cli
@@ -87,8 +86,7 @@ class TestMain:
 
 @patch("nemo_nowcast.scheduler.logging.config")
 class TestConfigureLogging:
-    """Unit tests for scheduler._configure_logging method.
-    """
+    """Unit tests for scheduler._configure_logging method."""
 
     filesystem_logging_config = {
         "logging": {
@@ -159,8 +157,7 @@ class TestConfigureLogging:
 
 
 class TestCreateScheduledJob:
-    """Unit tests for scheduler._create_scheduled_job function.
-    """
+    """Unit tests for scheduler._create_scheduled_job function."""
 
     def test_no_worker_cmd_line_opts(self):
         params = {"every": "day", "at": "15:43"}
@@ -170,8 +167,7 @@ class TestCreateScheduledJob:
         )
         assert job.interval == 1
         assert job.unit == "days"
-        assert job.job_func.args == (config, 'scheduler')
-
+        assert job.job_func.args == (config, "scheduler")
 
     def test_worker_cmd_line_opts(self):
         params = {"every": "day", "at": "15:43", "cmd line opts": "--sleep-time 2"}
@@ -181,15 +177,14 @@ class TestCreateScheduledJob:
         )
         assert job.interval == 1
         assert job.unit == "days"
-        assert job.job_func.args == (config, 'scheduler')
+        assert job.job_func.args == (config, "scheduler")
 
 
 @pytest.mark.parametrize(
     "i, sig", [(0, signal.SIGHUP), (1, signal.SIGINT), (2, signal.SIGTERM)]
 )
 class TestInstallSignalHandlers:
-    """Unit tests for scheduler._install_signal_handlers function.
-    """
+    """Unit tests for scheduler._install_signal_handlers function."""
 
     def test_signal_handlers(self, i, sig):
         with patch("nemo_nowcast.scheduler.signal.signal") as m_signal:

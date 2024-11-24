@@ -22,8 +22,7 @@ from nemo_nowcast.workers import clear_checklist
 
 @patch("nemo_nowcast.workers.clear_checklist.NowcastWorker")
 class TestMain:
-    """Unit tests for main function.
-    """
+    """Unit tests for main function."""
 
     def test_instantiate_worker(self, m_worker):
         clear_checklist.main()
@@ -49,8 +48,7 @@ class TestMain:
 
 @patch("nemo_nowcast.workers.clear_checklist.logger")
 class TestSuccess:
-    """Unit tests for success function.
-    """
+    """Unit tests for success function."""
 
     def test_success_log_info(self, m_logger):
         parsed_args = SimpleNamespace()
@@ -65,8 +63,7 @@ class TestSuccess:
 
 @patch("nemo_nowcast.workers.clear_checklist.logger")
 class TestFailure:
-    """Unit tests for failure function.
-    """
+    """Unit tests for failure function."""
 
     def test_failure_log_critical(self, m_logger):
         parsed_args = SimpleNamespace()
@@ -81,8 +78,7 @@ class TestFailure:
 
 @patch("nemo_nowcast.workers.clear_checklist.logger")
 class TestClearChecklist:
-    """Unit test for clear_checklist function.
-    """
+    """Unit test for clear_checklist function."""
 
     def test_send_clear_checklist_msg(self, m_logger):
         parsed_args, config = SimpleNamespace(), {}

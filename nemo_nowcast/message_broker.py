@@ -165,8 +165,7 @@ def _bind_zmq_sockets(config):
 
 
 def _install_signal_handlers(workers_socket, manager_socket):
-    """Set up hangup, interrupt, and kill signal handlers.
-    """
+    """Set up hangup, interrupt, and kill signal handlers."""
 
     def sighup_handler(signal, frame):
         logger.info("hangup signal (SIGHUP) received; reloading configuration")
