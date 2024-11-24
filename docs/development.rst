@@ -31,6 +31,9 @@
 .. image:: https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
     :target: https://github.com/43ravens/NEMO_Nowcast
     :alt: Git on GitHub
+.. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
+    :target: https://pre-commit.com
+    :alt: pre-commit
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://black.readthedocs.io/en/stable/
     :alt: The uncompromising Python code formatter
@@ -47,8 +50,8 @@
     :target: https://app.codecov.io/gh/43ravens/NEMO_Nowcast
     :alt: Codecov Testing Coverage Report
 .. image:: https://github.com/43ravens/NEMO_Nowcast/actions/workflows/codeql-analysis.yaml/badge.svg
-      :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3Acodeql-analysis
-      :alt: CodeQL analysis
+    :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3Acodeql-analysis
+    :alt: CodeQL analysis
 .. image:: https://img.shields.io/github/issues/43ravens/NEMO_Nowcast?logo=github
     :target: https://github.com/43ravens/NEMO_Nowcast/issues
     :alt: Issue Tracker
@@ -106,7 +109,7 @@ and building the documentation with the commands:
     $ conda env create -f environment-dev.yaml
     $ conda activate nemo-nowcast
 
-The ``NEMO_Nowcast`` is installed in `editable install mode`_ as part of the conda environment
+The :py:obj:`NEMO_Nowcast` package is installed in `editable install mode`_ as part of the conda environment
 creation process.
 That means that the package is installed from the cloned repo in such a way that
 it call be updated as the repo evolves with a simple :command:`git pull`.
@@ -125,36 +128,34 @@ To deactivate the environment use:
 Coding Style
 ============
 
+.. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
+    :target: https://pre-commit.com
+    :alt: pre-commit
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://black.readthedocs.io/en/stable/
     :alt: The uncompromising Python code formatter
 
-The :kbd:`NEMO_Nowcast` package uses the `black`_ code formatting tool to maintain a coding style that is very close to `PEP 8`_.
+The :py:obj:`NEMO_Nowcast` package uses the Git pre-commit hooks managed by `pre-commit`_
+to maintain consistent code style and and other aspects of code,
+docs,
+and repo QA.
 
-.. _black: https://black.readthedocs.io/en/stable/
-.. _PEP 8: https://peps.python.org/pep-0008/
+.. _pre-commit: https://pre-commit.com/
 
-:command:`black` is installed as part of the :ref:`NEMO_NowcastDevelopmentEnvironment` setup.
-
-To run :command:`black` on the entire code-base use:
+To install the ``pre-commit`` hooks in a newly cloned repo,
+activate the conda development environment,
+and run :command:`pre-commit install`:
 
 .. code-block:: bash
-
     $ cd NEMO_Nowcast
     $ conda activate nemo-nowcast
-    (nemo-nowcast)$ black ./
+    (nemo-nowcast)$ pre-commit install
 
-in the repository root directory.
-The output looks something like::
+.. note::
+    You only need to install the hooks once immediately after you make a new clone of the
+    `NEMO_Nowcast repository`_ and build your :ref:`NEMO_NowcastDevelopmentEnvironment`.
 
-  reformatted /media/doug/warehouse/MEOPAR/NEMO_Nowcast/nemo_nowcast/workers/clear_checklist.py
-  reformatted /media/doug/warehouse/MEOPAR/NEMO_Nowcast/nemo_nowcast/config.py
-  reformatted /media/doug/warehouse/MEOPAR/NEMO_Nowcast/tests/workers/test_clear_checklist.py
-  reformatted /media/doug/warehouse/MEOPAR/NEMO_Nowcast/tests/test_config.py
-  reformatted /media/doug/warehouse/MEOPAR/NEMO_Nowcast/nemo_nowcast/worker.py
-  reformatted /media/doug/warehouse/MEOPAR/NEMO_Nowcast/tests/test_worker.py
-  All done! ✨ 🍰 ✨
-  6 files reformatted, 26 files left unchanged.
+.. _NEMO_Nowcast repository: https://github.com/43ravens/NEMO_Nowcast
 
 
 .. _NEMO_NowcastBuildingTheDocumentation:
