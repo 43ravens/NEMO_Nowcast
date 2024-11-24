@@ -544,3 +544,67 @@ It is copyright 2016 by Mahmoud Hashemi and used under the terms of the `boltons
 .. _fileutils: https://boltons.readthedocs.io/en/latest/fileutils.html
 .. _boltons: https://pypi.org/project/boltons/
 .. _boltons BSD license: https://github.com/mahmoud/boltons/blob/master/LICENSE
+
+
+Release Process
+===============
+
+.. image:: https://img.shields.io/github/v/release/43ravens/NEMO_Nowcast?logo=github
+    :target: https://github.com/43ravens/NEMO_Nowcast/releases
+    :alt: Releases
+.. image:: https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg
+    :target: https://github.com/pypa/hatch
+    :alt: Hatch project
+
+Releases are done at Doug's discretion when significant pieces of development work have been
+completed.
+
+The release process steps are:
+
+#. Use :command:`hatch version release` to bump the version from ``.devn`` to the next release
+   version identifier
+
+#. Edit :file:`docs/CHANGES.rst` to update the version identifier and replace ``unreleased``
+   with the release date
+
+#. Commit the version bump and change log update
+
+#. Create and annotated tag for the release with :guilabel:`Git -> New Tag...` in PyCharm
+   or :command:`git tag -e -a vyy.n`
+
+#. Push the version bump commit and tag to GitHub
+
+#. Use the GitHub web interface to create a release,
+   editing the auto-generated release notes as necessary
+
+#. Use the GitHub :guilabel:`Issues -> Milestones` web interface to edit the release
+   milestone:
+
+   * Change the :guilabel:`Due date` to the release date
+   * Delete the "when it's ready" comment in the :guilabel:`Description`
+
+#. Use the GitHub :guilabel:`Issues -> Milestones` web interface to create a milestone for
+   the next release:
+
+   * Set the :guilabel:`Title` to the next release version,
+     prepended with a ``v``;
+     e.g. ``v25.1``
+   * Set the :guilabel:`Due date` to the end of the year of the next release
+   * Set the :guilabel:`Description` to something like
+     ``v25.1 release - when it's ready :-)``
+   * Create the next release milestone
+
+#. Review the open issues,
+   especially any that are associated with the milestone for the just released version,
+   and update their milestone.
+
+#. Close the milestone for the just released version.
+
+#. Use :command:`hatch version minor,dev` to bump the version for the next development cycle,
+   or use :command:`hatch version major,minor,dev` for a year rollover version bump
+
+#. Edit :file:`docs/CHANGES.rst` to add a new section for the unreleased dev version
+
+#. Commit the version bump and change log update
+
+#. Push the version bump commit to GitHub
