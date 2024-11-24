@@ -97,8 +97,7 @@ class NextWorker:
 
 @attr.s
 class NowcastWorker:
-    """Construct a :py:class:`nemo_nowcast.worker.NowcastWorker` instance.
-    """
+    """Construct a :py:class:`nemo_nowcast.worker.NowcastWorker` instance."""
 
     #: The name of the worker instance.
     #: Used in the nowcast messaging system and for logging.
@@ -263,8 +262,7 @@ class NowcastWorker:
         self._do_work()
 
     def _configure_logging(self):
-        """Configure the worker's logging system interface.
-        """
+        """Configure the worker's logging system interface."""
         # Initialize exception logging to Sentry with client DSN URL from SENTRY_DSN envvar;
         # does nothing if SENTRY_DSN does not exist, is empty, or is not recognized by Sentry
         if not self._parsed_args.debug:
@@ -347,8 +345,7 @@ class NowcastWorker:
         return msg
 
     def _install_signal_handlers(self):
-        """Set up interrupt and kill signal handlers.
-        """
+        """Set up interrupt and kill signal handlers."""
 
         def sigint_handler(signal, frame):
             self.logger.info(

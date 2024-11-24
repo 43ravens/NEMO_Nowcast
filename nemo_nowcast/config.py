@@ -26,8 +26,7 @@ import yaml
 
 @attr.s
 class Config:
-    """Construct a :py:class:`nemo_nowcast.config.Config` instance.
-    """
+    """Construct a :py:class:`nemo_nowcast.config.Config` instance."""
 
     #: Path/name of YAML configuration file for the NEMO nowcast system.
     #: Assigned when :py:meth:`~nemo_nowcast.config.Config.load` method

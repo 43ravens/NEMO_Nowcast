@@ -168,8 +168,7 @@ def _create_scheduled_job(worker_module, params, config):
 
 
 def _install_signal_handlers():
-    """Set up hangup, interrupt, and kill signal handlers.
-    """
+    """Set up hangup, interrupt, and kill signal handlers."""
 
     def sighup_handler(signal, frame):
         logger.info("hangup signal (SIGHUP) received; reloading configuration")

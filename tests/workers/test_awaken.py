@@ -21,8 +21,7 @@ from nemo_nowcast.workers import awaken
 
 @patch("nemo_nowcast.workers.awaken.NowcastWorker")
 class TestMain:
-    """Unit tests for main function.
-    """
+    """Unit tests for main function."""
 
     def test_instantiate_worker(self, m_worker):
         awaken.main()
@@ -42,8 +41,7 @@ class TestMain:
 
 
 class TestSuccess:
-    """Unit tests for success function.
-    """
+    """Unit tests for success function."""
 
     def test_success_log_info(self):
         parsed_args = Mock(awaken_time=5)
@@ -59,8 +57,7 @@ class TestSuccess:
 
 
 class TestFailure:
-    """Unit tests for failure function.
-    """
+    """Unit tests for failure function."""
 
     def test_failure_log_critical(self):
         parsed_args = Mock(awaken_time=5)
@@ -76,8 +73,7 @@ class TestFailure:
 
 
 class TestAwaken:
-    """Unit tests for awaken function.
-    """
+    """Unit tests for awaken function."""
 
     def test_example(self):
         parsed_args = Mock(awaken_time=5)

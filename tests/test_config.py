@@ -22,8 +22,7 @@ from nemo_nowcast.config import Config
 
 
 class TestConfig:
-    """Unit tests for nemo_nowcast.config.Config class.
-    """
+    """Unit tests for nemo_nowcast.config.Config class."""
 
     def test_default_attrs(self):
         config = Config()
@@ -128,8 +127,7 @@ class TestConfig:
 
 
 class TestConfigLoad:
-    """Unit tests for nemo_nowcast.config.Config.load method.
-    """
+    """Unit tests for nemo_nowcast.config.Config.load method."""
 
     def test_file_attr_set(self):
         m_open = mock_open(
@@ -257,8 +255,7 @@ class TestConfigLoad:
 
 
 class TestReplaceEnv:
-    """Unit tests for nemo_nowcast.config.Config._replace_env load method.
-    """
+    """Unit tests for nemo_nowcast.config.Config._replace_env load method."""
 
     @patch.dict("nemo_nowcast.config.os.environ", {"foo": "bar"})
     def test_replace_env(self):

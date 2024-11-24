@@ -26,8 +26,7 @@ import attr
 
 @attr.s
 class CommandLineInterface:
-    """Construct a :py:class:`nemo_nowcast.cli.CommandLineInterface` instance.
-    """
+    """Construct a :py:class:`nemo_nowcast.cli.CommandLineInterface` instance."""
 
     #: Name of the module that the parser is for;
     #: used to build the usage message.

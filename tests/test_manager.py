@@ -26,8 +26,7 @@ from nemo_nowcast import Config, manager, Message, NextWorker
 
 @patch("nemo_nowcast.manager.NowcastManager")
 class TestMain:
-    """Unit tests for the nemo_nowcast.manager.main function.
-    """
+    """Unit tests for the nemo_nowcast.manager.main function."""
 
     def test_main_setup(self, m_mgr):
         manager.main()
@@ -39,8 +38,7 @@ class TestMain:
 
 
 class TestNowcastManagerConstructor:
-    """Unit tests for NowcastManager.__init__ method.
-    """
+    """Unit tests for NowcastManager.__init__ method."""
 
     def test_default_name(self):
         mgr = manager.NowcastManager()
@@ -89,8 +87,7 @@ class TestNowcastManagerConstructor:
 
 @patch("nemo_nowcast.manager.logging")
 class TestNowcastManagerSetup:
-    """Unit tests for NowcastManager.setup method.
-    """
+    """Unit tests for NowcastManager.setup method."""
 
     @patch("nemo_nowcast.manager.importlib")
     def test_parsed_args(self, m_importlib, m_logging):
@@ -205,8 +202,7 @@ class TestNowcastManagerSetup:
 
 
 class TestCli:
-    """Unit tests for NowcastManager._cli method.
-    """
+    """Unit tests for NowcastManager._cli method."""
 
     def test_config_file(self):
         mgr = manager.NowcastManager()
@@ -226,8 +222,7 @@ class TestCli:
 
 @patch("nemo_nowcast.manager.logging.config")
 class TestConfigureLogging:
-    """Unit tests for NowcastManager._configure_logging method.
-    """
+    """Unit tests for NowcastManager._configure_logging method."""
 
     filesystem_logging_config = {
         "logging": {
@@ -316,8 +311,7 @@ class TestConfigureLogging:
 
 
 class TestNowcastManagerRun:
-    """Unit tests for NowcastManager.run method.
-    """
+    """Unit tests for NowcastManager.run method."""
 
     def test_socket(self):
         mgr = manager.NowcastManager()
@@ -370,8 +364,7 @@ class TestNowcastManagerRun:
     "i, sig", [(0, signal.SIGHUP), (1, signal.SIGINT), (2, signal.SIGTERM)]
 )
 class TestInstallSignalHandlers:
-    """Unit tests for NowcastManager._install_signal_handlers method.
-    """
+    """Unit tests for NowcastManager._install_signal_handlers method."""
 
     def test_signal_handlers(self, i, sig):
         mgr = manager.NowcastManager()
@@ -382,8 +375,7 @@ class TestInstallSignalHandlers:
 
 
 class TestLoadChecklist:
-    """Unit tests for NowcastManager._load_checklist method.
-    """
+    """Unit tests for NowcastManager._load_checklist method."""
 
     def test_load_checklist(self):
         mgr = manager.NowcastManager()
@@ -403,8 +395,7 @@ class TestLoadChecklist:
 
 
 class TestTryMessages:
-    """Unit tests for NowcastManager._try_messages method.
-    """
+    """Unit tests for NowcastManager._try_messages method."""
 
     def test_recv_string(self):
         mgr = manager.NowcastManager()
@@ -440,8 +431,7 @@ class TestTryMessages:
 
 
 class TestMessageHandler:
-    """Unit tests for NowcastManager._message_handler method.
-    """
+    """Unit tests for NowcastManager._message_handler method."""
 
     def test_unregistered_worker_msg(self):
         mgr = manager.NowcastManager()
@@ -520,8 +510,7 @@ class TestMessageHandler:
 
 
 class TestHandleUnregisteredWorkerMsg:
-    """Unit test for NowcastManager._handle_unregistered_worker_msg method.
-    """
+    """Unit test for NowcastManager._handle_unregistered_worker_msg method."""
 
     def test_handle_unregistered_worker_msg(self):
         mgr = manager.NowcastManager()
@@ -535,8 +524,7 @@ class TestHandleUnregisteredWorkerMsg:
 
 
 class TestHandleUnregisteredMsgType:
-    """Unit test for NowcastManager._handle_unregistered_msg_type method.
-    """
+    """Unit test for NowcastManager._handle_unregistered_msg_type method."""
 
     def test_handle_unregistered_msg_type(self):
         mgr = manager.NowcastManager()
@@ -550,8 +538,7 @@ class TestHandleUnregisteredMsgType:
 
 
 class TestLogReceivedMessage:
-    """Unit test for NowcastManager._log_received_message method.
-    """
+    """Unit test for NowcastManager._log_received_message method."""
 
     def test_log_received_msg(self):
         mgr = manager.NowcastManager()
@@ -568,8 +555,7 @@ class TestLogReceivedMessage:
 
 
 class TestHandleNeedMsg:
-    """Unit test for NowcastManager._handle_need_msg method.
-    """
+    """Unit test for NowcastManager._handle_need_msg method."""
 
     mgr = manager.NowcastManager()
     mgr.checklist = {"info": "requested info"}
@@ -581,8 +567,7 @@ class TestHandleNeedMsg:
 
 @patch("nemo_nowcast.manager.importlib")
 class TestHandleContinueMsg:
-    """Unit tests for NowcastManager._handle_continue_msg method.
-    """
+    """Unit tests for NowcastManager._handle_continue_msg method."""
 
     def test_no_checklist_update_when_no_payload(self, m_importlib):
         mgr = manager.NowcastManager()
@@ -776,8 +761,7 @@ class TestHandleContinueMsg:
 
 
 class TestUpdateChecklist:
-    """Unit tests for NowcastManager._update_checklist method.
-    """
+    """Unit tests for NowcastManager._update_checklist method."""
 
     def test_worker_checklist_keyerror(self):
         mgr = manager.NowcastManager()
@@ -799,12 +783,27 @@ class TestUpdateChecklist:
     def test_update_existing_dict_value(self):
         mgr = manager.NowcastManager()
         mgr.logger = Mock(name="logger")
-        mgr.checklist = {"results splitting": {"2022-11-24 day biology": "SalishSea_1d_20221124_20221124_biol_T.nc"}}
+        mgr.checklist = {
+            "results splitting": {
+                "2022-11-24 day biology": "SalishSea_1d_20221124_20221124_biol_T.nc"
+            }
+        }
         mgr._write_checklist_to_disk = Mock(name="_write_checklist_to_disk")
-        mgr._msg_registry = {"workers": {"test_worker": {"checklist key": "results splitting"}}}
-        msg = Message(source="test_worker", type="success", payload={"2022-11-24 day chemistry": "SalishSea_1d_20221124_20221124_chem_T.nc"})
+        mgr._msg_registry = {
+            "workers": {"test_worker": {"checklist key": "results splitting"}}
+        }
+        msg = Message(
+            source="test_worker",
+            type="success",
+            payload={
+                "2022-11-24 day chemistry": "SalishSea_1d_20221124_20221124_chem_T.nc"
+            },
+        )
         mgr._update_checklist(msg)
-        assert mgr.checklist["results splitting"] == {"2022-11-24 day biology": "SalishSea_1d_20221124_20221124_biol_T.nc", "2022-11-24 day chemistry": "SalishSea_1d_20221124_20221124_chem_T.nc"}
+        assert mgr.checklist["results splitting"] == {
+            "2022-11-24 day biology": "SalishSea_1d_20221124_20221124_biol_T.nc",
+            "2022-11-24 day chemistry": "SalishSea_1d_20221124_20221124_chem_T.nc",
+        }
 
     def test_keyerror_adds_key_and_value(self):
         mgr = manager.NowcastManager()
@@ -842,8 +841,7 @@ class TestUpdateChecklist:
 
 @patch("nemo_nowcast.manager.requests.post", autospec=True)
 class TestSlackNotification:
-    """Unit tests for NowcastManager._slack_notification method.
-    """
+    """Unit tests for NowcastManager._slack_notification method."""
 
     def test_no_config_section(self, m_post):
         mgr = manager.NowcastManager()
@@ -920,8 +918,7 @@ class TestSlackNotification:
 
 
 class TestClearChecklist:
-    """Unit tests for NowcastManager._clear_checklist method.
-    """
+    """Unit tests for NowcastManager._clear_checklist method."""
 
     def test_without_checklist_logging(self):
         mgr = manager.NowcastManager()

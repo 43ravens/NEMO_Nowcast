@@ -27,8 +27,7 @@ from nemo_nowcast import Config, Message, NextWorker, NowcastWorker, WorkerError
 
 
 class TestNextWorkerConstructor:
-    """Unit tests for NextWorker class constructor.
-    """
+    """Unit tests for NextWorker class constructor."""
 
     def test_default_args(self):
         next_worker = NextWorker("nowcast.workers.download_weather")
@@ -49,8 +48,7 @@ class TestNextWorkerConstructor:
 
 @patch("nemo_nowcast.worker.subprocess")
 class TestNextWorkerLaunch:
-    """Unit tests for NextWorker.lauch method.
-    """
+    """Unit tests for NextWorker.lauch method."""
 
     def test_localhost(self, m_subprocess):
         config = Config()
@@ -123,8 +121,7 @@ class TestNextWorkerLaunch:
 
 
 class TestNowcastWorkerConstructor:
-    """Unit tests for NowcastWorker.__init__ method.
-    """
+    """Unit tests for NowcastWorker.__init__ method."""
 
     def test_name(self):
         worker = NowcastWorker("worker_name", "description")
@@ -180,8 +177,7 @@ class TestNowcastWorkerConstructor:
 
 
 class TestInitCli:
-    """Unit test for NowcastWorker.init_cli method.
-    """
+    """Unit test for NowcastWorker.init_cli method."""
 
     def test_debug_arg(self):
         worker = NowcastWorker("worker_name", "description")
@@ -194,8 +190,7 @@ class TestInitCli:
 
 @patch("nemo_nowcast.worker.logging")
 class TestRun:
-    """Unit tests for NowcastWorker.run method.
-    """
+    """Unit tests for NowcastWorker.run method."""
 
     config = """
             checklist file: nowcast_checklist.yaml
@@ -428,8 +423,7 @@ class TestRun:
 
 @patch("nemo_nowcast.worker.logging.config")
 class TestConfigureLogging:
-    """Unit tests for NowcastWorker._configure_logging method.
-    """
+    """Unit tests for NowcastWorker._configure_logging method."""
 
     filesystem_logging_config = {"logging": {"handlers": {}}}
     zmq_logging_config_ports_list = {
@@ -745,8 +739,7 @@ class TestConfigureLogging:
 
 
 class TestInitZmqInterface:
-    """Unit testss for NowcastWorker._init_zmq_interface method.
-    """
+    """Unit testss for NowcastWorker._init_zmq_interface method."""
 
     def test_debug_mode(self):
         worker = NowcastWorker("worker_name", "description")
@@ -775,8 +768,7 @@ class TestInitZmqInterface:
 
 @pytest.mark.parametrize("i, sig", [(0, signal.SIGINT), (1, signal.SIGTERM)])
 class TestInstallSignalHandlers:
-    """Unit tests for NowcastWorker._install_signal_handlers method.
-    """
+    """Unit tests for NowcastWorker._install_signal_handlers method."""
 
     def test_signal_handlers(self, i, sig):
         worker = NowcastWorker("worker_name", "description")
@@ -787,8 +779,7 @@ class TestInstallSignalHandlers:
 
 
 class TestDoWork:
-    """Unit tests for NowcastWorker._do_work method.
-    """
+    """Unit tests for NowcastWorker._do_work method."""
 
     def test_worker_func(self):
         worker = NowcastWorker("worker_name", "description")
@@ -882,8 +873,7 @@ class TestDoWork:
 
 
 class TestTellManager:
-    """Unit tests for NowcastWorker._tell_manager method.
-    """
+    """Unit tests for NowcastWorker._tell_manager method."""
 
     def test_unregistered_worker(self):
         worker = NowcastWorker("test_worker", "description")

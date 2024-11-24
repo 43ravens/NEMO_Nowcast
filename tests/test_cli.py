@@ -25,8 +25,7 @@ from nemo_nowcast.cli import CommandLineInterface
 
 
 class TestCommandLineInterface:
-    """Unit tests for nemo_nowcast.cli.CommandLineInterface constructor.
-    """
+    """Unit tests for nemo_nowcast.cli.CommandLineInterface constructor."""
 
     def test_module_name(self):
         cli = CommandLineInterface("test")
@@ -54,8 +53,7 @@ class TestCommandLineInterface:
 
 
 class TestBuildParser:
-    """Unit tests for nemo_nowcast.cli.CommandLineInterface.build_parser method.
-    """
+    """Unit tests for nemo_nowcast.cli.CommandLineInterface.build_parser method."""
 
     def test_usage(self):
         cli = CommandLineInterface("test")
@@ -80,12 +78,10 @@ class TestBuildParser:
 
 @patch("nemo_nowcast.cli.argparse.ArgumentParser")
 class TestAddArgument:
-    """Unit test for nemo_nowcast.cli.CommandLineInterface.add_argument method.
-    """
+    """Unit test for nemo_nowcast.cli.CommandLineInterface.add_argument method."""
 
     def test_add_argument(self, m_parser):
-        """add_argument() wraps argparse.ArgumentParser.add_argument()
-        """
+        """add_argument() wraps argparse.ArgumentParser.add_argument()"""
         cli = CommandLineInterface("test")
         cli.parser = m_parser
         cli.add_argument(
@@ -132,8 +128,7 @@ class TestAddDateOption:
 
 
 class TestArrowDate:
-    """Unit tests for nemo_nowcast.cli.CommandLineInterface.arrow_date method.
-    """
+    """Unit tests for nemo_nowcast.cli.CommandLineInterface.arrow_date method."""
 
     def test_arrow_date(self):
         cli = CommandLineInterface("test")

@@ -29,8 +29,7 @@ from nemo_nowcast import message_broker
 @patch("nemo_nowcast.message_broker.logging")
 @patch("nemo_nowcast.message_broker.run")
 class TestMain:
-    """Unit tests for message_broker.main function.
-    """
+    """Unit tests for message_broker.main function."""
 
     def test_commandline_interface(
         self, m_run, m_logging, m_config_logging, m_config, m_cli
@@ -72,8 +71,7 @@ class TestMain:
 
 @patch("nemo_nowcast.message_broker.logging.config")
 class TestConfigureLogging:
-    """Unit tests for message_broker._configure_logging method.
-    """
+    """Unit tests for message_broker._configure_logging method."""
 
     filesystem_logging_config = {
         "logging": {
@@ -148,8 +146,7 @@ class TestConfigureLogging:
 @patch("nemo_nowcast.message_broker._bind_zmq_sockets")
 @patch("nemo_nowcast.message_broker.zmq.device")
 class TestRun:
-    """Unit tests for message_broker.run function.
-    """
+    """Unit tests for message_broker.run function."""
 
     def test_zmq_device(self, m_zmq_device, m_bzs, m_ish, m_logger):
         m_bzs.return_value = "worker_socket", "manager_socket"
@@ -162,8 +159,7 @@ class TestRun:
 
 @patch("nemo_nowcast.message_broker.context")
 class TestBindZmqSockets:
-    """Unit tests for message_broker._bind_zmq_sockets function.
-    """
+    """Unit tests for message_broker._bind_zmq_sockets function."""
 
     def test_sockets(self, m_context):
         config = {"zmq": {"ports": {"workers": 4343, "manager": 6665}}}
@@ -184,8 +180,7 @@ class TestBindZmqSockets:
     "i, sig", [(0, signal.SIGHUP), (1, signal.SIGINT), (2, signal.SIGTERM)]
 )
 class TestInstallSignalHandlers:
-    """Unit tests for message_broker._install_signal_handlers function.
-    """
+    """Unit tests for message_broker._install_signal_handlers function."""
 
     def test_signal_handlers(self, i, sig):
         with patch("nemo_nowcast.message_broker.signal.signal") as m_signal:

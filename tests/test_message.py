@@ -21,8 +21,7 @@ from nemo_nowcast import Message
 
 
 class TestMessage:
-    """Unit tests for nemo_nowcast.message.Message class.
-    """
+    """Unit tests for nemo_nowcast.message.Message class."""
 
     def test_default_attrs(self):
         msg = Message("test_runner", "foo")

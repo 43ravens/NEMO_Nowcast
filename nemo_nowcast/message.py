@@ -20,8 +20,7 @@ import yaml
 
 @attr.s
 class Message:
-    """Construct a :py:class:`nemo_nowcast.message.Message` instance.
-    """
+    """Construct a :py:class:`nemo_nowcast.message.Message` instance."""
 
     #: Name of the worker or manager sending the message.
     source = attr.ib()

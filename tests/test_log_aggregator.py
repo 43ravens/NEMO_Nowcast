@@ -30,8 +30,7 @@ from nemo_nowcast import log_aggregator
 @patch("nemo_nowcast.log_aggregator.logging")
 @patch("nemo_nowcast.log_aggregator.run")
 class TestMain:
-    """Unit tests for log_aggregator.main function.
-    """
+    """Unit tests for log_aggregator.main function."""
 
     def test_commandline_interface(
         self, m_run, m_logging, m_config_logging, m_config, m_cli
@@ -70,8 +69,7 @@ class TestMain:
 
 @patch("nemo_nowcast.log_aggregator.logging.config")
 class TestConfigureLogging:
-    """Unit tests for log_aggregator._configure_logging function.
-    """
+    """Unit tests for log_aggregator._configure_logging function."""
 
     config = {
         "logging": {
@@ -103,8 +101,7 @@ class TestConfigureLogging:
 @patch("nemo_nowcast.log_aggregator._install_signal_handlers")
 @patch("nemo_nowcast.log_aggregator._process_messages")
 class TestRun:
-    """Unit tests for log_aggregator.run function.
-    """
+    """Unit tests for log_aggregator.run function."""
 
     def test_manager_port(self, m_proc_msgs, m_ish, m_context):
         config = {"zmq": {"host": "localhost", "ports": {"logging": {"manager": 4343}}}}
@@ -150,8 +147,7 @@ class TestRun:
 @patch("nemo_nowcast.log_aggregator.zmq.Socket", spec=zmq.Socket)
 @patch("nemo_nowcast.log_aggregator.logger")
 class TestLogMessages:
-    """Unit test for log_aggregator._log_messages function.
-    """
+    """Unit test for log_aggregator._log_messages function."""
 
     def test_log_messages(self, m_logger, m_socket):
         m_socket.recv_multipart.return_value = [b"worker_name.INFO", b"message"]
@@ -165,8 +161,7 @@ class TestLogMessages:
     "i, sig", [(0, signal.SIGHUP), (1, signal.SIGINT), (2, signal.SIGTERM)]
 )
 class TestInstallSignalHandlers:
-    """Unit tests for log_aggregator._install_signal_handlers function.
-    """
+    """Unit tests for log_aggregator._install_signal_handlers function."""
 
     def test_signal_handlers(self, i, sig):
         with patch("nemo_nowcast.log_aggregator.signal.signal") as m_signal:

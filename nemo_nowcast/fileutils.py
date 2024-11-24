@@ -218,7 +218,6 @@ except ImportError:
         "Dummy set_cloexec for platforms without fcntl support"
         pass
 
-
 else:
 
     def set_cloexec(fd):
@@ -287,7 +286,6 @@ if os.name == "nt":
         else:
             os.rename(src, dst)
         return
-
 
 else:
     # wrapper func for cross compat + docs
