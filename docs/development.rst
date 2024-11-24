@@ -15,9 +15,9 @@
 
 .. _NEMO_NowcastPackageDevelopment:
 
-***************************************
-:kbd:`NEMO_Nowcast` Package Development
-***************************************
+******************************************
+:py:obj:`NEMO_Nowcast` Package Development
+******************************************
 
 .. image:: https://img.shields.io/badge/license-Apache%202-cb2533.svg
     :target: https://www.apache.org/licenses/LICENSE-2.0
@@ -66,7 +66,7 @@ Python Versions
     :alt: Python Version
 
 
-The :kbd:`SalishSeaNowcast` package is developed and tested using `Python`_ 3.12.
+The :py:obj:`NEMO_Nowcast` package is developed and tested using `Python`_ 3.12.
 
 .. _Python: https://www.python.org/
 
@@ -167,10 +167,10 @@ Building the Documentation
     :target: https://nemo-nowcast.readthedocs.io/en/latest/
     :alt: Documentation Status
 
-The documentation for the :kbd:`NEMO_Nowcast` package is written in `reStructuredText`_ and converted to HTML using `Sphinx`_.
+The documentation for the :py:obj:`NEMO_Nowcast` package is written in `reStructuredText`_ and converted to HTML using `Sphinx`_.
 Creating a :ref:`NEMO_NowcastDevelopmentEnvironment` as described above includes the installation of Sphinx.
 Building the documentation is driven by the :file:`docs/Makefile`.
-With your :kbd:`nemo-nowcast` development environment activated,
+With your ``nemo-nowcast`` development environment activated,
 use:
 
 .. _reStructuredText: https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html
@@ -240,7 +240,7 @@ Link Checking the Documentation
     :alt: Sphinx linkcheck
 
 Sphinx also provides a link checker utility which can be run to find broken or redirected links in the docs.
-With your :kbd:`nemo-nowcast` environment activated,
+With your ``nemo-nowcast`` environment activated,
 use:
 
 .. code-block:: bash
@@ -394,12 +394,12 @@ The output looks something like:
 Running the Unit Tests
 ======================
 
-The test suite for the :kbd:`NEMO_Nowcast` package is in :file:`NEMO_Nowcast/tests/`.
+The test suite for the :py:obj:`NEMO_Nowcast` package is in :file:`NEMO_Nowcast/tests/`.
 The `pytest`_ tool is used for test parametrization and as the test runner for the suite.
 
 .. _pytest: https://docs.pytest.org/en/latest/
 
-With your :kbd:`nemo-nowcast` development environment activated,
+With your ``nemo-nowcast`` development environment activated,
 use:
 
 .. code-block:: bash
@@ -473,7 +473,7 @@ Continuous Integration
     :target: https://app.codecov.io/gh/43ravens/NEMO_Nowcast
     :alt: Codecov Testing Coverage Report
 
-The :kbd:`NEMO_Nowcast` package unit test suite is run and a coverage report is generated whenever changes are pushed to GitHub.
+The :py:obj:`NEMO_Nowcast` package unit test suite is run and a coverage report is generated whenever changes are pushed to GitHub.
 The results are visible on the `repo actions page`_,
 from the green checkmarks beside commits on the `repo commits page`_,
 or from the green checkmark to the left of the "Latest commit" message on the `repo code overview page`_ .
@@ -498,7 +498,7 @@ Version Control Repository
     :target: https://github.com/43ravens/NEMO_Nowcast
     :alt: Git on GitHub
 
-The :kbd:`NEMO_Nowcast` package code and documentation source files are available as a `Git`_ repository at https://github.com/43ravens/NEMO_Nowcast.
+The :py:obj:`NEMO_Nowcast` package code and documentation source files are available as a `Git`_ repository at https://github.com/43ravens/NEMO_Nowcast.
 
 .. _Git: https://git-scm.com/
 
