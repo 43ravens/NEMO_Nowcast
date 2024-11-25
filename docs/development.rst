@@ -73,8 +73,8 @@
 Python Versions
 ===============
 
-.. image:: https://img.shields.io/badge/Python-3.12-blue?logo=python&label=Python&logoColor=gold
-    :target: https://docs.python.org/3.12/
+.. image:: https://img.shields.io/python/required-version-toml?tomlFilePath=https://raw.githubusercontent.com/43ravens/NEMO_Nowcast/main/pyproject.toml&logo=Python&logoColor=gold&label=Python
+    :target: https://docs.python.org/
     :alt: Python Version
 
 
