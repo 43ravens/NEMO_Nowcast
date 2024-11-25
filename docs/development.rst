@@ -158,6 +158,7 @@ activate the conda development environment,
 and run :command:`pre-commit install`:
 
 .. code-block:: bash
+
     $ cd NEMO_Nowcast
     $ conda activate nemo-nowcast
     (nemo-nowcast)$ pre-commit install
