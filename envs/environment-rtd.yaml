@@ -1,7 +1,7 @@
 # conda environment description file for docs build environment
 # on readthedocs.org
 
-name: sphinx-build
+name: nemo-nowcast-docs
 
 channels:
   - conda-forge
@@ -26,4 +26,4 @@ dependencies:
 
   - pip:
     # install of NEMO_Nowcast package in editable mode
-    - --editable ./
+    - --editable ../

@@ -19,5 +19,5 @@ jobs:
     uses: UBC-MOAD/gha-workflows/.github/workflows/sphinx-linkcheck.yaml@main
     with:
       python-version: ${{ matrix.python-version }}
-      conda-env-file: environment-test.yaml
+      conda-env-file: envs/environment-test.yaml
       conda-env-name: nemo-nowcast-test

@@ -4,7 +4,7 @@
 # Create a conda environment for development, testing, and documentation
 # of the NEMO Nowcast framework with:
 #
-#    $ conda env create -f NEMO_Nowcast/environment-dev.yaml
+#    $ conda env create -f NEMO_Nowcast/envs/environment-dev.yaml
 #    $ source activate nemo-nowcast
 
 name: nemo-nowcast
@@ -25,8 +25,9 @@ dependencies:
   - supervisor
   - schedule
 
-  # For coding style and repo QA
+  # For coding style, repo QA, and package management
   - black
+  - hatch
   - pre-commit
 
   # For unit tests
@@ -40,4 +41,4 @@ dependencies:
 
   - pip:
     # install of NEMO_Nowcast package in editable mode
-    - --editable ./
+    - --editable ../

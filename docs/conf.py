@@ -13,7 +13,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 
-import datetime
+import importlib.metadata
 import os
 import sys
 
@@ -22,17 +22,14 @@ sys.path.insert(0, os.path.abspath(".."))
 
 # -- Project information -----------------------------------------------------
 
-project = "NEMO Nowcast Framework"
+distribution_name = "NEMO_Nowcast"
 author = "Doug Latornell"
-copyright_years = (
-    "2016" if datetime.date.today().year == 2016 else f"2016-{datetime.date.today():%Y}"
-)
+pkg_creation_year = 2016
+copyright_years = f"{pkg_creation_year} – present"
 copyright = f"{copyright_years}, {author}"
 
 # The short X.Y version.
-from nemo_nowcast import __pkg_metadata__
-
-version = __pkg_metadata__.VERSION
+version = importlib.metadata.version(distribution_name)
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -59,10 +56,6 @@ autodoc_mock_imports = ["schedule"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
-
-# The suffix(es) of source filenames.
-# You can specify multiple suffix as a list of string:
-source_suffix = ".rst"
 
 # The master toctree document.
 master_doc = "index"

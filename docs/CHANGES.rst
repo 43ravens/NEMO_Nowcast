@@ -5,6 +5,19 @@ Change Log
 v24.1 (unreleased)
 ==================
 
+* Add release process section to package development docs
+
+* Modernize packaging:
+
+  * Move conda environment description YAML files and :file:`requirements.txt` file from top
+    level directory into :file:`envs/` subdirectory
+  * Replace :file:`setup.py` with :file:`pyproject.toml`
+  * Move `coverage`_ configuration from :file:`.coveragerc` to :file:`pyproject.toml`
+  * Change from ``setuptools`` to hatch_ for build backend
+
+  .. _coverage: https://coverage.readthedocs.io/en/latest/
+  .. _hatch: https://hatch.pypa.io/
+
 * Add pre-commit to manage code style and repo QA.
 
 * Drop support for Python 3.10, and 3.11.

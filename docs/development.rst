@@ -1,4 +1,4 @@
-.. Copyright 2016-2021 Doug Latornell, 43ravens
+.. Copyright 2016 – present Doug Latornell, 43ravens
 
 .. Licensed under the Apache License, Version 2.0 (the "License");
 .. you may not use this file except in compliance with the License.
@@ -19,50 +19,62 @@
 :py:obj:`NEMO_Nowcast` Package Development
 ******************************************
 
-.. image:: https://img.shields.io/badge/license-Apache%202-cb2533.svg
-    :target: https://www.apache.org/licenses/LICENSE-2.0
-    :alt: Licensed under the Apache License, Version 2.0
-.. image:: https://img.shields.io/badge/license-BSD%203--Clause-orange.svg
-    :target: https://opensource.org/license/BSD-3-Clause
-    :alt: Licensed under the BSD-3-Clause License
-.. image:: https://img.shields.io/badge/Python-3.12-blue?logo=python&label=Python&logoColor=gold
-    :target: https://docs.python.org/3.12/
-    :alt: Python Version
-.. image:: https://img.shields.io/badge/version%20control-git-blue.svg?logo=github
-    :target: https://github.com/43ravens/NEMO_Nowcast
-    :alt: Git on GitHub
-.. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
-    :target: https://pre-commit.com
-    :alt: pre-commit
-.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-    :target: https://black.readthedocs.io/en/stable/
-    :alt: The uncompromising Python code formatter
-.. image:: https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest
-    :target: https://nemo-nowcast.readthedocs.io/en/latest/
-    :alt: Documentation Status
-.. image:: https://github.com/43ravens/NEMO_Nowcast/workflows/sphinx-linkcheck/badge.svg
-    :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3Asphinx-linkcheck
-    :alt: Sphinx linkcheck
-.. image:: https://github.com/43ravens/NEMO_Nowcast/workflows/pytest-with-coverage/badge.svg
-    :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3Apytest-with-coverage
-    :alt: Pytest with Coverage Status
-.. image:: https://codecov.io/gh/43ravens/NEMO_Nowcast/branch/main/graph/badge.svg
-    :target: https://app.codecov.io/gh/43ravens/NEMO_Nowcast
-    :alt: Codecov Testing Coverage Report
-.. image:: https://github.com/43ravens/NEMO_Nowcast/actions/workflows/codeql-analysis.yaml/badge.svg
-    :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow%3Acodeql-analysis
-    :alt: CodeQL analysis
-.. image:: https://img.shields.io/github/issues/43ravens/NEMO_Nowcast?logo=github
-    :target: https://github.com/43ravens/NEMO_Nowcast/issues
-    :alt: Issue Tracker
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **Continuous Integration** | .. image:: https://github.com/43ravens/NEMO_Nowcast/actions/workflows/pytest-with-coverage.yaml/badge.svg                                                                                            |
+|                            |      :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow:pytest-with-coverage                                                                                                   |
+|                            |      :alt: Pytest with Coverage Status                                                                                                                                                               |
+|                            | .. image:: https://codecov.io/gh/43ravens/NEMO_Nowcast/branch/main/graph/badge.svg                                                                                                                   |
+|                            |      :target: https://app.codecov.io/gh/43ravens/NEMO_Nowcast                                                                                                                                        |
+|                            |      :alt: Codecov Testing Coverage Report                                                                                                                                                           |
+|                            | .. image:: https://github.com/43ravens/NEMO_Nowcast/actions/workflows/codeql-analysis.yaml/badge.svg                                                                                                 |
+|                            |     :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow:CodeQL                                                                                                                  |
+|                            |     :alt: CodeQL analysis                                                                                                                                                                            |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **Documentation**          | .. image:: https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest                                                                                                                       |
+|                            |     :target: https://nemo-nowcast.readthedocs.io/en/latest/                                                                                                                                          |
+|                            |     :alt: Documentation Status                                                                                                                                                                       |
+|                            | .. image:: https://github.com/43ravens/NEMO_Nowcast/actions/workflows/sphinx-linkcheck.yaml/badge.svg                                                                                                |
+|                            |     :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow:sphinx-linkcheck                                                                                                        |
+|                            |     :alt: Sphinx linkcheck                                                                                                                                                                           |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **Package**                | .. image:: https://img.shields.io/github/v/release/43ravens/NEMO_Nowcast?logo=github                                                                                                                 |
+|                            |     :target: https://github.com/43ravens/NEMO_Nowcast/releases                                                                                                                                       |
+|                            |     :alt: Releases                                                                                                                                                                                   |
+|                            | .. image:: https://img.shields.io/python/required-version-toml?tomlFilePath=https://raw.githubusercontent.com/43ravens/NEMO_Nowcast/main/pyproject.toml&logo=Python&logoColor=gold&label=Python      |
+|                            |      :target: https://docs.python.org/                                                                                                                                                               |
+|                            |      :alt: Python Version from PEP 621 TOML                                                                                                                                                          |
+|                            | .. image:: https://img.shields.io/github/issues/43ravens/NEMO_Nowcast?logo=github                                                                                                                    |
+|                            |     :target: https://github.com/43ravens/NEMO_Nowcast/issues                                                                                                                                         |
+|                            |     :alt: Issue Tracker                                                                                                                                                                              |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **Meta**                   | .. image:: https://img.shields.io/badge/license-Apache%202-cb2533.svg                                                                                                                                |
+|                            |     :target: https://www.apache.org/licenses/LICENSE-2.0                                                                                                                                             |
+|                            |     :alt: Licensed under the Apache License, Version 2.0                                                                                                                                             |
+|                            | .. image:: https://img.shields.io/badge/License-BSD%203--Clause-orange.svg                                                                                                                           |
+|                            |     :target: https://opensource.org/licenses/BSD-3-Clause                                                                                                                                            |
+|                            |     :alt: Licensed under the BSD-3-Clause License                                                                                                                                                    |
+|                            | .. image:: https://img.shields.io/badge/version%20control-git-blue.svg?logo=github                                                                                                                   |
+|                            |     :target: https://github.com/43ravens/NEMO_Nowcast                                                                                                                                                |
+|                            |     :alt: Git on GitHub                                                                                                                                                                              |
+|                            +------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                            | .. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white                                                                                              |
+|                            |     :target: https://pre-commit.com                                                                                                                                                                  |
+|                            |     :alt: pre-commit                                                                                                                                                                                 |
+|                            | .. image:: https://img.shields.io/badge/code%20style-black-000000.svg                                                                                                                                |
+|                            |     :target: https://black.readthedocs.io/en/stable/                                                                                                                                                 |
+|                            |     :alt: The uncompromising Python code formatter                                                                                                                                                   |
+|                            | .. image:: https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg                                                                                                                                |
+|                            |     :target: https://github.com/pypa/hatch                                                                                                                                                           |
+|                            |     :alt: Hatch project                                                                                                                                                                              |
++----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. _NEMO_NowcastPythonVersions:
 
 Python Versions
 ===============
 
-.. image:: https://img.shields.io/badge/Python-3.12-blue?logo=python&label=Python&logoColor=gold
-    :target: https://docs.python.org/3.12/
+.. image:: https://img.shields.io/python/required-version-toml?tomlFilePath=https://raw.githubusercontent.com/43ravens/NEMO_Nowcast/main/pyproject.toml&logo=Python&logoColor=gold&label=Python
+    :target: https://docs.python.org/
     :alt: Python Version
 
 
@@ -106,7 +118,7 @@ and building the documentation with the commands:
 .. code-block:: bash
 
     $ cd  NEMO_Nowcast
-    $ conda env create -f environment-dev.yaml
+    $ conda env create -f envs/environment-dev.yaml
     $ conda activate nemo-nowcast
 
 The :py:obj:`NEMO_Nowcast` package is installed in `editable install mode`_ as part of the conda environment
@@ -147,6 +159,7 @@ activate the conda development environment,
 and run :command:`pre-commit install`:
 
 .. code-block:: bash
+
     $ cd NEMO_Nowcast
     $ conda activate nemo-nowcast
     (nemo-nowcast)$ pre-commit install
@@ -529,7 +542,7 @@ Licenses
     :target: https://opensource.org/license/BSD-3-Clause
     :alt: Licensed under the BSD-3-Clause License
 
-The NEMO_Nowcast framework code and documentation are copyright 2016-2021 by Doug Latornell, 43ravens.
+The NEMO_Nowcast framework code and documentation are copyright 2016 – present by Doug Latornell, 43ravens.
 
 They are licensed under the Apache License, Version 2.0.
 https://www.apache.org/licenses/LICENSE-2.0
@@ -541,3 +554,67 @@ It is copyright 2016 by Mahmoud Hashemi and used under the terms of the `boltons
 .. _fileutils: https://boltons.readthedocs.io/en/latest/fileutils.html
 .. _boltons: https://pypi.org/project/boltons/
 .. _boltons BSD license: https://github.com/mahmoud/boltons/blob/master/LICENSE
+
+
+Release Process
+===============
+
+.. image:: https://img.shields.io/github/v/release/43ravens/NEMO_Nowcast?logo=github
+    :target: https://github.com/43ravens/NEMO_Nowcast/releases
+    :alt: Releases
+.. image:: https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg
+    :target: https://github.com/pypa/hatch
+    :alt: Hatch project
+
+Releases are done at Doug's discretion when significant pieces of development work have been
+completed.
+
+The release process steps are:
+
+#. Use :command:`hatch version release` to bump the version from ``.devn`` to the next release
+   version identifier
+
+#. Edit :file:`docs/CHANGES.rst` to update the version identifier and replace ``unreleased``
+   with the release date
+
+#. Commit the version bump and change log update
+
+#. Create and annotated tag for the release with :guilabel:`Git -> New Tag...` in PyCharm
+   or :command:`git tag -e -a vyy.n`
+
+#. Push the version bump commit and tag to GitHub
+
+#. Use the GitHub web interface to create a release,
+   editing the auto-generated release notes as necessary
+
+#. Use the GitHub :guilabel:`Issues -> Milestones` web interface to edit the release
+   milestone:
+
+   * Change the :guilabel:`Due date` to the release date
+   * Delete the "when it's ready" comment in the :guilabel:`Description`
+
+#. Use the GitHub :guilabel:`Issues -> Milestones` web interface to create a milestone for
+   the next release:
+
+   * Set the :guilabel:`Title` to the next release version,
+     prepended with a ``v``;
+     e.g. ``v25.1``
+   * Set the :guilabel:`Due date` to the end of the year of the next release
+   * Set the :guilabel:`Description` to something like
+     ``v25.1 release - when it's ready :-)``
+   * Create the next release milestone
+
+#. Review the open issues,
+   especially any that are associated with the milestone for the just released version,
+   and update their milestone.
+
+#. Close the milestone for the just released version.
+
+#. Use :command:`hatch version minor,dev` to bump the version for the next development cycle,
+   or use :command:`hatch version major,minor,dev` for a year rollover version bump
+
+#. Edit :file:`docs/CHANGES.rst` to add a new section for the unreleased dev version
+
+#. Commit the version bump and change log update
+
+#. Push the version bump commit to GitHub

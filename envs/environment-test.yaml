@@ -2,7 +2,7 @@
 #
 # Creates a conda environment in which the NEMO_Nowcast package unit tests and
 # coverage analysis can be run.
-# Primarily intended for creation of a conda env for use in a GitHub Actions workflow.
+# Primarily intended to create a conda env for use in a GitHub Actions workflow.
 
 name: nemo-nowcast-test
 
@@ -32,4 +32,4 @@ dependencies:
 
   - pip:
     # install of NEMO_Nowcast package in editable mode
-    - --editable ./
+    - --editable ../

@@ -1,4 +1,4 @@
-# Copyright 2016-2021 Doug Latornell, 43ravens
+# Copyright 2016 – present Doug Latornell, 43ravens
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import logging
 import time
 
 from nemo_nowcast import NowcastWorker
-
 
 NAME = "sleep"
 logger = logging.getLogger(NAME)
