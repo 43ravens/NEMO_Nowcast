@@ -2,7 +2,7 @@
 Change Log
 **********
 
-v24.1 (unreleased)
+v24.1 (2024-11-27)
 ==================
 
 * Add support for Python 3.13.
