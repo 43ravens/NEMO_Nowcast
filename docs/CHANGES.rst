@@ -5,6 +5,10 @@ Change Log
 v24.1 (unreleased)
 ==================
 
+* Add support for Python 3.13.
+  Change to Python 3.13 for development.
+  Minimum supported Python version is 3.12.
+
 * Add release process section to package development docs
 
 * Modernize packaging:
