@@ -189,7 +189,7 @@ Doing so ensures that the processes will be restarted if they crash,
 and provides a centralized interface for monitoring and controlling the processes.
 We'll use `Supervisor`_ which was installed when you created your :ref:`CondaEnvironment`.
 
-.. _Supervisor: http://supervisord.org/
+.. _Supervisor: https://supervisord.org/
 
 :kbd:`supervisord` uses its own configuration file,
 written using `INI`_ syntax.

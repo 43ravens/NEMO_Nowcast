@@ -285,7 +285,7 @@ The output looks something like:
     writing output... [100%] nowcast_system/workers
 
     (nowcast_system/workers: line  439) ok        https://arrow.readthedocs.io/en/latest/
-    (         CHANGES: line   71) ok        http://supervisord.org/
+    (         CHANGES: line   71) ok        https://supervisord.org/
     (         CHANGES: line   60) ok        https://app.codecov.io/gh/43ravens/NEMO_Nowcast
     (         CHANGES: line  125) ok        https://black.readthedocs.io/en/stable/
     (         CHANGES: line  164) ok        https://boltons.readthedocs.io/en/latest/

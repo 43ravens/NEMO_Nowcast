@@ -37,7 +37,7 @@ The logging configuration for a nowcast system that uses the log aggregator is d
 The recommended way to launch the log aggregator is to put it under the control of a process manager like `Supervisor`_.
 Please see :ref:`NowcastProcessMgmt` for details.
 
-.. _Supervisor: http://supervisord.org/
+.. _Supervisor: https://supervisord.org/
 
 .. note::
   It is necessary to ensure that the appropriate firewall rules are in place to allow traffic to pass between the machines on which remote workers are running and the machine that hosts the log aggregator via the logging port(s).

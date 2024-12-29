@@ -37,4 +37,4 @@ The default sleep period is 60 seconds.
 The recommended way to launch the scheduler is to put it under the control of a process manager like `Supervisor`_.
 Please see :ref:`NowcastProcessMgmt` for details.
 
-.. _Supervisor: http://supervisord.org/
+.. _Supervisor: https://supervisord.org/

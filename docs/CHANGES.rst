@@ -79,7 +79,7 @@ v21.1 (2021-03-03)
   ``supervisor`` has fewer dependencies, provides all of the functionality that we
   need, and is being actively maintained.
 
-  .. _supervisor: http://supervisord.org/
+  .. _supervisor: https://supervisord.org/
 
 
 v19.2 (2019-11-11)

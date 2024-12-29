@@ -57,7 +57,7 @@ and signal handling for the :kbd:`QUEUE` device.
 The recommended way to launch the message broker is to put it under the control of a process manager like `Supervisor`_.
 Please see :ref:`NowcastProcessMgmt` for details.
 
-.. _Supervisor: http://supervisord.org/
+.. _Supervisor: https://supervisord.org/
 
 .. note::
   Since manager/worker communication,

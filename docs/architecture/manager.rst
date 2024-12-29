@@ -104,4 +104,4 @@ and resumes listening for messages from workers.
 The recommended way to launch the manager is to put it under the control of a process manager like `Supervisor`_.
 Please see :ref:`NowcastProcessMgmt` for details.
 
-.. _Supervisor: http://supervisord.org/
+.. _Supervisor: https://supervisord.org/
