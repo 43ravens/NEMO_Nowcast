@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""NEMO_Nowcast worker launch scheduler.
-"""
+"""NEMO_Nowcast worker launch scheduler."""
 import logging
 import logging.config
 import os

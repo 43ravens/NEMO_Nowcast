@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Unit tests for nemo_nowcast.next_workers module.
-"""
+"""Unit tests for nemo_nowcast.next_workers module."""
 import pytest
 
 from nemo_nowcast import Message, NextWorker, next_workers

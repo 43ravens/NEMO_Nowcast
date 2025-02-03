@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Unit tests for nemo_nowcast.workers.awaken module.
-"""
+"""Unit tests for nemo_nowcast.workers.awaken module."""
 from unittest.mock import Mock, patch
 
 from nemo_nowcast.workers import awaken

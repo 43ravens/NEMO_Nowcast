@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""NEMO_Nowcast framework message object.
-"""
+"""NEMO_Nowcast framework message object."""
 import attr
 import yaml
 

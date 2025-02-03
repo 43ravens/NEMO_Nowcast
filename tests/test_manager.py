@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Unit tests for nemo_nowcast.manager module.
-"""
+"""Unit tests for nemo_nowcast.manager module."""
 import os
 import signal
 from unittest.mock import patch, Mock, mock_open
