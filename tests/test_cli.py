@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Unit tests for cli module.
-"""
+"""Unit tests for cli module."""
 import argparse
 from datetime import datetime
 from unittest.mock import patch

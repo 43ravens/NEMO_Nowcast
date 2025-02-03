@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Unit tests for message module.
-"""
+"""Unit tests for message module."""
 import pytest
 import yaml
 

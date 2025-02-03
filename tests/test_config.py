@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Unit tests for config module.
-"""
+"""Unit tests for config module."""
 from unittest.mock import Mock, mock_open, patch
 
 import pytest
