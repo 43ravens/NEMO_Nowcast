@@ -16,20 +16,24 @@
 import importlib.metadata
 import os
 import sys
+import tomllib
+from pathlib import Path
 
 sys.path.insert(0, os.path.abspath(".."))
 
 
 # -- Project information -----------------------------------------------------
 
-distribution_name = "NEMO_Nowcast"
+with Path("../pyproject.toml").open("rb") as f:
+    pkg_info = tomllib.load(f)
+project = pkg_info["project"]["name"]
 author = "Doug Latornell"
 pkg_creation_year = 2016
 copyright_years = f"{pkg_creation_year} – present"
 copyright = f"{copyright_years}, {author}"
 
 # The short X.Y version.
-version = importlib.metadata.version(distribution_name)
+version = importlib.metadata.version(project)
 # The full version, including alpha/beta/rc tags.
 release = version
 
