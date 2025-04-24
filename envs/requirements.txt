@@ -24,7 +24,7 @@ docutils==0.21.2
 editables==0.5
 exceptiongroup==1.2.2
 filelock==3.16.1
-h11==0.14.0
+h11==0.16.0
 h2==4.1.0
 hatch==1.14.0
 hatchling==1.27.0
