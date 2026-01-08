@@ -98,7 +98,7 @@ trove-classifiers==2024.10.21.16
 types-python-dateutil==2.9.0.20241206
 typing_extensions==4.12.2
 ukkonen==1.0.1
-urllib3==2.6.0
+urllib3==2.6.3
 userpath==1.7.0
 virtualenv==20.28.0
 zipp==3.21.0
