@@ -17,6 +17,7 @@
 This broker provides the static point in the nowcast messaging framework,
 allowing the nowcast manager to be restarted more or less at will.
 """
+
 import logging
 import logging.config
 import os

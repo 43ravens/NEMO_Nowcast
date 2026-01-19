@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """Unit tests for nemo_nowcast.workers.sleep module."""
+
 from unittest.mock import Mock, patch
 
 from nemo_nowcast.workers import sleep

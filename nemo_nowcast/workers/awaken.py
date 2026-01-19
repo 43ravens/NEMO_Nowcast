@@ -19,6 +19,7 @@ messages to the manager.
 This worker is intended to demonstrate how a worker is launched after the
 sleep example worker finishes successfully.
 """
+
 import logging
 
 from nemo_nowcast import NowcastWorker

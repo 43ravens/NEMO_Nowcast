@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """Unit tests for nemo_nowcast.scheduler module."""
+
 import signal
 from unittest.mock import Mock, patch
 

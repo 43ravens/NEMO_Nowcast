@@ -24,6 +24,7 @@ end their work.
 
 Function names **must** be of the form :py:func:`after_worker_name`.
 """
+
 from nemo_nowcast import NextWorker
 
 

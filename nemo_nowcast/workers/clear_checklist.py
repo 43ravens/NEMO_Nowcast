@@ -24,6 +24,7 @@ processing cycle (e.g. end of the day), just prior to launching the
 It can also be launched from the command-line by the nowcast administrator
 as necessary for system maintenance.
 """
+
 import logging
 
 from nemo_nowcast import NowcastWorker

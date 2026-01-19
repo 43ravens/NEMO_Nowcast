@@ -17,6 +17,7 @@
 Provides :py:class:`dict`-like access to the configuration loaded from the
 YAML system configuration file.
 """
+
 import os
 import re
 

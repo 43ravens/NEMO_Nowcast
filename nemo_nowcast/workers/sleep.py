@@ -17,6 +17,7 @@
 An example implementation of a worker module that does nothing other than sleep
 for a specified number of seconds.
 """
+
 import logging
 import time
 

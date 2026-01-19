@@ -24,6 +24,7 @@ processing cycle (e.g. end of the day).
 It can also be launched from the command-line by the nowcast administrator
 as necessary for system maintenance.
 """
+
 import logging
 import logging.config
 from pathlib import Path

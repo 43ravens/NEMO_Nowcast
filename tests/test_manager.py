@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """Unit tests for nemo_nowcast.manager module."""
+
 import os
 import signal
 from unittest.mock import patch, Mock, mock_open
