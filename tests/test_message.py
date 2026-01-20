@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """Unit tests for message module."""
+
 import pytest
 import yaml
 

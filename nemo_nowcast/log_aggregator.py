@@ -19,6 +19,7 @@ published by other processes.
 It is useful for nowcast systems in which workers run on hosts other than the
 one that the manager and message broker run on.
 """
+
 import logging
 import logging.config
 import os

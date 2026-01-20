@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """Unit tests for nemo_nowcast.workers.rotate_logs module."""
+
 import logging.handlers
 from types import SimpleNamespace
 from unittest.mock import patch

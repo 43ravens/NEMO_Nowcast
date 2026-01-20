@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """Unit tests for cli module."""
+
 import argparse
 from datetime import datetime
 from unittest.mock import patch

@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """Unit tests for config module."""
+
 from unittest.mock import Mock, mock_open, patch
 
 import pytest

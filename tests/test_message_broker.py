@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """Unit tests for nemo_nowcast.message_broker module."""
+
 import signal
 from unittest.mock import call, Mock, patch
 

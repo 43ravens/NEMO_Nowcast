@@ -18,6 +18,7 @@ Provides a command-line interface argument parser for nowcast system components.
 The parser includes handling for the always-required :kbd:`config_file`
 argument.
 """
+
 import argparse
 
 import arrow

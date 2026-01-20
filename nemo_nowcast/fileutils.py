@@ -14,7 +14,6 @@ import errno
 import fnmatch
 from shutil import copy2, copystat, Error
 
-
 __all__ = [
     "mkdir_p",
     "atomic_save",

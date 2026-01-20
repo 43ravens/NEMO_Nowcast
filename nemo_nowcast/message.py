@@ -13,6 +13,7 @@
 # limitations under the License.
 
 """NEMO_Nowcast framework message object."""
+
 import attr
 import yaml
 
