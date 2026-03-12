@@ -25,7 +25,7 @@ dynamic = [ "version" ]
 description = "Automation framework for NEMO and other ocean models"
 readme = "README.rst"
 requires-python = ">=3.12"
-license-files = { paths = ["LICENSE"] }
+license-files = [ "LICENSE" ]
 authors = [
     {name = "Doug Latornell", email = "dlatornell@eoas.ubc.ca"}
 ]
@@ -68,3 +68,18 @@ include = ["nemo_nowcast"]
 
 [tool.hatch.version]
 path = "nemo_nowcast/__about__.py"
+
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-64", "win-64"]
+
+[tool.pixi.pypi-dependencies]
+NEMO_Nowcast = { path = ".", editable = true }
+
+[tool.pixi.environments]
+default = { solve-group = "default" }
+docs = { features = ["docs"], solve-group = "default" }
+tests = { features = ["tests"], solve-group = "default" }
+
+[tool.pixi.tasks]
