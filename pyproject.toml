@@ -78,7 +78,7 @@ platforms = ["linux-64", "osx-64"]
 arrow = "*"
 attrs = "*"
 pixi-pycharm = ">=0.0.10,<0.0.11"
-python = "3.14.*"
+python = "*"
 pyyaml = "*"
 pyzmq = "*"
 requests = "*"
@@ -95,6 +95,8 @@ NEMO_Nowcast = { path = ".", editable = true }
 default = { solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
 test = { features = ["test"], solve-group = "default" }
+test-py312 = ["py312", "test"]
+test-py313 = ["py313", "test"]
 
 [tool.pixi.feature.test.dependencies]
 pytest = ">=9.0.2,<10"
@@ -105,3 +107,9 @@ pytest-randomly = ">=3.15.0,<4"
 pytest = "pytest"
 pytest-cov = "pytest --cov=./"
 pytest-cov-html = "pytest --cov=./ --cov-report html"
+
+[tool.pixi.feature.py312.dependencies]
+python = "3.12.*"
+
+[tool.pixi.feature.py313.dependencies]
+python = "3.13.*"
