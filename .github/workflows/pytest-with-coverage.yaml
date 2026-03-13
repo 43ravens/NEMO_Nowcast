@@ -12,14 +12,15 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ '3.12', '3.13' ]
-    uses: UBC-MOAD/gha-workflows/.github/workflows/pytest-with-coverage.yaml@main
+        environment: [ 'test-py312', 'test-py313', 'test-py314' ]
+
+    uses: UBC-MOAD/gha-workflows/.github/workflows/pixi-pytest-with-coverage.yaml@main
     with:
-      python-version: ${{ matrix.python-version }}
-      conda-env-file: envs/environment-test.yaml
-      conda-env-name: nemo-nowcast-test
+      environment: ${{ matrix.environment }}
+
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
