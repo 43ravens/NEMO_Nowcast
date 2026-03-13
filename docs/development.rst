@@ -422,13 +422,12 @@ The `pytest`_ tool is used for test parametrization and as the test runner for t
 
 .. _pytest: https://docs.pytest.org/en/latest/
 
-With your ``nemo-nowcast`` development environment activated,
-use:
+Use:
 
 .. code-block:: bash
 
-    (nemo-nowcast)$ cd NEMO_Nowcast/
-    (nemo-nowcast)$ pytest
+    cd NEMO_Nowcast/
+    pixi run pytest
 
 to run the test suite.
 The output looks something like:
@@ -436,11 +435,11 @@ The output looks something like:
 .. code-block:: text
 
     ================================ test session starts =================================
-    platform linux -- Python 3.13.0, pytest-8.3.3, pluggy-1.5.0
-    Using --randomly-seed=3451085175
+    platform linux -- Python 3.14.3, pytest-9.0.2, pluggy-1.6.0
+    Using --randomly-seed=2471750703
     rootdir: /media/doug/warehouse/43ravens/projects/NEMO_Nowcast
     configfile: pyproject.toml
-    plugins: randomly-3.15.0, cov-6.0.0, anyio-4.6.2.post1
+    plugins: cov-7.0.0, randomly-3.15.0
     collected 319 items
 
     tests/test_manager.py ................................................................
@@ -468,8 +467,8 @@ You can monitor what lines of code the test suite exercises using the `coverage.
 
 .. code-block:: bash
 
-    (nemo-nowcast)$ cd NEMO_Nowcast/
-    (nemo-nowcast)$ pytest --cov=./
+    cd NEMO_Nowcast/
+    pixi run pytest-cov
 
 The test coverage report will be displayed below the test suite run output.
 
@@ -478,7 +477,7 @@ you can use
 
 .. code-block:: bash
 
-    (nemo-nowcast)$ pytest --cov=./ --cov-report html
+    pixi run pytest-cov-html
 
 to produce an HTML report that you can view in your browser by opening :file:`NEMO_Nowcast/htmlcov/index.html`.
 

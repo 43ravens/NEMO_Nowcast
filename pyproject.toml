@@ -51,7 +51,7 @@ dependencies = [
 "Source Code" = "https://github.com/43ravens/NEMO_Nowcast"
 
 [project.optional-dependencies]
-tests = ["coverage", "pytest"]
+test = ["coverage", "pytest"]
 docs = ["sphinx"]
 
 
@@ -94,4 +94,14 @@ NEMO_Nowcast = { path = ".", editable = true }
 [tool.pixi.environments]
 default = { solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
-tests = { features = ["tests"], solve-group = "default" }
+test = { features = ["test"], solve-group = "default" }
+
+[tool.pixi.feature.test.dependencies]
+pytest = ">=9.0.2,<10"
+pytest-cov = ">=7.0.0,<8"
+pytest-randomly = ">=3.15.0,<4"
+
+[tool.pixi.feature.test.tasks]
+pytest = "pytest"
+pytest-cov = "pytest --cov=./"
+pytest-cov-html = "pytest --cov=./ --cov-report html"
