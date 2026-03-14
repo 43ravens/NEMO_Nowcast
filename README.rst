@@ -13,7 +13,7 @@ NEMO Ocean Model Nowcast Framework
 |                            |     :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow:CodeQL                                                                                                                  |
 |                            |     :alt: CodeQL analysis                                                                                                                                                                            |
 +----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **Documentation**          | .. image:: https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest                                                                                                                       |
+| **Documentation**          | .. image:: https://app.readthedocs.org/projects/nemo-nowcast/badge/?version=latest                                                                                                                   |
 |                            |     :target: https://nemo-nowcast.readthedocs.io/en/latest/                                                                                                                                          |
 |                            |     :alt: Documentation Status                                                                                                                                                                       |
 |                            | .. image:: https://github.com/43ravens/NEMO_Nowcast/actions/workflows/sphinx-linkcheck.yaml/badge.svg                                                                                                |
@@ -92,7 +92,7 @@ to produce daily nowcast runs that calculate the state of the Gulf of Maine and 
 Documentation
 =============
 
-.. image:: https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest
+.. image:: https://app.readthedocs.org/projects/nemo-nowcast/badge/?version=latest
     :target: https://nemo-nowcast.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Build Status
 

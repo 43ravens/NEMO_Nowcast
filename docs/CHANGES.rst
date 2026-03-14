@@ -107,7 +107,7 @@ v19.2 (2019-11-11)
   `Slack incoming webhooks API`_.
   Documentation coming soon...
 
-  .. _Slack incoming webhooks API: https://api.slack.com/messaging/webhooks
+  .. _Slack incoming webhooks API: https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks/
 
 
 v19.1 (2019-01-17)
