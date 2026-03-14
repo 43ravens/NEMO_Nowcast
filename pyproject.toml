@@ -117,3 +117,16 @@ python = "3.13.*"
 
 [tool.pixi.feature.py314.dependencies]
 python = "3.14.*"
+
+[tool.pixi.feature.docs.dependencies]
+mock = ">=5.2.0,<6"
+pillow = ">=12.1.1,<13"
+sphinx = "==8.1.3"
+sphinx-rtd-theme = "==3.0.0"
+
+[dependency-groups]
+docs = ["commonmark>=0.9.1,<0.10", "recommonmark>=0.7.1,<0.8", "readthedocs-sphinx-ext>=2.2.5,<3"]
+
+[tool.pixi.feature.docs.tasks]
+docs = { cmd = "make clean html", cwd = "docs/" }
+linkcheck = { cmd = "make clean linkcheck", cwd = "docs/" }
