@@ -2062,7 +2062,7 @@ packages:
 - pypi: ./
   name: nemo-nowcast
   version: 25.1.dev0
-  sha256: 7904f19821a8616cd3f405375e3470eb1e117a4d4b1ef54e61c38f21637aa0bc
+  sha256: ccfe4677a702236c5a68067482714533b372432b06cf3462d9ff1efd5de9d6ac
   requires_dist:
   - arrow
   - attrs
