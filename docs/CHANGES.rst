@@ -2,8 +2,16 @@
 Change Log
 **********
 
-v25.1 (unreleased)
+v26.1 (2026-03-15)
 ==================
+
+* Change to use Pixi_ to manage dependencies and operating environments.
+
+  .. _Pixi: https://pixi.prefix.dev/latest/
+
+* Add support for Python 3.14.
+  Change to Python 3.14 for development.
+  Minimum supported Python version is 3.12.
 
 
 v24.1 (2024-11-27)
