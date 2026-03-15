@@ -599,7 +599,7 @@ completed.
 
 The release process steps are:
 
-#. Use :command:`hatch version release` to bump the version from ``.devn`` to the next release
+#. Use :command:`pixi run -e dev hatch version release` to bump the version from ``.devn`` to the next release
    version identifier
 
 #. Edit :file:`docs/CHANGES.rst` to update the version identifier and replace ``unreleased``
@@ -644,8 +644,8 @@ The release process steps are:
 
 #. Close the milestone for the just released version.
 
-#. Use :command:`hatch version minor,dev` to bump the version for the next development cycle,
-   or use :command:`hatch version major,minor,dev` for a year rollover version bump
+#. Use :command:`pixi run -e dev hatch version minor,dev` to bump the version for the next development cycle,
+   or use :command:`pixi run -e dev hatch version major,minor,dev` for a year rollover version bump
 
 #. Edit :file:`docs/CHANGES.rst` to add a new section for the unreleased dev version
 
