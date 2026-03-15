@@ -78,7 +78,10 @@ Python Versions
     :alt: Python Version
 
 
-The :py:obj:`NEMO_Nowcast` package is developed and tested using `Python`_ 3.13.
+The :py:obj:`NEMO_Nowcast` package is developed and tested using `Python`_ 3.14.
+The minimum supported Python version is 3.12.
+The :ref:`NEMO_NowcastContinuousIntegration` workflow on GitHub ensures that the package
+is tested for all versions of Python>=3.12.
 
 .. _Python: https://www.python.org/
 
@@ -106,33 +109,45 @@ Clone the code and documentation `repository`_ from GitHub with:
 Development Environment
 =======================
 
-Setting up an isolated development environment using `Conda`_ is recommended.
-Assuming that you have `Miniconda3`_ installed,
-you can create and activate an environment called ``nemo-nowcast`` that will have all of the Python packages necessary for development,
-testing,
-and building the documentation with the commands:
+:py:obj:`NEMO_Nowcast` uses Pixi_ for package and environment management.
+If you don't already have Pixi_ installed,
+please follow its `installation instructions`_ to do so.
 
-.. _Conda: https://docs.conda.io/en/latest/
-.. _Miniconda3: https://docs.conda.io/en/latest/miniconda.html
+.. _Pixi: https://pixi.prefix.dev/latest/
+.. _`installation instructions`: https://pixi.prefix.dev/latest/installation/
+
+Install the development environment
+(``dev``)
+that includes the packages that :py:obj:`NEMO_Nowcast` depends on as well as various development tools packages with:
 
 .. code-block:: bash
 
-    $ cd  NEMO_Nowcast
-    $ conda env create -f envs/environment-dev.yaml
-    $ conda activate nemo-nowcast
+    $ cd NEMO_Nowcast
+    $ pixi install --environment dev
 
-The :py:obj:`NEMO_Nowcast` package is installed in `editable install mode`_ as part of the conda environment
-creation process.
-That means that the package is installed from the cloned repo in such a way that
-it call be updated as the repo evolves with a simple :command:`git pull`.
+Other environments used by commands in the sections below have addition packages for running
+the test suite,
+building and link checking the documentation,
+etc.
+
+If you are using an integrated development environment like VSCode or PyCharm
+where you need a Python interpreter to support coding assistance features,
+run development tasks,
+etc.,
+use the interpreter in the ``dev`` environment.
+You can get its full path with :command:`pixi run -e dev which python`
+
+To get detailed information about the environments,
+the packages installed in them,
+`Pixi`_ tasks that are defined for them,
+etc.,
+:use command:`pixi info`.
+
+:py:obj:`NEMO_NowCast` is installed in `editable install mode`_ in all of the environments that
+`Pixi`_ creates.
+That means that changes you make to the code are immediately reflected in the environments.
 
 .. _editable install mode: https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs
-
-To deactivate the environment use:
-
-.. code-block:: bash
-
-    (nemo-nowcast)$ conda deactivate
 
 
 .. _NEMO_NowcastCodingStyle:
@@ -161,8 +176,7 @@ and run :command:`pre-commit install`:
 .. code-block:: bash
 
     $ cd NEMO_Nowcast
-    $ conda activate nemo-nowcast
-    (nemo-nowcast)$ pre-commit install
+    $ pixi run -e dev pre-commit install
 
 .. note::
     You only need to install the hooks once immediately after you make a new clone of the
@@ -190,8 +204,8 @@ To do a clean build of the documentation use:
 
 .. code-block:: bash
 
-    cd NEMO_Nowcast
-    pixi run docs
+    $ cd NEMO_Nowcast
+    $ pixi run docs
 
 The output looks something like:
 
@@ -256,8 +270,8 @@ Run the link checker with:
 
 .. code-block:: bash
 
-    cd NEMO_Nowcast
-    pixi run linkcheck
+    $ cd NEMO_Nowcast
+    $ pixi run linkcheck
 
 The output looks something like:
 
@@ -426,8 +440,8 @@ Use:
 
 .. code-block:: bash
 
-    cd NEMO_Nowcast/
-    pixi run pytest
+    $ cd NEMO_Nowcast/
+    $ pixi run pytest
 
 to run the test suite.
 The output looks something like:
@@ -467,8 +481,8 @@ You can monitor what lines of code the test suite exercises using the `coverage.
 
 .. code-block:: bash
 
-    cd NEMO_Nowcast/
-    pixi run pytest-cov
+    $ cd NEMO_Nowcast/
+    $ pixi run pytest-cov
 
 The test coverage report will be displayed below the test suite run output.
 
@@ -477,7 +491,7 @@ you can use
 
 .. code-block:: bash
 
-    pixi run pytest-cov-html
+    $ pixi run pytest-cov-html
 
 to produce an HTML report that you can view in your browser by opening :file:`NEMO_Nowcast/htmlcov/index.html`.
 
