@@ -30,7 +30,7 @@ Elements of a Nowcast System
 * workers
 * next_workers module
 * process management with supervisor
-* distribute releases via an anaconda.org channel or conda-forge
+* distribute releases via a conda-forge
 
 
 .. _Logging:

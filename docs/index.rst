@@ -68,7 +68,7 @@ Contents
    architecture/index
    nowcast_system/index
    api
-   development
+   pkg_development
    CHANGES
 
 
