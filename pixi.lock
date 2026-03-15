@@ -2806,7 +2806,7 @@ packages:
   timestamp: 1738196181298
 - pypi: ./
   name: nemo-nowcast
-  version: 25.1.dev0
+  version: 26.2.dev0
   sha256: a1856913b29263cd73ca1efb32995f0f61690341c3a57e1de07093c8b5e189b8
   requires_dist:
   - arrow
