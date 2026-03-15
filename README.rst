@@ -13,7 +13,7 @@ NEMO Ocean Model Nowcast Framework
 |                            |     :target: https://github.com/43ravens/NEMO_Nowcast/actions?query=workflow:CodeQL                                                                                                                  |
 |                            |     :alt: CodeQL analysis                                                                                                                                                                            |
 +----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **Documentation**          | .. image:: https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest                                                                                                                       |
+| **Documentation**          | .. image:: https://app.readthedocs.org/projects/nemo-nowcast/badge/?version=latest                                                                                                                   |
 |                            |     :target: https://nemo-nowcast.readthedocs.io/en/latest/                                                                                                                                          |
 |                            |     :alt: Documentation Status                                                                                                                                                                       |
 |                            | .. image:: https://github.com/43ravens/NEMO_Nowcast/actions/workflows/sphinx-linkcheck.yaml/badge.svg                                                                                                |
@@ -39,6 +39,9 @@ NEMO Ocean Model Nowcast Framework
 |                            | .. image:: https://img.shields.io/badge/version%20control-git-blue.svg?logo=github                                                                                                                   |
 |                            |     :target: https://github.com/43ravens/NEMO_Nowcast                                                                                                                                                |
 |                            |     :alt: Git on GitHub                                                                                                                                                                              |
+|                            | .. image:: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/prefix-dev/pixi/main/assets/badge/v0.json                                                                           |
+|                            |     :target: https://pixi.prefix.dev/latest/                                                                                                                                                         |
+|                            |     :alt: Pixi                                                                                                                                                                                       |
 |                            | .. image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white                                                                                              |
 |                            |     :target: https://pre-commit.com                                                                                                                                                                  |
 |                            |     :alt: pre-commit                                                                                                                                                                                 |
@@ -56,7 +59,7 @@ forcing data or model products for open boundary conditions,
 river run-off flows,
 and atmospheric forcing.
 
-.. _NEMO_Nowcast: https://anaconda.org/GoMSS-Nowcast/nemo_nowcast
+.. _NEMO_Nowcast: https://github.com/43ravens/NEMO_Nowcast
 .. _NEMO ocean model: https://www.nemo-ocean.eu/
 
 The runs are automated using an asynchronous,
@@ -92,7 +95,7 @@ to produce daily nowcast runs that calculate the state of the Gulf of Maine and 
 Documentation
 =============
 
-.. image:: https://readthedocs.org/projects/nemo-nowcast/badge/?version=latest
+.. image:: https://app.readthedocs.org/projects/nemo-nowcast/badge/?version=latest
     :target: https://nemo-nowcast.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Build Status
 

@@ -25,18 +25,15 @@ dynamic = [ "version" ]
 description = "Automation framework for NEMO and other ocean models"
 readme = "README.rst"
 requires-python = ">=3.12"
-license-files = { paths = ["LICENSE"] }
+license-files = [ "LICENSE" ]
 authors = [
     {name = "Doug Latornell", email = "dlatornell@eoas.ubc.ca"}
 ]
 keywords = ["ocean model", "nowcast", "NEMO"]
 dependencies = [
-    # see envs/environment-dev.yaml for conda environment dev installation,
-    # see envs/requirements.txt for package versions used during recent development
-    # see envs/environment-rtd.yaml for conda environment used for readthedocs build
     "arrow",
     "attrs",
-    "PyYAML",
+    "pyyaml",
     "pyzmq",
     "requests",
     "schedule",
@@ -51,7 +48,7 @@ dependencies = [
 "Source Code" = "https://github.com/43ravens/NEMO_Nowcast"
 
 [project.optional-dependencies]
-tests = ["coverage", "pytest"]
+test = ["coverage", "pytest"]
 docs = ["sphinx"]
 
 
@@ -68,3 +65,83 @@ include = ["nemo_nowcast"]
 
 [tool.hatch.version]
 path = "nemo_nowcast/__about__.py"
+
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-64"]
+
+[tool.pixi.dependencies]
+arrow = ">=1.4.0,<2"
+attrs = ">=25.4.0,<26"
+pixi-pycharm = ">=0.0.10,<0.0.11"
+python = "*"
+pyyaml = ">=6.0.3,<7"
+pyzmq = ">=27.1.0,<28"
+requests = ">=2.32.5,<3"
+sentry-sdk = ">=2.54.0,<3"
+supervisor = ">=4.3.0,<5"
+schedule = ">=1.2.2,<2"
+
+[tool.pixi.pypi-dependencies]
+NEMO_Nowcast = { path = ".", editable = true }
+
+[tool.pixi.tasks]
+
+[tool.pixi.environments]
+default = { solve-group = "default" }
+dev = { features = ["dev"], solve-group = "default" }
+docs = { features = ["docs"], solve-group = "default" }
+test = { features = ["test"], solve-group = "default" }
+test-py312 = ["py312", "test"]
+test-py313 = ["py313", "test"]
+test-py314 = ["py314", "test"]
+
+[tool.pixi.feature.test.dependencies]
+pytest = ">=9.0.2,<10"
+pytest-cov = ">=7.0.0,<8"
+pytest-randomly = ">=3.15.0,<4"
+
+[tool.pixi.feature.test.tasks]
+pytest = "pytest"
+pytest-cov = "pytest --cov=./"
+pytest-cov-html = "pytest --cov=./ --cov-report html"
+
+[tool.pixi.feature.py312.dependencies]
+python = "3.12.*"
+
+[tool.pixi.feature.py313.dependencies]
+python = "3.13.*"
+
+[tool.pixi.feature.py314.dependencies]
+python = "3.14.*"
+
+[tool.pixi.feature.docs.dependencies]
+mock = ">=5.2.0,<6"
+pillow = ">=12.1.1,<13"
+sphinx = "==8.1.3"
+sphinx-rtd-theme = "==3.0.0"
+
+[dependency-groups]
+docs = ["commonmark>=0.9.1,<0.10", "recommonmark>=0.7.1,<0.8", "readthedocs-sphinx-ext>=2.2.5,<3"]
+
+[tool.pixi.feature.docs.tasks]
+docs = { cmd = "make clean html", cwd = "docs/" }
+linkcheck = { cmd = "make clean linkcheck", cwd = "docs/" }
+
+[tool.pixi.feature.dev.dependencies]
+# For coding style, repo QA, and package management
+black = ">=26.1.0,<27"
+hatch = ">=1.16.5,<2"
+pip = ">=26.0.1,<27"
+pre-commit = ">=4.5.1,<5"
+# For unit tests
+pytest = ">=9.0.2,<10"
+pytest-cov = ">=7.0.0,<8"
+pytest-randomly = ">=3.15.0,<4"
+# For documentation
+sphinx = "8.1.3.*"
+sphinx-rtd-theme = "3.0.0.*"
+
+[tool.pixi.feature.dev.tasks]
+update-reqs = "python -m pip list --format=freeze >> requirements.txt"
