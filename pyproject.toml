@@ -31,8 +31,7 @@ authors = [
 ]
 keywords = ["ocean model", "nowcast", "NEMO"]
 dependencies = [
-    # see envs/environment-dev.yaml for conda environment dev installation,
-    # see envs/requirements.txt for package versions used during recent development
+    # see requirements.txt for package versions used during recent development
     "arrow",
     "attrs",
     "PyYAML",
