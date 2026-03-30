@@ -65,7 +65,7 @@ pluggy==1.6.0
 pre_commit==4.5.1
 ptyprocess==0.7.0
 pycparser==2.22
-Pygments==2.19.2
+Pygments==2.20.0
 pyproject_hooks==1.2.0
 PySocks==1.7.1
 pytest==9.0.2
