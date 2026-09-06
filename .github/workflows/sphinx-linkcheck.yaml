@@ -13,4 +13,4 @@ jobs:
     permissions:
       contents: read
 
-    uses: UBC-MOAD/gha-workflows/.github/workflows/pixi-sphinx-linkcheck.yaml@main
+    uses: UBC-MOAD/gha-workflows/.github/workflows/pixi-sphinx-linkcheck.yaml@main  # zizmor: ignore[unpinned-uses]
