@@ -1,5 +1,7 @@
 name: sphinx-linkcheck
 
+permissions: {}
+
 on:
   push:
     branches: [ '*' ]
@@ -8,7 +10,8 @@ on:
 
 jobs:
   sphinx-linkcheck:
+    name: Sphinx linkcheck
     permissions:
-      contents: read
+      contents: read  # Required to access repository contents for link checking
 
-    uses: UBC-MOAD/gha-workflows/.github/workflows/pixi-sphinx-linkcheck.yaml@main
+    uses: UBC-MOAD/gha-workflows/.github/workflows/pixi-sphinx-linkcheck.yaml@main  # zizmor: ignore[unpinned-uses]

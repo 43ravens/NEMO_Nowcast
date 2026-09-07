@@ -1,5 +1,7 @@
 name: pytest-with-coverage
 
+permissions: {}
+
 on:
   push:
     branches: [ '*' ]
@@ -9,16 +11,17 @@ on:
 
 jobs:
   pytest-with-coverage:
+    name: pytest with coverage for ${{ inputs.environment }}
     permissions:
-      contents: read
-      pull-requests: write
+      contents: read  # Required to access repository contents for testing
+      pull-requests: write  # Required to upload code coverage to pull requests
 
     strategy:
       fail-fast: false
       matrix:
         environment: [ 'test-py312', 'test-py313', 'test-py314' ]
 
-    uses: UBC-MOAD/gha-workflows/.github/workflows/pixi-pytest-with-coverage.yaml@main
+    uses: UBC-MOAD/gha-workflows/.github/workflows/pixi-pytest-with-coverage.yaml@main  # zizmor: ignore[unpinned-uses]
     with:
       environment: ${{ matrix.environment }}
 
