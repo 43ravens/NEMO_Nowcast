@@ -13,6 +13,7 @@ on:
       - opened
 jobs:
   auto_assign:
+    name: Automatically assign Issue/PR to Doug
     permissions:
       issues: write  # Required to add assignee to issue
       pull-requests: write  # Required to add assignee to pull request

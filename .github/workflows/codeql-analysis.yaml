@@ -10,7 +10,7 @@ on:
 
 jobs:
   analyze:
-    name: Analyze
+    name: CodeQL  analysis for ${{ inputs.language }}
     permissions:
       actions: read  # Required to run CodeQL analysis
       contents: read  # Required to access repository contents for analysis
