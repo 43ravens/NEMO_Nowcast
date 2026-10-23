@@ -134,6 +134,7 @@ linkcheck = { cmd = "make clean linkcheck", cwd = "docs/" }
 black = ">=26.1.0,<27"
 hatch = ">=1.16.5,<2"
 pip = ">=26.0.1,<27"
+pre-commit = ">=4.7.0,<5"
 # For unit tests
 pytest = ">=9.0.2,<10"
 pytest-cov = ">=7.0.0,<8"
